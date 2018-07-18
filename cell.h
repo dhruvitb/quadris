@@ -1,14 +1,15 @@
 #ifndef _CELL_H_
 #define _CELL_H_
-#include "coordinate.h"
+#include "structures.h"
 #include "gamepiece.h"
 #include "subject.h"
 #include "observer.h"
+#include <memory>
 
 class Cell: public Subject, public Observer {
     Coordinate position;
     Colour colour;
-    GamePiece piece;
+    std::shared_ptr<GamePiece> piece;
 public:
 
 };

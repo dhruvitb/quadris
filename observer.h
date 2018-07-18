@@ -3,7 +3,7 @@
 
 class Observer {
 public:
-    bool notify(Observer whoNotified);
+    virtual bool notify(Observer whoNotified);
 };
 
 #endif 
