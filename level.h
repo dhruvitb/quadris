@@ -3,7 +3,7 @@
 #include <vector>
 #include "gamepiece.h"
 
-class Level: public Subject {
+class Level: public Subject<PieceInfo> {
     // remove the pieces field, replace with an enum class
     // find out how to add the input file streams
     bool random;

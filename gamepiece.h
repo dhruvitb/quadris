@@ -22,6 +22,8 @@ public:
 
     virtual void drop();
         // drop the piece
+
+    virtual PieceInfo getInfo();
 };
 
 #endif

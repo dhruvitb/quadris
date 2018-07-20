@@ -17,4 +17,19 @@ struct Coordinate {
     int y;
 };
 
+struct CellInfo {
+    int x;
+    int y;
+    Colour c;
+    Request r;
+};
+
+struct PieceInfo {
+    vector<Coordinate> coords;
+    Colour c;
+    Direction d;
+    Rotation r;
+    Piece p;
+};
+
 #endif

@@ -3,15 +3,17 @@
 #include "observer.h"
 #include <vector>
 #include <string>
+#include "structures.h"
 
-class Subject {
-    std::string request;
-    std::vector<Observer> observers;
+template <typename InfoType> class Subject {
+    std::vector<Observer<InfoType>> observers;
+    Request request;
 public:
-    void attachObserver(Observer ob);
+    void attachObserver(Observer<InfoType> &ob);
     bool notifyObservers();
+    virtual InfoType getInfo() = 0;
     void setRequest(std::string request);
-    std::string getRequest();
+    Request getRequest();
 };
 
 #endif

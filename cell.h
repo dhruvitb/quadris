@@ -11,7 +11,8 @@ class Cell: public Subject, public Observer {
     Colour colour;
     std::shared_ptr<GamePiece> piece;
 public:
-
+    Cell(Coordinate position, Colour colour);
+    CellInfo getInfo();
 };
 
 #endif

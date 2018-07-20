@@ -1,9 +1,12 @@
 #ifndef _OBSERVER_H_
 #define _OBSERVER_H_
+#include "structures.h"
+#include "subject.h"
 
-class Observer {
+template <typename InfoType> class Observer {
 public:
-    virtual bool notify(Observer whoNotified);
+    virtual bool notify(Subject<InfoType> &from) = 0;
+    virtual ~Observer() = default;
 };
 
 #endif 
