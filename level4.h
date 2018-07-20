@@ -5,7 +5,11 @@
 class Level4: public Level {
     int turnsSinceClear;
 public:
-    GamePiece generatePiece() override;
+    Level4();
+    ~Level4();
+    std::shared_ptr<GamePiece> generatePiece() override;
+    PieceInfo getInfo();
+    bool notifyObservers();
     bool generateBlock();
 };
 

@@ -10,7 +10,7 @@ class GamePiece {
     int levelGenerated;
 public:
 
-    virtual ~GamePiece() = 0;
+    virtual ~GamePiece();
 
     virtual std::vector<Coordinate> rotate(Rotation r);
         // make the thing rotate
@@ -20,7 +20,7 @@ public:
     virtual std::vector<Coordinate> shift(Direction d);
         // same as above function
 
-    virtual void drop();
+    virtual void drop() = 0;
         // drop the piece
 
     virtual PieceInfo getInfo();

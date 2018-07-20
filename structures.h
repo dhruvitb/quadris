@@ -1,5 +1,6 @@
 #ifndef _STRUCTURES_H_
 #define _STRUCTURES_H_
+#include <vector>
 
 enum class Colour {Cyan, Blue, Orange, Yellow, Green, Red, Purple, Brown,
                     Black, LightGrey, NoColour};
@@ -15,21 +16,6 @@ enum class Request{ClearLeft, ClearRight, };
 struct Coordinate {
     int x;
     int y;
-};
-
-struct CellInfo {
-    int x;
-    int y;
-    Colour c;
-    Request r;
-};
-
-struct PieceInfo {
-    vector<Coordinate> coords;
-    Colour c;
-    Direction d;
-    Rotation r;
-    Piece p;
 };
 
 #endif

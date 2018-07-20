@@ -8,8 +8,6 @@ using namespace std;
 int main(int argc, char *argv[]) {
     string cmd;
     // FIND OUT HOW TO READ -ARG N TYPE COMMAND LINE ARGUMENTS
-    const int MAX_LEVEL = 4;
-    const int MIN_LEVEL = 0;
     int highScore = 0;
     try {
         while (true) {

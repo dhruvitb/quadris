@@ -12,7 +12,7 @@
 const int LEVEL_MAX = 4;
 const int LEVEL_MIN = 0;
 
-class Grid: public Observer<PieceInfo> {
+class Grid: public Observer {
     std::vector<std::vector<Cell>> theGrid;
     std::unique_ptr<Level> levelFactory;
     int currentLevel;
@@ -38,6 +38,7 @@ public:
     void restart();
     void hint();
     int getScore();
+    bool notify(Subject &from) override;
 };
 
 #endif

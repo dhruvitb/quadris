@@ -5,7 +5,11 @@
 class Level2: public Level {
 
 public:
-    GamePiece generatePiece() override;
+    Level2();
+    ~Level2();
+    std::shared_ptr<GamePiece> generatePiece() override;
+    PieceInfo getInfo();
+    bool notifyObservers();
 };
 
 #endif

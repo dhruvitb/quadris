@@ -19,11 +19,11 @@ void Grid::init() {
     currentLevel = 0;
     turnCount = 0; // or should we make it one?
     score = 0;
-    currentPiece = make_shared<GamePiece>(levelFactory->generatePiece());
-    nextPiece = make_shared<GamePiece>(levelFactory->generatePiece());
+    //currentPiece = levelFactory->generatePiece();
+    //nextPiece = levelFactory->generatePiece();
     td = make_unique<TextDisplay>();
-    unique_ptr<GraphicsDisplay> gd = make_unique<GraphicsDisplay>();
-    unique_ptr<Level> levelFactory = make_unique<Level0>();
+    //unique_ptr<GraphicsDisplay> gd = make_unique<GraphicsDisplay>();
+    //unique_ptr<Level> levelFactory = make_unique<Level0>();
     int width = 11;
     int height = 18;
     for (int i = 0; i < height; ++i) {
@@ -57,15 +57,17 @@ void Grid::drop() {
 
 bool Grid::shiftPiece(Direction d) {
     currentPiece->shift(d);
+    return true; // FIX THIS PLEASE
 }
 
 bool Grid::rotatePiece(Rotation r) {
     currentPiece->rotate(r);
+    return true; // FIX THIS PLEASE
 }
 
 void Grid::getNextPiece() {
-    currentPiece = make_shared<GamePiece>(nextPiece);
-    nextPiece = make_shared<GamePiece>(levelFactory->generatePiece());
+    currentPiece = nextPiece;
+    nextPiece = levelFactory->generatePiece();
 }
 
 void Grid::incrementLevel() {

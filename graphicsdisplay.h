@@ -5,9 +5,10 @@
 #include <X11/Xlib.h>
 #include "window.h"
 
-class GraphicsDisplay: public Observer<CellInfo> {
+class GraphicsDisplay: public Observer {
     std::vector<Xwindow> xw;
 public:
+    bool notify(Subject &from);
 };
 
 #endif
