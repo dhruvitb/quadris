@@ -29,7 +29,7 @@ void Grid::init() {
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
-            Cell c = Cell{Coordinate{i,j}, Colour::NoColour};
+            Cell c = Cell{Coordinate{i,j}};
             temp.emplace_back(c);
         }
         theGrid.emplace_back(temp);

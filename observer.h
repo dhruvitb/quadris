@@ -3,12 +3,11 @@
 #include "structures.h"
 #include "subject.h"
 
-class Subject;
+template <typename InfoType> class Subject;
 
-class Observer {
+template <typename InfoType> class Observer {
 public:
-    virtual bool notify(Subject &from) = 0;
-    virtual ~Observer() = default;
+    virtual bool notify(Subject<InfoType> &from) = 0;
 };
 
 #endif 

@@ -3,14 +3,18 @@
 #include "level.h"
 
 class Level4: public Level {
-    int turnsSinceClear;
+    int turnCount;
 public:
-    Level4();
-    ~Level4();
     std::shared_ptr<GamePiece> generatePiece() override;
-    PieceInfo getInfo();
-    bool notifyObservers();
-    bool generateBlock();
+    void resetTurnCount() override;
+    // Level4:
+    // When you generate a piece you need to do:
+    //     1. Increase the turn count
+    //     2. Check if turn count is equal to 5:
+    //     3. If equal to 5:
+    //         NotifyObservers (i.e. tell the grid to drop a bomb)
+    //         Set the turnsSinceClear 0
+    //     4. Generate a new piece
 };
 
 #endif

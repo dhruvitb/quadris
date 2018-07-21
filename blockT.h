@@ -7,9 +7,6 @@
 class BlockT: public GamePiece {
 
 public:
-    std::vector<Coordinate> rotate(Rotation r) override;
-    std::vector<Coordinate> shift(Direction d) override;
-    void drop() override;
 };
 
 #endif

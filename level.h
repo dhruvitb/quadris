@@ -1,18 +1,20 @@
 #ifndef _LEVEL_H_
 #define _LEVEL_H_
 #include <vector>
-#include "gamepiece.h"
 #include <memory>
+#include <iostream>
+#include <fstream>
+#include "gamepiece.h"
+#include "structures.h"
+#include "subject.h"
 
-class Level: public Subject {
-    // remove the pieces field, replace with an enum class
-    // find out how to add the input file streams
+class Level: public Subject<LevelInfo> {
+    std::ifstream file;
     bool random;
 public:
-    Level();
-    ~Level();
     virtual std::shared_ptr<GamePiece> generatePiece() = 0;
-    bool notifyObservers();
+    LevelInfo getInfo() const override;
+    virtual void resetTurnCount(); // resets the turnsSinceClearedLine
 };
 
 #endif

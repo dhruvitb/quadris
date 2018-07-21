@@ -11,11 +11,22 @@ enum class Rotation {CW, CCW};
 
 enum class Piece{I,J,L,O,S,Z,T};
 
-enum class Request{ClearLeft, ClearRight, };
+enum class Request{Clear, Drop, NoRequest};
 
 struct Coordinate {
     int x;
     int y;
+};
+
+struct CellInfo {
+    int x;
+    int y;
+    Colour colour;
+    Request request;
+};
+
+struct LevelInfo {
+    bool dropBomb;
 };
 
 #endif
