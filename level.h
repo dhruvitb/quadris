@@ -11,6 +11,7 @@
 class Level: public Subject<LevelInfo> {
     std::ifstream file;
     bool random;
+    int myLevel;
 public:
     virtual std::shared_ptr<GamePiece> generatePiece() = 0;
     LevelInfo getInfo() const override;

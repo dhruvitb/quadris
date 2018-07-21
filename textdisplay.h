@@ -5,7 +5,7 @@
 #include "structures.h"
 #include <vector>
 
-class TextDisplay: public Observer {
+class TextDisplay: public Observer<CellInfo> {
     std::vector<std::vector<char>> theDisplay;
     const char I = 'I';
     const char J = 'J';
@@ -18,7 +18,7 @@ class TextDisplay: public Observer {
 public:
     TextDisplay();
     void print();
-    bool notify(Subject &from) override;
+    bool notify(Subject<CellInfo> &from) override;
 };
 
 #endif

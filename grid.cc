@@ -37,11 +37,12 @@ void Grid::init() {
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             // attach the up and right cell as observer
-            if (inBounds(i - 1, j, height, width)) {
-                theGrid[i][j].attachObserver(theGrid[i - 1][j]);
+            if (inBounds(i - 1, j, height, width)) {   
+                // attach observer
+                
             }
             if (inBounds(i, j + 1, height, width)) {
-                theGrid[i][j].attachObserver(theGrid[i][j + 1]);
+                // attach obserevr
             }
         }
     }

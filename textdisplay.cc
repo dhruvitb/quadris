@@ -14,11 +14,11 @@ TextDisplay::TextDisplay() {
     }
 }
 
-bool TextDisplay::notify(Subject &from) {
+bool TextDisplay::notify(Subject<CellInfo> &from) {
     
 }
 
-bool TextDisplay::notify(Subject &from) {
+bool TextDisplay::notify(Subject<CellInfo> &from) {
     CellInfo info = from.getInfo();
     int row = info.y;
     int col = info.x;

@@ -12,16 +12,16 @@
 const int LEVEL_MAX = 4;
 const int LEVEL_MIN = 0;
 
-class Grid: public Observer {
+class Grid: public Observer<LevelInfo> {
+    int turnCount;
+    int currentLevel;
+    int score;
     std::vector<std::vector<Cell>> theGrid;
     std::unique_ptr<Level> levelFactory;
-    int currentLevel;
-    std::shared_ptr<GamePiece> currentPiece;
-    std::shared_ptr<GamePiece> nextPiece;
-    int turnCount;
     std::unique_ptr<TextDisplay> td;
     std::unique_ptr<GraphicsDisplay> gd;
-    int score;
+    std::shared_ptr<GamePiece> currentPiece;
+    std::shared_ptr<GamePiece> nextPiece;
     static bool inBounds(int i, int j, int maxI, int maxJ);
     void incrementLevel();
     void decrementLevel();
@@ -38,7 +38,7 @@ public:
     void restart();
     void hint();
     int getScore();
-    bool notify(Subject &from) override;
+    bool notify(Subject<LevelInfo> &from) override;
 };
 
 #endif
