@@ -45,3 +45,7 @@ std::vector<Coordinate> GamePiece::getCoords() {
 Colour GamePiece::getColour() {
     return colour;
 }
+
+char GamePiece::getChar() {
+    return symbol;
+}

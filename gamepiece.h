@@ -22,6 +22,8 @@ public:
 
     Colour getColour();
 
+    char getChar();
+
     //virtual void drop(); I don't think this is ever needed
 };
 

@@ -52,6 +52,8 @@ void Grid::init() {
         }
     }
     vector<Coordinate> initialCoords = currentPiece->getCoords();
+    char lmao = currentPiece->getChar();
+    cout << "current piece's colour: " << lmao << endl;
     cout << "size of the initial coords: " << initialCoords.size() << endl;
     for (Coordinate coord : initialCoords) {
         theGrid[coord.col][coord.row].setColour(currentPiece->getColour());
