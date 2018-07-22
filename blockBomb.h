@@ -4,7 +4,7 @@
 #include <vector>
 #include "structures.h"
 
-class Block: public GamePiece {
+class BlockBomb: public GamePiece {
     
 };
 

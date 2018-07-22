@@ -6,7 +6,6 @@
 
 class BlockT: public GamePiece {
 
-public:
 };
 
 #endif

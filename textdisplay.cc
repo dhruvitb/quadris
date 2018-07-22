@@ -15,10 +15,6 @@ TextDisplay::TextDisplay() {
 }
 
 bool TextDisplay::notify(Subject<CellInfo> &from) {
-    
-}
-
-bool TextDisplay::notify(Subject<CellInfo> &from) {
     CellInfo info = from.getInfo();
     int row = info.y;
     int col = info.x;
@@ -40,9 +36,12 @@ bool TextDisplay::notify(Subject<CellInfo> &from) {
     }
 }
 
-void TextDisplay::print() {
+void TextDisplay::print(int level, int score, int highScore) {
     int width = 11;
     int height = 18;
+    cout << "Level:    " << level << endl;
+    cout << "Score:    " << score << endl;
+    cout << "Hi Score: " << highScore << endl;
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             cout << theDisplay[i][j];

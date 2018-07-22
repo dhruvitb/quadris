@@ -17,7 +17,7 @@ class TextDisplay: public Observer<CellInfo> {
     const char BLANK = '-';
 public:
     TextDisplay();
-    void print();
+    void print(int level, int score, int highScore);
     bool notify(Subject<CellInfo> &from) override;
 };
 

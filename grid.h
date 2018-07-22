@@ -16,6 +16,7 @@ class Grid: public Observer<LevelInfo> {
     int turnCount;
     int currentLevel;
     int score;
+    static int highScore;
     std::vector<std::vector<Cell>> theGrid;
     std::unique_ptr<Level> levelFactory;
     std::unique_ptr<TextDisplay> td;

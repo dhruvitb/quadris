@@ -49,7 +49,7 @@ void Grid::init() {
 }
 
 void Grid::print() {
-    td->print();
+    td->print(currentLevel, score, highScore);
 }
 
 void Grid::drop() {
@@ -57,8 +57,19 @@ void Grid::drop() {
 }
 
 bool Grid::shiftPiece(Direction d) {
-    currentPiece->shift(d);
-    return true; // FIX THIS PLEASE
+    vector<Coordinate> newPosition = currentPiece->shift(d);
+    int size = newPosition.size();
+    bool valid = true;
+    for (int i = 0; i < size; ++i) {
+        if (!inBounds(newPosition[i].x, newPosition[i].y, 11, 18)) {
+            valid = false;
+            break;
+        }
+    }
+    if (valid) {
+        currentPiece->setCoords(newPosition);
+    }
+    return valid;
 }
 
 bool Grid::rotatePiece(Rotation r) {

@@ -5,7 +5,7 @@
 #include "structures.h"
 
 class BlockO: public GamePiece {
-public:
+
 };
 
 #endif
