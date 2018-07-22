@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <memory>
@@ -9,6 +10,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     string cmd;
+
     // FIND OUT HOW TO READ -ARG N TYPE COMMAND LINE ARGUMENTS
     int highScore = 0;
     unique_ptr<Grid> quadris = make_unique<Grid>();

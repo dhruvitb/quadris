@@ -23,6 +23,8 @@ class Grid: public Observer<LevelInfo> {
     std::shared_ptr<Level> levelFactory;
     std::shared_ptr<TextDisplay> td;
     //std::unique_ptr<GraphicsDisplay> gd;
+    std::string fileName;
+    std::ifstream inputFile;
     std::shared_ptr<GamePiece> currentPiece;
     std::shared_ptr<GamePiece> nextPiece;
     static bool inBounds(int i, int j, int maxI, int maxJ);

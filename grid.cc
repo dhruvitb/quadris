@@ -1,5 +1,7 @@
 #include "grid.h"
 #include <vector>
+#include <iostream>
+#include <fstream>
 #include "level.h"
 #include "level0.h"
 #include "level1.h"
@@ -28,8 +30,13 @@ void Grid::init() {
     //levelFactory->attach(make_shared<Observer>(this));
     td = make_shared<TextDisplay>();
     //gd = make_unique<GraphicsDisplay>();
-    currentPiece = levelFactory->generatePiece();
-    nextPiece = levelFactory->generatePiece();
+    fileName = "sequence.txt";
+    inputFile.open(fileName);
+    string s;
+    inputFile >> s;
+    currentPiece = levelFactory->generatePiece(s);
+    inputFile >> s;
+    nextPiece = levelFactory->generatePiece(s);
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {

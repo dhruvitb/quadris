@@ -8,7 +8,7 @@ Level4::Level4(): random{false}, myLevel{4}, turnCount{0} {
 
 }
 
-shared_ptr<GamePiece> Level4::generatePiece() {
+shared_ptr<GamePiece> Level4::generatePiece(string s) {
     ++turnCount;
     if (turnCount == 5) {
         resetTurnCount();

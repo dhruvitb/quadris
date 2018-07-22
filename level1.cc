@@ -7,6 +7,6 @@ using namespace std;
 
 Level1::Level1(): random{false}, myLevel{1} {}
 
-shared_ptr<GamePiece> Level1::generatePiece() {
+shared_ptr<GamePiece> Level1::generatePiece(string s) {
     return make_shared<BlockO>(myLevel);
 }

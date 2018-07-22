@@ -3,12 +3,22 @@
 #include <vector>
 #include "structures.h"
 
+class BlockI;
+class BlockJ;
+class BlockL;
+class BlockO;
+class BlockS;
+class BlockZ;
+class BlockT;
+class BlockBomb;
+
 class GamePiece {
     std::vector<Coordinate> allCoords;
     Colour colour;
     char symbol;
     int levelGenerated;
 public:
+    //virtual ~GamePiece() = 0;
 
     std::vector<Coordinate> rotate(Rotation r);
 

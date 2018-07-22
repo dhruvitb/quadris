@@ -8,6 +8,6 @@ Level3::Level3(): random{false}, myLevel{3} {
     
 }
 
-shared_ptr<GamePiece> Level3::generatePiece() {
+shared_ptr<GamePiece> Level3::generatePiece(string s) {
     return make_shared<BlockO>(myLevel);
 }
