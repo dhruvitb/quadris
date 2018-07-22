@@ -7,7 +7,7 @@ class Level0: public Level {
     bool random;
     int myLevel;
 public:
-	Level0();
+    Level0();
     std::shared_ptr<GamePiece> generatePiece() override;
 };
 

@@ -5,11 +5,13 @@
 #include "structures.h"
 
 class BlockS: public GamePiece {
-    std::vector<Coordinate> allCoords{Coordinate{2,0}, Coordinate{1,0},
-    Coordinate{1,1},Coordinate{0,1}};
+    std::vector<Coordinate> allCoords;
     Colour colour;
     char symbol;
     int levelGenerated;
+public:
+    BlockS(int levelGenerated);
+    ~BlockS() override;
 };
 
 #endif

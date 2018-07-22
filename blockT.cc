@@ -1,13 +1,13 @@
-#include "blockO.h"
+#include "blockT.h"
 
-BlockO::BlockO(int levelGenerated): colour{Colour::Yellow}, symbol{'O'},
+BlockT::BlockT(int levelGenerated): colour{Colour::Purple}, symbol{'T'},
 levelGenerated{levelGenerated} {
-    allCoords.emplace_back(Coordinate{0,0});
     allCoords.emplace_back(Coordinate{0,1});
     allCoords.emplace_back(Coordinate{1,0});
     allCoords.emplace_back(Coordinate{1,1});
+    allCoords.emplace_back(Coordinate{1,2});
 }
 
-BlockO::~BlockO() {
+BlockT::~BlockT() {
     
 }

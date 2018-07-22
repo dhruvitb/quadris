@@ -11,6 +11,7 @@ class BlockO: public GamePiece {
     int levelGenerated;
 public:
     BlockO(int levelGenerated);
+    ~BlockO() override;
 };
 
 #endif

@@ -10,6 +10,8 @@ class GamePiece {
     int levelGenerated;
 public:
 
+    virtual ~GamePiece() = 0;
+
     std::vector<Coordinate> rotate(Rotation r);
 
     std::vector<Coordinate> shift(Direction d);
