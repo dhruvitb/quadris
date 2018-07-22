@@ -1,6 +1,13 @@
 #include "level4.h"
 #include "gamepiece.h"
+#include "blockI.h"
+#include "blockJ.h"
+#include "blockL.h"
 #include "blockO.h"
+#include "blockS.h"
+#include "blockT.h"
+#include "blockZ.h"
+#include "blockbomb.h"
 #include <memory>
 using namespace std;
 
@@ -8,7 +15,7 @@ Level4::Level4(): random{false}, myLevel{4}, turnCount{0} {
 
 }
 
-shared_ptr<GamePiece> Level4::generatePiece() {
+shared_ptr<GamePiece> Level4::generatePiece(string s) {
     ++turnCount;
     if (turnCount == 5) {
         resetTurnCount();

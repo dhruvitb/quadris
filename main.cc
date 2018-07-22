@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <memory>
@@ -9,6 +10,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     string cmd;
+
     (void) argc; // REMOVE THESE ONCE YOU ACTUALLY MAKE USE OF THEM MAYBE LAMDLKANVJISFNLVKSJFDNVLKV
     (void) argv; // REMOVE THESE ONCE YOU ACTUALLY MAKE USE OF THEM MAYBE LAMDLKANVJISFNLVKSJFDNVLKV
     // FIND OUT HOW TO READ -ARG N TYPE COMMAND LINE ARGUMENTS

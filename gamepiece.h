@@ -9,6 +9,7 @@ class GamePiece {
     char symbol;
     int levelGenerated;
 public:
+    //virtual ~GamePiece() = 0;
 
     virtual ~GamePiece() = 0;
 
