@@ -3,7 +3,9 @@
 #include "level.h"
 
 class Level2: public Level {
-
+    std::ifstream file;
+    bool random;
+    int myLevel;
 public:
 	Level2();
     std::shared_ptr<GamePiece> generatePiece() override;
