@@ -7,7 +7,7 @@ colour{Colour::NoColour}, request{Request::NoRequest} {
 }
 
 CellInfo Cell::getInfo() const {
-    return CellInfo{position.x, position.y, colour, request};
+    return CellInfo{position.row, position.col, colour, request};
 }
 
 bool Cell::notify(Subject &from) {

@@ -1,24 +1,12 @@
 #include "grid.h"
-#include "blockbomb.h"
-#include "blockI.h"
-#include "blockJ.h"
-#include "blockL.h"
-#include "blockO.h"
-#include "blockS.h"
-#include "blockT.h"
-#include "blockZ.h"
-#include "cell.h"
-#include "gamepiece.h"
+#include <vector>
 #include "level.h"
 #include "level0.h"
 #include "level1.h"
 #include "level2.h"
 #include "level3.h"
 #include "level4.h"
-#include "observer.h"
-#include "structures.h"
-#include "subject.h"
-#include "textdisplay.h"
+#include "blockbomb.h"
 using namespace std;
 
 Grid::~Grid() {
@@ -37,7 +25,7 @@ void Grid::init() {
     currentLevel = 0;
     score = 0;
     levelFactory = make_shared<Level0>();
-    // FIGURE OUT HOW TO DO THIS levelFactory->attach(make_shared<Observer>(this));
+    //levelFactory->attach(make_shared<Observer>(this));
     td = make_shared<TextDisplay>();
     //gd = make_unique<GraphicsDisplay>();
     currentPiece = levelFactory->generatePiece();
@@ -62,9 +50,10 @@ void Grid::init() {
             }
         }
     }
-    vector<Coordinate> initialPiece = currentPiece->getCoords();
-    for (auto coord : initialPiece) {
-        theGrid[coord.y][coord.x].setColour(currentPiece->getColour());
+    vector<Coordinate> initialCoords = currentPiece->getCoords();
+    for (auto coord : initialCoords) {
+        theGrid[coord.col][coord.row].setColour(currentPiece->getColour());
+        cout << "Colour the coord: " << coord.col << " " << coord.row << endl;
     }
 }
 
@@ -80,9 +69,9 @@ bool Grid::movePiece(vector<Coordinate> newPosition) {
     int size = newPosition.size();
     bool valid = true;
     for (int i = 0; i < size; ++i) {
-        int row = newPosition[i].x;
-        int col = newPosition[i].y;
-        if (!inBounds(row, col, width, height)) {
+        int row = newPosition[i].row;
+        int col = newPosition[i].col;
+        if (!inBounds(row, col, height, width)) {
             valid = false;
             break;
         }
@@ -119,7 +108,7 @@ void Grid::incrementLevel() {
         levelFactory = make_unique<Level2>();
     } else if (currentLevel == 2) {
         levelFactory = make_unique<Level3>();
-    } else { // changeLevel checks if the level is in bounds 
+    } else { // changeLevel checks if the level is in bounds
         levelFactory = make_unique<Level4>();
     }
 }

@@ -3,8 +3,12 @@
 #include "level.h"
 
 class Level4: public Level {
+    std::ifstream file;
+    bool random;
+    int myLevel;
     int turnCount;
 public:
+    Level4();
     std::shared_ptr<GamePiece> generatePiece() override;
     void resetTurnCount() override;
     // Level4:

@@ -7,15 +7,15 @@ vector<Coordinate> GamePiece::shift(Direction d) {
     int size = copy.size();
     if (d == Direction::Right) {
         for (int i = 0; i < size; ++i) {
-            ++copy[i].x;
+            ++copy[i].col;
         }
     } else if (d == Direction::Left) {
         for (int i = 0; i < size; ++i) {
-            --copy[i].x;
+            --copy[i].col;
         }
     } else {
         for (int i = 0; i < size; ++i) {
-            ++copy[i].y;
+            ++copy[i].row;
         }
     }
     return copy;
