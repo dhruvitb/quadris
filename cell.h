@@ -16,6 +16,8 @@ class Cell: public Subject<CellInfo>, public Observer<CellInfo> {
 public:
     Cell(Coordinate c);
     CellInfo getInfo() const override;
+    void setColour(Colour c);
+    void setPiece(std::shared_ptr<GamePiece> newPiece);
     bool notify(Subject<CellInfo> &from) override;
 };
 

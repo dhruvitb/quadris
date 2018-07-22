@@ -1,10 +1,24 @@
 #include "grid.h"
+#include "blockbomb.h"
+#include "blockI.h"
+#include "blockJ.h"
+#include "blockL.h"
+#include "blockO.h"
+#include "blockS.h"
+#include "blockT.h"
+#include "blockZ.h"
+#include "cell.h"
+#include "gamepiece.h"
+#include "level.h"
 #include "level0.h"
 #include "level1.h"
 #include "level2.h"
 #include "level3.h"
 #include "level4.h"
-#include "blockbomb.h"
+#include "observer.h"
+#include "structures.h"
+#include "subject.h"
+#include "textdisplay.h"
 using namespace std;
 
 Grid::~Grid() {
@@ -22,8 +36,9 @@ void Grid::init() {
     turnCount = 1; // should we make this 0?
     currentLevel = 0;
     score = 0;
-    levelFactory = make_unique<Level0>();
-    td = make_unique<TextDisplay>();
+    levelFactory = make_shared<Level0>();
+    // FIGURE OUT HOW TO DO THIS levelFactory->attach(make_shared<Observer>(this));
+    td = make_shared<TextDisplay>();
     //gd = make_unique<GraphicsDisplay>();
     currentPiece = levelFactory->generatePiece();
     nextPiece = levelFactory->generatePiece();
@@ -38,18 +53,18 @@ void Grid::init() {
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             // attach the up and right cell as observer
-            if (inBounds(i - 1, j, height, width)) {   
-                // attach observer
-                
+            theGrid[i][j].attach(td);
+            if (inBounds(i - 1, j, height, width)) {
+                theGrid[i][j].attach(make_shared<Cell>(theGrid[i-1][j]));
             }
             if (inBounds(i, j + 1, height, width)) {
-                // attach observer
+                theGrid[i][j].attach(make_shared<Cell>(theGrid[i][j+1]));
             }
         }
     }
     vector<Coordinate> initialPiece = currentPiece->getCoords();
     for (auto coord : initialPiece) {
-        // LISA THIS IS WHERE i'M AT
+        theGrid[coord.y][coord.x].setColour(currentPiece->getColour());
     }
 }
 
@@ -58,7 +73,7 @@ void Grid::print() {
 }
 
 void Grid::drop() {
-    while (shiftPiece(Direction::Down)); // this is so cool
+    while (shiftPiece(Direction::Down));
 }
 
 bool Grid::movePiece(vector<Coordinate> newPosition) {

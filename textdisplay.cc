@@ -34,6 +34,7 @@ bool TextDisplay::notify(Subject<CellInfo> &from) {
     } else if (colour == Colour::Purple) {
         theDisplay[col][row] = T;
     }
+    return true;
 }
 
 void TextDisplay::print(int level, int score, int highScore) {

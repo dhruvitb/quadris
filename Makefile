@@ -10,5 +10,5 @@ ${EXEC}: ${OBJECTS}
 -include ${DEPENDS}
 
 clean:
-	rm main.o cell.o grid.o textdisplay.o ${DEPENDS} ${EXEC}
+	rm ${OBJECTS} ${DEPENDS} ${EXEC}
 .PHONY: clean

@@ -5,7 +5,7 @@
 #include "gamepiece.h"
 
 class BlockBomb: public GamePiece {
-    std::vector<Coordinate> allCoords;
+    std::vector<Coordinate> allCoords{Coordinate{0,5}};
     Colour colour;
     char symbol;
     int levelGenerated;

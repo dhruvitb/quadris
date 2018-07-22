@@ -31,6 +31,10 @@ void GamePiece::setCoords(vector<Coordinate> newCoords) {
     allCoords = newCoords;
 }
 
-std::vector<Coordinate> GamePiece::getCoords() const {
+std::vector<Coordinate> GamePiece::getCoords() {
     return allCoords;
+}
+
+Colour GamePiece::getColour() {
+    return colour;
 }

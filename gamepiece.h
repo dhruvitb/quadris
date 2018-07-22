@@ -16,7 +16,9 @@ public:
 
     void setCoords(std::vector<Coordinate>);
 
-    std::vector<Coordinate> getCoords() const;
+    std::vector<Coordinate> getCoords();
+
+    Colour getColour();
 
     //virtual void drop(); I don't think this is ever needed
 };

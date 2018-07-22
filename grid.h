@@ -20,8 +20,8 @@ class Grid: public Observer<LevelInfo> {
     int score; // score of the current game they're playing
     static int highScore; // instead of keeping highScore in main
     std::vector<std::vector<Cell>> theGrid;
-    std::unique_ptr<Level> levelFactory;
-    std::unique_ptr<TextDisplay> td;
+    std::shared_ptr<Level> levelFactory;
+    std::shared_ptr<TextDisplay> td;
     //std::unique_ptr<GraphicsDisplay> gd;
     std::shared_ptr<GamePiece> currentPiece;
     std::shared_ptr<GamePiece> nextPiece;
