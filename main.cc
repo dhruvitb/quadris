@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
                 break;
             }
         }
-    } catch(...) {
+    } catch(ios::failure &) {
         // do something about bad input********
     }
 }
