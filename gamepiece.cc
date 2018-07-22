@@ -2,6 +2,10 @@
 #include <vector>
 using namespace std;
 
+GamePiece::~GamePiece() {
+    
+}
+
 vector<Coordinate> GamePiece::shift(Direction d) {
     vector<Coordinate> copy = allCoords; // a vector we can mutate
     int size = copy.size();
@@ -24,6 +28,9 @@ vector<Coordinate> GamePiece::shift(Direction d) {
 vector<Coordinate> GamePiece::rotate(Rotation r) { 
     // TODO by Lisa
     vector<Coordinate> copy = allCoords; // a vector we can mutate
+    if (r == Rotation::CCW) {
+        return copy; // remove everything from this function lmfaoooooo I just did this so that it wouldn't yell at me
+    }
     return copy;
 }
 

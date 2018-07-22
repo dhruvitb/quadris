@@ -1,9 +1,17 @@
 #include "level0.h"
 #include "gamepiece.h"
 #include <memory>
+#include "blockI.h"
+#include "blockJ.h"
+#include "blockL.h"
+#include "blockO.h"
+#include "blockS.h"
+#include "blockT.h"
+#include "blockZ.h"
+#include "blockbomb.h"
 using namespace std;
 
-Level0::Level0(): random{false}, myLevel{0}, fileName{"sequence.txt"} {}
+Level0::Level0(): random{false}, myLevel{0} {}
  
 shared_ptr<GamePiece> Level0::generatePiece(string s) {
 	if (s == "I") {

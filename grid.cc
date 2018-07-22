@@ -9,6 +9,8 @@
 #include "level3.h"
 #include "level4.h"
 #include "blockbomb.h"
+#include "blockO.h"
+#include "gamepiece.h"
 using namespace std;
 
 Grid::~Grid() {
@@ -58,7 +60,8 @@ void Grid::init() {
         }
     }
     vector<Coordinate> initialCoords = currentPiece->getCoords();
-    for (auto coord : initialCoords) {
+    cout << "size of the initial coords: " << initialCoords.size() << endl;
+    for (Coordinate coord : initialCoords) {
         theGrid[coord.col][coord.row].setColour(currentPiece->getColour());
         cout << "Colour the coord: " << coord.col << " " << coord.row << endl;
     }
@@ -105,30 +108,30 @@ bool Grid::rotatePiece(Rotation r) {
 
 void Grid::getNextPiece() {
     currentPiece = nextPiece;
-    nextPiece = levelFactory->generatePiece();
+    nextPiece = levelFactory->generatePiece(""); //consider file or random
 }
 
 void Grid::incrementLevel() {
     if (currentLevel == 0) {
-        levelFactory = make_unique<Level1>();
+        levelFactory = make_shared<Level1>();
     } else if (currentLevel == 1) {
-        levelFactory = make_unique<Level2>();
+        levelFactory = make_shared<Level2>();
     } else if (currentLevel == 2) {
-        levelFactory = make_unique<Level3>();
+        levelFactory = make_shared<Level3>();
     } else { // changeLevel checks if the level is in bounds
-        levelFactory = make_unique<Level4>();
+        levelFactory = make_shared<Level4>();
     }
 }
 
 void Grid::decrementLevel() {
     if (currentLevel == 4) {
-        levelFactory = make_unique<Level3>();
+        levelFactory = make_shared<Level3>();
     } else if (currentLevel == 3) {
-        levelFactory = make_unique<Level2>();
+        levelFactory = make_shared<Level2>();
     } else if (currentLevel == 2) {
-        levelFactory = make_unique<Level1>();
+        levelFactory = make_shared<Level1>();
     } else { // changeLevel checks if the level is in bounds
-        levelFactory = make_unique<Level0>(); 
+        levelFactory = make_shared<Level0>();
     }
 }
 
