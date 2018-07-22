@@ -4,6 +4,9 @@
 #include <memory>
 using namespace std;
 
+
+Level1::Level1(): random{false}, myLevel{1} {}
+
 shared_ptr<GamePiece> Level1::generatePiece() {
-    return make_shared<BlockO>();
+    return make_shared<BlockO>(myLevel);
 }
