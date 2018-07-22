@@ -5,11 +5,12 @@
 #include "structures.h"
 
 class BlockO: public GamePiece {
-    std::vector<Coordinate> allCoords{Coordinate{0,0},Coordinate{0,1},
-    Coordinate{1,0},Coordinate{0,1}};
+    std::vector<Coordinate> allCoords;
     Colour colour;
     char symbol;
     int levelGenerated;
+public:
+    BlockO(int levelGenerated);
 };
 
 #endif

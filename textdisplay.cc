@@ -16,8 +16,8 @@ TextDisplay::TextDisplay() {
 
 bool TextDisplay::notify(Subject<CellInfo> &from) {
     CellInfo info = from.getInfo();
-    int row = info.y;
-    int col = info.x;
+    int row = info.row;
+    int col = info.col;
     Colour colour = info.colour;
     if (colour == Colour::Cyan) {
         theDisplay[col][row] = I;

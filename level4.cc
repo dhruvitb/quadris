@@ -4,6 +4,10 @@
 #include <memory>
 using namespace std;
 
+Level4::Level4(): random{false}, myLevel{4}, turnCount{0} {
+
+}
+
 shared_ptr<GamePiece> Level4::generatePiece() {
     ++turnCount;
     if (turnCount == 5) {
