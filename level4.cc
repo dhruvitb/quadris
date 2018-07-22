@@ -13,7 +13,7 @@ shared_ptr<GamePiece> Level4::generatePiece() {
     if (turnCount == 5) {
         resetTurnCount();
     }
-    return make_shared<BlockO>();
+    return make_shared<BlockO>(myLevel);
 }
 
 void Level4::resetTurnCount() {
