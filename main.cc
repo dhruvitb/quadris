@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
+#include "grid.h"
 #include "gamepiece.h"
 
 using namespace std;
@@ -9,9 +11,14 @@ int main(int argc, char *argv[]) {
     string cmd;
     // FIND OUT HOW TO READ -ARG N TYPE COMMAND LINE ARGUMENTS
     int highScore = 0;
+    unique_ptr<Grid> quadris = make_unique<Grid>();
     try {
         while (true) {
             cin >> cmd;
+            if (cmd == "start") {
+                quadris->init();
+                quadris->print();
+            }
             if (cmd == "left") {
                 // move the current piece left
             } else if (cmd == "right") {
@@ -57,6 +64,8 @@ int main(int argc, char *argv[]) {
                 // clear the board and start new game
             } else if (cmd == "hint") {
                 // display a hint
+            } else if (cmd == "end") {
+                break;
             }
         }
     } catch(...) {

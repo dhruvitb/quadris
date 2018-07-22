@@ -4,6 +4,7 @@
 #include "gamepiece.h"
 #include "subject.h"
 #include "observer.h"
+#include "cell.h"
 #include <memory>
 
 class Cell: public Subject<CellInfo>, public Observer<CellInfo> {

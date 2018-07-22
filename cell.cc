@@ -2,11 +2,7 @@
 
 Cell::Cell(Coordinate position): position{position},
 colour{Colour::NoColour}, request{Request::NoRequest} {
-    
-}
 
-Cell::~Cell() {
-    
 }
 
 CellInfo Cell::getInfo() const {
@@ -15,5 +11,6 @@ CellInfo Cell::getInfo() const {
 
 bool Cell::notify(Subject &from) {
     // figure out what needs to happen here
+
     return true;
 }

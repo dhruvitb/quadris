@@ -6,26 +6,29 @@
 #include "structures.h"
 #include "level.h"
 #include "textdisplay.h"
-#include "graphicsdisplay.h"
+//#include "graphicsdisplay.h"
 #include "observer.h"
 
 const int LEVEL_MAX = 4;
 const int LEVEL_MIN = 0;
 
 class Grid: public Observer<LevelInfo> {
+    const int width = 11;
+    const int height = 18;
     int turnCount;
     int currentLevel;
-    int score;
-    static int highScore;
+    int score; // score of the current game they're playing
+    static int highScore; // instead of keeping highScore in main
     std::vector<std::vector<Cell>> theGrid;
     std::unique_ptr<Level> levelFactory;
     std::unique_ptr<TextDisplay> td;
-    std::unique_ptr<GraphicsDisplay> gd;
+    //std::unique_ptr<GraphicsDisplay> gd;
     std::shared_ptr<GamePiece> currentPiece;
     std::shared_ptr<GamePiece> nextPiece;
     static bool inBounds(int i, int j, int maxI, int maxJ);
     void incrementLevel();
     void decrementLevel();
+    bool movePiece(std::vector<Coordinate> newPosition);
 public:
     ~Grid();
     void init();

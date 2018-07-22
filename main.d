@@ -1,1 +1,2 @@
-main.o: main.cc gamepiece.h structures.h
+main.o: main.cc grid.h gamepiece.h structures.h cell.h subject.h \
+ observer.h level.h textdisplay.h

@@ -4,6 +4,7 @@
 #include "level2.h"
 #include "level3.h"
 #include "level4.h"
+#include "blockbomb.h"
 using namespace std;
 
 Grid::~Grid() {
@@ -15,17 +16,17 @@ bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
     return (i < maxI && i >= 0 && j < maxJ && j >= 0);
 }
 
+int Grid::highScore = 0;
+
 void Grid::init() {
+    turnCount = 1; // should we make this 0?
     currentLevel = 0;
-    turnCount = 0; // or should we make it one?
     score = 0;
-    //currentPiece = levelFactory->generatePiece();
-    //nextPiece = levelFactory->generatePiece();
+    levelFactory = make_unique<Level0>();
     td = make_unique<TextDisplay>();
-    //unique_ptr<GraphicsDisplay> gd = make_unique<GraphicsDisplay>();
-    //unique_ptr<Level> levelFactory = make_unique<Level0>();
-    int width = 11;
-    int height = 18;
+    //gd = make_unique<GraphicsDisplay>();
+    currentPiece = levelFactory->generatePiece();
+    nextPiece = levelFactory->generatePiece();
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
@@ -42,9 +43,13 @@ void Grid::init() {
                 
             }
             if (inBounds(i, j + 1, height, width)) {
-                // attach obserevr
+                // attach observer
             }
         }
+    }
+    vector<Coordinate> initialPiece = currentPiece->getCoords();
+    for (auto coord : initialPiece) {
+        // LISA THIS IS WHERE i'M AT
     }
 }
 
@@ -53,15 +58,20 @@ void Grid::print() {
 }
 
 void Grid::drop() {
-    currentPiece->drop();
+    while (shiftPiece(Direction::Down)); // this is so cool
 }
 
-bool Grid::shiftPiece(Direction d) {
-    vector<Coordinate> newPosition = currentPiece->shift(d);
+bool Grid::movePiece(vector<Coordinate> newPosition) {
     int size = newPosition.size();
     bool valid = true;
     for (int i = 0; i < size; ++i) {
-        if (!inBounds(newPosition[i].x, newPosition[i].y, 11, 18)) {
+        int row = newPosition[i].x;
+        int col = newPosition[i].y;
+        if (!inBounds(row, col, width, height)) {
+            valid = false;
+            break;
+        }
+        if (theGrid[row][col].getInfo().colour != Colour::NoColour) {
             valid = false;
             break;
         }
@@ -72,9 +82,14 @@ bool Grid::shiftPiece(Direction d) {
     return valid;
 }
 
+bool Grid::shiftPiece(Direction d) {
+    vector<Coordinate> newPosition = currentPiece->shift(d);
+    return movePiece(newPosition);
+}
+
 bool Grid::rotatePiece(Rotation r) {
-    currentPiece->rotate(r);
-    return true; // FIX THIS PLEASE
+    vector<Coordinate> newPosition = currentPiece->rotate(r);
+    return movePiece(newPosition);
 }
 
 void Grid::getNextPiece() {
@@ -118,9 +133,13 @@ void Grid::changeLevel() {
 
 void Grid::gameOver() {
     // find out how to implement this
+    // it will probably call restart
 }
 
 void Grid::restart() {
+    if (score > this->highScore) {
+        highScore = score;
+    }
     init();
 }
 
@@ -130,4 +149,15 @@ void Grid::hint() {
 
 int Grid::getScore() {
     return score;
+}
+
+bool Grid::notify(Subject<LevelInfo> &from) {
+    if (from.getInfo().dropBomb) {
+        // switch the current piece to a bomb, drop it, switch back
+        shared_ptr<GamePiece> temp = currentPiece;
+        currentPiece = make_shared<BlockBomb>();
+        drop();
+        currentPiece = temp;
+    }
+    return true;
 }
