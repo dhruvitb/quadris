@@ -44,8 +44,7 @@ int main(int argc, char *argv[]) {
             } else if (cmd == "drop") {
                 quadris->drop();
                 quadris->print();
-                // drop the piece, summon next one
-                quadris->getNextPiece();
+                // drop the piece, summon next one (the drop function handles this)
             } else if (cmd == "levelup") {
                 quadris->levelUp();
                 // increment level if possible

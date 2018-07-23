@@ -14,10 +14,10 @@
 using namespace std;
 
 Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
-    levelFactory = make_shared<Level1>();
+    levelFactory = make_shared<Level0>();
     levelFactory->attach(this);
-    currentPiece = levelFactory->generatePiece(); //
-    nextPiece = levelFactory->generatePiece(); //
+    currentPiece = levelFactory->generatePiece();
+    nextPiece = levelFactory->generatePiece();
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
@@ -64,7 +64,7 @@ void Grid::print() {
 void Grid::drop() {
     while (shiftPiece(Direction::Down));
     getNextPiece();
-    gameOver();
+    //gameOver();
 }
 
 bool Grid::movePiece(vector<Coordinate> newCoords) {
