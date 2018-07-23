@@ -60,8 +60,6 @@ void Grid::init() {
         }
     }
     vector<Coordinate> initialCoords = currentPiece->getCoords();
-    char lmao = currentPiece->getChar();
-    cout << "current piece's colour: " << lmao << endl;
     cout << "size of the initial coords: " << initialCoords.size() << endl;
     for (Coordinate coord : initialCoords) {
         theGrid[coord.col][coord.row].setColour(currentPiece->getColour());
@@ -110,7 +108,9 @@ bool Grid::rotatePiece(Rotation r) {
 
 void Grid::getNextPiece() {
     currentPiece = nextPiece;
-    nextPiece = levelFactory->generatePiece(""); //consider file or random
+    string s;
+    inputFile >> s;
+    nextPiece = levelFactory->generatePiece(s); //consider file or random
 }
 
 void Grid::incrementLevel() {

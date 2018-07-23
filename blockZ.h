@@ -5,13 +5,13 @@
 #include "structures.h"
 
 class BlockZ: public GamePiece {
-    std::vector<Coordinate> allCoords;
-    Colour colour;
-    char symbol;
-    int levelGenerated;
+
 public:
     BlockZ(int levelGenerated);
     ~BlockZ() override;
+    std::vector<Coordinate> rotate(Rotation r) override;
+    Colour getColour() override;
+    char getSymbol() override;
 };
 
 #endif

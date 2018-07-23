@@ -5,13 +5,13 @@
 #include "gamepiece.h"
 
 class BlockBomb: public GamePiece {
-    std::vector<Coordinate> allCoords;
-    Colour colour;
-    char symbol;
-    int levelGenerated;
+
 public:
     BlockBomb();
     ~BlockBomb() override;
+    std::vector<Coordinate> rotate(Rotation r) override;
+    Colour getColour() override;
+    char getSymbol() override;
 };
 
 #endif

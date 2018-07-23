@@ -10,7 +10,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     string cmd;
-
+    
     (void) argc; // REMOVE THESE ONCE YOU ACTUALLY MAKE USE OF THEM MAYBE LAMDLKANVJISFNLVKSJFDNVLKV
     (void) argv; // REMOVE THESE ONCE YOU ACTUALLY MAKE USE OF THEM MAYBE LAMDLKANVJISFNLVKSJFDNVLKV
     // FIND OUT HOW TO READ -ARG N TYPE COMMAND LINE ARGUMENTS
@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
                 // rotate 90 degrees counterclockwise
             } else if (cmd == "drop") {
                 // drop the piece, summon next one
+                quadris->getNextPiece();
             } else if (cmd == "levelup") {
                 // increment level if possible
             } else if (cmd == "leveldown") {

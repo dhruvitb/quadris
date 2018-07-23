@@ -4,16 +4,15 @@
 #include "structures.h"
 
 class GamePiece {
+
+protected:
     std::vector<Coordinate> allCoords;
-    Colour colour;
-    char symbol;
     int levelGenerated;
+
 public:
-    //virtual ~GamePiece() = 0;
-
     virtual ~GamePiece() = 0;
-
-    std::vector<Coordinate> rotate(Rotation r);
+    
+    virtual std::vector<Coordinate> rotate(Rotation r) = 0;
 
     std::vector<Coordinate> shift(Direction d);
 
@@ -21,9 +20,9 @@ public:
 
     std::vector<Coordinate> getCoords();
 
-    Colour getColour();
+    virtual Colour getColour() = 0;
 
-    char getChar();
+    virtual char getSymbol() = 0;
 
     //virtual void drop(); I don't think this is ever needed
 };
