@@ -8,6 +8,7 @@ class Level2: public Level {
 public:
 	Level2();
     std::shared_ptr<GamePiece> generatePiece(std::string s) override;
+    int getMyLevel() override;
 };
 
 #endif

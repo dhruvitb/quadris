@@ -3,14 +3,11 @@
 #include "level.h"
 
 class Level4: public Level {
-    std::ifstream file;
-    bool random;
-    int myLevel;
-    int turnCount;
+
 public:
     Level4();
     std::shared_ptr<GamePiece> generatePiece(std::string s) override;
-    void resetTurnCount() override;
+    int getMyLevel() override;
     // Level4:
     // When you generate a piece you need to do:
     //     1. Increase the turn count

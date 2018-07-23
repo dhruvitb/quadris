@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
         while (true) {
             cin >> cmd;
             if (cmd == "start") {
-                quadris->init();
+                quadris->print();
             }
             if (cmd == "left") {
                 quadris->shiftPiece(Direction::Left);

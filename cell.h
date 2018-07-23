@@ -12,7 +12,7 @@ class Cell: public Subject<CellInfo>, public Observer<CellInfo> {
     Colour colour;
     Request request;
     std::shared_ptr<GamePiece> piece;
-    std::vector<std::shared_ptr<Observer<CellInfo>>> observers;
+    std::vector<Observer<CellInfo>*> observers;
 public:
     Cell(Coordinate c);
     CellInfo getInfo() const override;

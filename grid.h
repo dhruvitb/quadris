@@ -21,10 +21,8 @@ class Grid: public Observer<LevelInfo> {
     static int highScore; // instead of keeping highScore in main
     std::vector<std::vector<Cell>> theGrid;
     std::shared_ptr<Level> levelFactory;
-    std::shared_ptr<TextDisplay> td;
-    //std::unique_ptr<GraphicsDisplay> gd;
-    std::string fileName;
-    std::ifstream inputFile;
+    TextDisplay *td;
+    //GraphicsDisplay *gd;
     std::shared_ptr<GamePiece> currentPiece;
     std::shared_ptr<GamePiece> nextPiece;
     static bool inBounds(int i, int j, int maxI, int maxJ);
@@ -33,7 +31,7 @@ class Grid: public Observer<LevelInfo> {
     bool movePiece(std::vector<Coordinate> newPosition);
 public:
     ~Grid();
-    void init();
+    Grid();
     void print();
     void drop();
     bool shiftPiece(Direction d);

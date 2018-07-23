@@ -11,8 +11,12 @@
 #include <memory>
 using namespace std;
 
-Level2::Level2(): random{false}, myLevel{2} {}
+Level2::Level2() {}
 
 shared_ptr<GamePiece> Level2::generatePiece(string s) {
     return make_shared<BlockO>(myLevel);
+}
+
+int Level2::getMyLevel() {
+	return 2;
 }

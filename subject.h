@@ -9,10 +9,10 @@
 template <typename InfoType> class Observer;
 
 template <typename InfoType> class Subject {
-    std::vector<std::shared_ptr<Observer<InfoType>>> observers;
+    std::vector<Observer<InfoType>*> observers;
     Request request;
 public:
-    void attach(std::shared_ptr<Observer<InfoType>> o);
+    void attach(Observer<InfoType> *o);
     bool notifyObservers();
     virtual InfoType getInfo() const = 0;
     void setRequest(Request r);
@@ -20,12 +20,12 @@ public:
 };
 
 template <typename InfoType>
-void Subject<InfoType>::attach(std::shared_ptr<Observer<InfoType>> o) {
+void Subject<InfoType>::attach(Observer<InfoType> *o) {
   observers.emplace_back(o);
 }
 
 template <typename InfoType> bool Subject<InfoType>::notifyObservers() {
-    for (std::shared_ptr<Observer<InfoType>> ob: observers) {
+    for (const auto &ob: observers) {
         ob->notify(*this);
     }
     return true;
