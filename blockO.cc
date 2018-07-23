@@ -1,4 +1,5 @@
 #include "blockO.h"
+#include "iostream"
 
 BlockO::BlockO(int levelGenerated) {
     this->levelGenerated = levelGenerated;

@@ -22,21 +22,29 @@ int main(int argc, char *argv[]) {
                 quadris->print();
             }
             if (cmd == "left") {
+                quadris->shiftPiece(Direction::Left);
                 // move the current piece left
             } else if (cmd == "right") {
+                quadris->shiftPiece(Direction::Right);
                 // move the current piece right
             } else if (cmd == "down") {
+                quadris->shiftPiece(Direction::Down);
                 // move the current piece down
             } else if (cmd == "clockwise") {
+                quadris->rotatePiece(Rotation::CW);
                 // rotate 90 degrees clockwise
             } else if (cmd == "counterclockwise") {
+                quadris->rotatePiece(Rotation::CCW);
                 // rotate 90 degrees counterclockwise
             } else if (cmd == "drop") {
+                quadris->drop();
                 // drop the piece, summon next one
                 quadris->getNextPiece();
             } else if (cmd == "levelup") {
+                quadris->levelUp();
                 // increment level if possible
             } else if (cmd == "leveldown") {
+                quadris->levelDown();
                 // decrement level if possible
             } else if (cmd == "norandom") {
                 string fileName;

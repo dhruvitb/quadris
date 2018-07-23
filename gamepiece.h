@@ -16,9 +16,9 @@ public:
 
     std::vector<Coordinate> shift(Direction d);
 
-    void setCoords(std::vector<Coordinate>);
+    virtual void setCoords(std::vector<Coordinate> newCoords);
 
-    std::vector<Coordinate> getCoords();
+    virtual std::vector<Coordinate> getCoords();
 
     virtual Colour getColour() = 0;
 
