@@ -12,6 +12,13 @@ class BlockBomb: public GamePiece {
 public:
     BlockBomb();
     ~BlockBomb() override;
+    void setCoords(std::vector<Coordinate> newCoords);
+
+    std::vector<Coordinate> getCoords();
+
+    Colour getColour();
+
+    char getChar();
 };
 
 #endif

@@ -39,7 +39,8 @@ public:
     bool shiftPiece(Direction d);
     bool rotatePiece(Rotation r);
     void getNextPiece();
-    void changeLevel();
+    void levelUp();
+    void levelDown();
     void gameOver();
     void restart();
     void hint();

@@ -9,7 +9,6 @@ class GamePiece {
     char symbol;
     int levelGenerated;
 public:
-    //virtual ~GamePiece() = 0;
 
     virtual ~GamePiece() = 0;
 
@@ -17,13 +16,13 @@ public:
 
     std::vector<Coordinate> shift(Direction d);
 
-    void setCoords(std::vector<Coordinate>);
+    virtual void setCoords(std::vector<Coordinate> newCoords);
 
-    std::vector<Coordinate> getCoords();
+    virtual std::vector<Coordinate> getCoords();
 
-    Colour getColour();
+    virtual Colour getColour();
 
-    char getChar();
+    virtual char getChar();
 
     //virtual void drop(); I don't think this is ever needed
 };

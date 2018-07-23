@@ -12,6 +12,14 @@ class BlockO: public GamePiece {
 public:
     BlockO(int levelGenerated);
     ~BlockO() override;
+    
+    void setCoords(std::vector<Coordinate> newCoords);
+
+    std::vector<Coordinate> getCoords();
+
+    Colour getColour();
+
+    char getChar();
 };
 
 #endif

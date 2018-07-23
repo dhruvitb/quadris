@@ -12,6 +12,13 @@ class BlockZ: public GamePiece {
 public:
     BlockZ(int levelGenerated);
     ~BlockZ() override;
+    void setCoords(std::vector<Coordinate> newCoords);
+
+    std::vector<Coordinate> getCoords();
+
+    Colour getColour();
+
+    char getChar();
 };
 
 #endif

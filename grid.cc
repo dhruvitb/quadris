@@ -28,7 +28,7 @@ void Grid::init() {
     turnCount = 1; // should we make this 0?
     currentLevel = 0;
     score = 0;
-    levelFactory = make_shared<Level0>();
+    levelFactory = make_shared<Level1>();
     //levelFactory->attach(make_shared<Observer>(this));
     td = make_shared<TextDisplay>();
     //gd = make_unique<GraphicsDisplay>();
@@ -60,12 +60,8 @@ void Grid::init() {
         }
     }
     vector<Coordinate> initialCoords = currentPiece->getCoords();
-    char lmao = currentPiece->getChar();
-    cout << "current piece's colour: " << lmao << endl;
-    cout << "size of the initial coords: " << initialCoords.size() << endl;
     for (Coordinate coord : initialCoords) {
         theGrid[coord.col][coord.row].setColour(currentPiece->getColour());
-        cout << "Colour the coord: " << coord.col << " " << coord.row << endl;
     }
 }
 
@@ -75,6 +71,8 @@ void Grid::print() {
 
 void Grid::drop() {
     while (shiftPiece(Direction::Down));
+    getNextPiece();
+    gameOver();
 }
 
 bool Grid::movePiece(vector<Coordinate> newPosition) {
@@ -93,6 +91,10 @@ bool Grid::movePiece(vector<Coordinate> newPosition) {
         }
     }
     if (valid) {
+        vector<Coordinate> oldCoords = currentPiece->getCoords();
+        for (Coordinate coord : oldCoords) {
+            theGrid[coord.row][coord.col].setColour(Colour::NoColour);
+        }
         currentPiece->setCoords(newPosition);
     }
     return valid;
@@ -137,11 +139,15 @@ void Grid::decrementLevel() {
     }
 }
 
-void Grid::changeLevel() {
+void Grid::levelUp() {
     if (currentLevel < LEVEL_MAX) {
         ++currentLevel;
         incrementLevel();
-    } else if (currentLevel > LEVEL_MIN) {
+    }
+}
+
+void Grid::levelDown() {
+    if (currentLevel > LEVEL_MIN) {
         --currentLevel;
         decrementLevel();
     }
@@ -150,6 +156,12 @@ void Grid::changeLevel() {
 void Grid::gameOver() {
     // find out how to implement this
     // it will probably call restart
+    vector<Coordinate> coords = currentPiece->getCoords();
+    for (Coordinate coord : coords) {
+        if (coord.row > 15) {
+            cout << "YOU LOSE" << endl; // find out what exactly to do when the game is over
+        }
+    }
 }
 
 void Grid::restart() {

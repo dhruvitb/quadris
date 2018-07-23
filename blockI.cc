@@ -11,3 +11,19 @@ levelGenerated{levelGenerated} {
 BlockI::~BlockI() {
     
 }
+
+void BlockI::setCoords(std::vector<Coordinate> newCoords) {
+    allCoords = newCoords;
+}
+
+std::vector<Coordinate> BlockI::getCoords() {
+    return allCoords;
+}
+
+Colour BlockI::getColour() {
+    return colour;
+}
+
+char BlockI::getChar() {
+    return symbol;
+}
