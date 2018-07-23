@@ -171,6 +171,18 @@ void Grid::levelDown() {
     }
 }
 
+void Grid::updateFileName(string s) {
+    if (currentLevel == 3 || currentLevel == 4) {
+        levelFactory->changeFileName(s);
+    }
+}
+
+void Grid::restoreRandom() {
+    if (currentLevel != 0) {
+        levelFactory->randomize();
+    }
+}
+
 void Grid::gameOver() {
     // find out how to implement this
     // it will probably call restart
@@ -198,12 +210,10 @@ int Grid::getScore() {
 }
 
 bool Grid::notify(Subject<LevelInfo> &from) {
-    if (from.getInfo().dropBomb) {
-        // switch the current piece to a bomb, drop it, switch back
-        shared_ptr<GamePiece> temp = currentPiece;
-        currentPiece = make_shared<BlockBomb>();
-        drop();
-        currentPiece = temp;
-    }
+    // switch the current piece to a bomb, drop it, switch back
+    shared_ptr<GamePiece> temp = currentPiece;
+    currentPiece = make_shared<BlockBomb>();
+    drop();
+    currentPiece = temp;
     return true;
 }

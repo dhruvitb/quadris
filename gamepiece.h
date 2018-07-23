@@ -10,6 +10,7 @@ protected:
     int levelGenerated;
     int rotationIndex;
     int findRotationIndex(Rotation change);
+    Coordinate templateCoord(Coordinate c, Coordinate offset); //removes the offset amounts
 public:
     virtual ~GamePiece() = 0;
     
@@ -17,8 +18,7 @@ public:
 
     std::vector<Coordinate> shift(Direction d);
 
-    virtual Coordinate getLowerLeft();
-    Coordinate templateCoord(Coordinate c, Coordinate offset); //removes the offset amounts
+    virtual Coordinate getLowerLeft(); //returns lower left of bounding box
 
     virtual void setCoords(std::vector<Coordinate> newCoords);
 

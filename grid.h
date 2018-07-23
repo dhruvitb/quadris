@@ -39,6 +39,8 @@ public:
     void getNextPiece();
     void levelUp();
     void levelDown();
+    void updateFileName(std::string f);
+    void restoreRandom();
     void gameOver();
     void restart();
     void hint();

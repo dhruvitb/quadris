@@ -15,6 +15,7 @@ using namespace std;
 Level1::Level1() {}
 
 shared_ptr<GamePiece> Level1::generatePiece() {
+    //calculation to generate piece - no input file
     return make_shared<BlockO>(getMyLevel());
 }
 

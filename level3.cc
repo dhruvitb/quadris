@@ -14,7 +14,12 @@ using namespace std;
 Level3::Level3() {}
 
 shared_ptr<GamePiece> Level3::generatePiece() {
-    return make_shared<BlockO>(myLevel);
+    if (random) {
+        //calculate random block generator
+    } else {
+        string s = generateString();
+        return generatePieceFromString(s);
+    }
 }
 
 int Level3::getMyLevel() {

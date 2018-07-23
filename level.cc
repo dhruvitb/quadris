@@ -9,6 +9,20 @@
 #include "blockbomb.h"
 using namespace std;
 
+string Level::generateString() {
+	string s;
+	if (fileInput.is_open()) {
+		if (fileInput.eof()) {
+			fileInput.close();
+			fileInput.open(fileName);
+		}
+	} else {
+		fileInput.open(fileName);
+	}
+	fileInput >> s;
+	return s;
+}
+
 shared_ptr<GamePiece> Level::generatePieceFromString(string s) {
     if (s == "I") {
 		return make_shared<BlockI>(getMyLevel());
@@ -25,10 +39,6 @@ shared_ptr<GamePiece> Level::generatePieceFromString(string s) {
 	} else { //b == "T"
 		return make_shared<BlockT>(getMyLevel());
 	}
-}
-
-bool Level::getIsRandom() {
-    return random;
 }
 
 void Level::randomize() {
