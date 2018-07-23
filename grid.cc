@@ -112,7 +112,9 @@ bool Grid::rotatePiece(Rotation r) {
 
 void Grid::getNextPiece() {
     currentPiece = nextPiece;
-    nextPiece = levelFactory->generatePiece(""); //consider file or random
+    string s;
+    inputFile >> s;
+    nextPiece = levelFactory->generatePiece(s); //consider file or random
 }
 
 void Grid::incrementLevel() {

@@ -3,9 +3,7 @@
 #include <vector>
 using namespace std;
 
-GamePiece::~GamePiece() {
-    
-}
+GamePiece::~GamePiece() {}
 
 vector<Coordinate> GamePiece::shift(Direction d) {
     vector<Coordinate> copy = allCoords; // a vector we can mutate
@@ -26,27 +24,10 @@ vector<Coordinate> GamePiece::shift(Direction d) {
     return copy;
 }
 
-vector<Coordinate> GamePiece::rotate(Rotation r) { 
-    // TODO by Lisa
-    vector<Coordinate> copy = allCoords; // a vector we can mutate
-    if (r == Rotation::CCW) {
-        return copy; // remove everything from this function lmfaoooooo I just did this so that it wouldn't yell at me
-    }
-    return copy;
-}
-
 void GamePiece::setCoords(vector<Coordinate> newCoords) {
     allCoords = newCoords;
 }
 
 std::vector<Coordinate> GamePiece::getCoords() {
     return allCoords;
-}
-
-Colour GamePiece::getColour() {
-    return colour;
-}
-
-char GamePiece::getChar() {
-    return symbol;
 }

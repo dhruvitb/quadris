@@ -1,25 +1,19 @@
 #include "blockbomb.h"
+#include <vector>
 
-BlockBomb::BlockBomb(): colour{Colour::Brown}, symbol{'*'} {
+BlockBomb::BlockBomb() {}
+
+BlockBomb::~BlockBomb() {}
+
+std::vector<Coordinate> BlockBomb::rotate(Rotation r) {
+    //stuff
+    return std::vector<Coordinate>();
+} 
     
-}
-
-BlockBomb::~BlockBomb() {
-    
-}
-
-void BlockBomb::setCoords(std::vector<Coordinate> newCoords) {
-    allCoords = newCoords;
-}
-
-std::vector<Coordinate> BlockBomb::getCoords() {
-    return allCoords;
-}
-
 Colour BlockBomb::getColour() {
-    return colour;
+    return Colour::Brown;
 }
 
-char BlockBomb::getChar() {
-    return symbol;
+char BlockBomb::getSymbol() {
+    return '*';
 }

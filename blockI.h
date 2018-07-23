@@ -5,20 +5,13 @@
 #include "structures.h"
 
 class BlockI: public GamePiece {
-    std::vector<Coordinate> allCoords;
-    Colour colour;
-    char symbol;
-    int levelGenerated;
+
 public:
     BlockI(int levelGenerated);
     ~BlockI() override;
-    void setCoords(std::vector<Coordinate> newCoords);
-
-    std::vector<Coordinate> getCoords();
-
-    Colour getColour();
-
-    char getChar();
+    std::vector<Coordinate> rotate(Rotation r) override;
+    Colour getColour() override;
+    char getSymbol() override;
 };
 
 #endif
