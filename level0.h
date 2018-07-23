@@ -3,11 +3,11 @@
 #include "level.h"
 
 class Level0: public Level {
-    bool random;
-    int myLevel;
+
 public:
 	Level0();
     std::shared_ptr<GamePiece> generatePiece(std::string s) override;
+    int getMyLevel() override;
 };
 
 #endif

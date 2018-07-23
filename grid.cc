@@ -13,32 +13,11 @@
 #include "gamepiece.h"
 using namespace std;
 
-Grid::~Grid() {
-
-}
-
-bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
-    // helper function to find out if a coordinate is in the grid
-    return (i < maxI && i >= 0 && j < maxJ && j >= 0);
-}
-
-int Grid::highScore = 0;
-
-void Grid::init() {
-    turnCount = 1; // should we make this 0?
-    currentLevel = 0;
-    score = 0;
+Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
     levelFactory = make_shared<Level0>();
-    //levelFactory->attach(make_shared<Observer>(this));
-    td = make_shared<TextDisplay>();
-    //gd = make_unique<GraphicsDisplay>();
-    fileName = "sequence.txt";
-    inputFile.open(fileName);
-    string s;
-    inputFile >> s;
-    currentPiece = levelFactory->generatePiece(s);
-    inputFile >> s;
-    nextPiece = levelFactory->generatePiece(s);
+    levelFactory->attach(this);
+    currentPiece = levelFactory->generatePiece(""); //
+    nextPiece = levelFactory->generatePiece(""); //
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
@@ -52,10 +31,10 @@ void Grid::init() {
             // attach the up and right cell as observer
             theGrid[i][j].attach(td);
             if (inBounds(i - 1, j, height, width)) {
-                theGrid[i][j].attach(make_shared<Cell>(theGrid[i-1][j]));
+                theGrid[i][j].attach(&(theGrid[i-1][j]));
             }
             if (inBounds(i, j + 1, height, width)) {
-                theGrid[i][j].attach(make_shared<Cell>(theGrid[i][j+1]));
+                theGrid[i][j].attach(&(theGrid[i][j+1]));
             }
         }
     }
@@ -66,6 +45,17 @@ void Grid::init() {
         cout << "Colour the coord: " << coord.col << " " << coord.row << endl;
     }
 }
+
+Grid::~Grid() {
+
+}
+
+bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
+    // helper function to find out if a coordinate is in the grid
+    return (i < maxI && i >= 0 && j < maxJ && j >= 0);
+}
+
+int Grid::highScore = 0;
 
 void Grid::print() {
     td->print(currentLevel, score, highScore);
@@ -108,9 +98,7 @@ bool Grid::rotatePiece(Rotation r) {
 
 void Grid::getNextPiece() {
     currentPiece = nextPiece;
-    string s;
-    inputFile >> s;
-    nextPiece = levelFactory->generatePiece(s); //consider file or random
+    nextPiece = levelFactory->generatePiece(""); //consider file or random
 }
 
 void Grid::incrementLevel() {
@@ -156,7 +144,7 @@ void Grid::restart() {
     if (score > this->highScore) {
         highScore = score;
     }
-    init();
+    //enter fields of grid that need to be changed when restarted
 }
 
 void Grid::hint() {

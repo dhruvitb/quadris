@@ -9,12 +9,17 @@
 #include "subject.h"
 
 class Level: public Subject<LevelInfo> {
-    bool random;
-    int myLevel;
+    std::shared_ptr<GamePiece> generatePieceFromString(std::string s);
+protected:
+    bool random = true;
+    std::string fileName;
+    int turnCount;
+
 public:
     virtual std::shared_ptr<GamePiece> generatePiece(std::string s) = 0;
     LevelInfo getInfo() const override;
-    virtual void resetTurnCount(); // resets the turnsSinceClearedLine
+    void resetTurnCount(); // resets the turnsSinceClearedLine
+    virtual int getMyLevel() = 0;
 };
 
 #endif
