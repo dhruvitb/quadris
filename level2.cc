@@ -13,7 +13,7 @@ using namespace std;
 
 Level2::Level2() {}
 
-shared_ptr<GamePiece> Level2::generatePiece(string s) {
+shared_ptr<GamePiece> Level2::generatePiece() {
     return make_shared<BlockO>(myLevel);
 }
 

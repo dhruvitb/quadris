@@ -27,10 +27,29 @@ shared_ptr<GamePiece> Level::generatePieceFromString(string s) {
 	}
 }
 
+bool Level::getIsRandom() {
+    return random;
+}
+
+void Level::randomize() {
+    random = true;
+}
+
+void Level::changeFileName (string f) {
+    fileName = f;
+    random = false;
+}
+
 void Level::resetTurnCount() {
+    turnCount = 0;
     // does nothing normally (in level 4 it has purpose)
+}
+
+void Level::openFile(std::string newFile) {
+    fileInput.open(newFile);
 }
 
 LevelInfo Level::getInfo() const {
     return LevelInfo{true};
 }
+

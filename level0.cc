@@ -1,6 +1,8 @@
 #include "level0.h"
 #include "gamepiece.h"
 #include <memory>
+#include <iostream>
+#include <fstream>
 #include "blockI.h"
 #include "blockJ.h"
 #include "blockL.h"
@@ -12,11 +14,18 @@
 using namespace std;
 
 Level0::Level0() {
-	random = false;
-	fileName = "sequence.txt";
+	openFile("sequence.txt");
 }
  
-shared_ptr<GamePiece> Level0::generatePiece(string s) {
+shared_ptr<GamePiece> Level0::generatePiece() {
+	string s;
+	if (!fileInput.eof()) {
+		fileInput >> s;
+	} else {
+		fileInput.close();
+		openFile("sequence.txt");
+	}
+	return generatePieceFromString(s);
 	//cout << "Piece has been generated" << endl;
 }
 

@@ -16,8 +16,8 @@ using namespace std;
 Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
     levelFactory = make_shared<Level1>();
     levelFactory->attach(this);
-    currentPiece = levelFactory->generatePiece(""); //
-    nextPiece = levelFactory->generatePiece(""); //4
+    currentPiece = levelFactory->generatePiece(); //
+    nextPiece = levelFactory->generatePiece(); //
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
@@ -114,7 +114,7 @@ bool Grid::rotatePiece(Rotation r) {
 
 void Grid::getNextPiece() {
     currentPiece = nextPiece;
-    nextPiece = levelFactory->generatePiece(""); //consider file or random
+    nextPiece = levelFactory->generatePiece(); //consider file or random
     vector<Coordinate> newPieceCoords = currentPiece->getCoords();
     for (Coordinate coord : newPieceCoords) {
         theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
