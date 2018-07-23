@@ -7,17 +7,16 @@ GamePiece::~GamePiece() {}
 
 vector<Coordinate> GamePiece::shift(Direction d) {
     vector<Coordinate> copy = allCoords; // a vector we can mutate
-    int size = copy.size();
     if (d == Direction::Right) {
-        for (auto& c: copy) {
+        for (Coordinate &c: copy) {
             ++c.col;
         }
     } else if (d == Direction::Left) {
-        for (auto& c: copy) {
+        for (Coordinate &c: copy) {
             --c.col;
         }
     } else {
-        for (auto& c: copy) {
+        for (Coordinate &c: copy) {
             ++c.row;
         }
     }
@@ -30,4 +29,18 @@ void GamePiece::setCoords(vector<Coordinate> newCoords) {
 
 std::vector<Coordinate> GamePiece::getCoords() {
     return allCoords;
+}
+
+Coordinate GamePiece::getLowerLeft() {
+    Coordinate lowerLeft = allCoords[0];
+    for (Coordinate coord : allCoords) {
+        if (coord.row > lowerLeft.row && coord.col < lowerLeft.col) {
+            lowerLeft = coord;
+        }
+    }
+    return lowerLeft;
+}
+
+void GamePiece::undoRotation(Rotation r) {
+    rotationIndex += (-1 * static_cast<int>(r));
 }

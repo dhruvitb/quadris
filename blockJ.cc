@@ -5,7 +5,8 @@ using namespace std;
 BlockJ::BlockJ(int levelGenerated) {
     cout << "Generating block J" << endl;
     this->levelGenerated = levelGenerated;
-    allCoords = {Coordinate{0,1}, Coordinate{1,1}, Coordinate{2,1}, Coordinate{2,0}};
+    allCoords = {Coordinate{0,1}, Coordinate{1,1},
+    Coordinate{2,1}, Coordinate{2,0}};
 }
 
 BlockJ::~BlockJ() {

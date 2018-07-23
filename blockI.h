@@ -12,6 +12,7 @@ public:
     std::vector<Coordinate> rotate(Rotation r) override;
     Colour getColour() override;
     char getSymbol() override;
+    void undoRotation(Rotation r) override;
 };
 
 #endif

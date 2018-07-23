@@ -2,7 +2,8 @@
 
 BlockZ::BlockZ(int levelGenerated) {
     this->levelGenerated = levelGenerated;
-    allCoords = {Coordinate{0,0}, Coordinate{0,1}, Coordinate{1,1}, Coordinate{1,2}};
+    allCoords = {Coordinate{0,0}, Coordinate{0,1},
+    Coordinate{1,1}, Coordinate{1,2}};
 }
 
 BlockZ::~BlockZ() {

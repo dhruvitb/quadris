@@ -3,7 +3,8 @@
 
 BlockO::BlockO(int levelGenerated) {
     this->levelGenerated = levelGenerated;
-    allCoords = {Coordinate{0,0}, Coordinate{0,1}, Coordinate{1,0}, Coordinate{1,1}};
+    allCoords = {Coordinate{0,0}, Coordinate{0,1},
+    Coordinate{1,0}, Coordinate{1,1}};
 }
 
 BlockO::~BlockO() {
@@ -11,8 +12,7 @@ BlockO::~BlockO() {
 }
 
 std::vector<Coordinate> BlockO::rotate(Rotation r) {
-    //stuff
-    return std::vector<Coordinate>();
+    return allCoords;
 } 
 
 Colour BlockO::getColour() {

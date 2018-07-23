@@ -11,7 +11,10 @@
 #include "blockbomb.h"
 #include "blockO.h"
 #include "gamepiece.h"
+#include <set>
 using namespace std;
+
+int Grid::highScore = 0;
 
 Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
     levelFactory = make_shared<Level0>();
@@ -55,14 +58,17 @@ bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
     return (i < maxI && i >= 0 && j < maxJ && j >= 0);
 }
 
-int Grid::highScore = 0;
-
 void Grid::print() {
     td.print(currentLevel, score, highScore);
 }
 
 void Grid::drop() {
     while (shiftPiece(Direction::Down));
+    // vector<Coordinate> finalCoords = currentPiece->getCoords();
+    // set<int> rowsSpanned;
+    // for (Coordinate coord : finalCoords) {
+    //     rowsSpanned.insert(coord.row);
+    // }
     getNextPiece();
     //gameOver();
 }
@@ -107,8 +113,13 @@ bool Grid::shiftPiece(Direction d) {
 bool Grid::rotatePiece(Rotation r) {
     vector<Coordinate> newPosition = currentPiece->rotate(r);
     if (movePiece(newPosition)) {
+        for (Coordinate coord : newPosition) {
+            theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
+            theGrid[coord.row][coord.col].notifyObservers();
+        }
         return true;
     }
+    currentPiece->undoRotation(r);
     return false;
 }
 
