@@ -8,7 +8,7 @@ enum class Colour {Cyan, Blue, Orange, Yellow, Green, Red, Purple, Brown,
 
 enum class Direction {Left, Down, Right};
 
-enum class Rotation {CW, CCW};
+enum class Rotation {CW = 1, CCW = -1};
 
 enum class Piece{I,J,L,O,S,Z,T};
 
@@ -49,4 +49,20 @@ struct RotationCoordinatesL {
     };
 };
 
+struct rotationCoordinates {
+    vector<vector<Coordinate>> allRotations{
+        {Coordinate{1,0}, Coordinate{1,1}, Coordinate{1,2}, Coordinate{2,0}, 
+            Coordinate{2,1}, Coordinate{2,2}},
+        {Coordinate{0,1}, Coordinate{1,1}, Coordinate{2,1}, Coordinate{0,0}, 
+            Coordinate{1,0}, Coordinate{2,0}},
+        {Coordinate{2,0}, Coordinate{2,1}, Coordinate{2,0}, Coordinate{1,2}, 
+            Coordinate{1,1}, Coordinate{1,0}},
+        {Coordinate{2,0}, Coordinate{1,0}, Coordinate{0,0}, Coordinate{2,1}, 
+            Coordinate{1,1}, Coordinate{0,1}}
+    };
+    static Coordinate getLowerAndLeft() {
+        return Coordinate{2,0};
+    }    
+};
+ 
 #endif

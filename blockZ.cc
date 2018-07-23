@@ -10,11 +10,6 @@ BlockZ::~BlockZ() {
     
 }
 
-std::vector<Coordinate> BlockZ::rotate(Rotation r) {
-    //stuff
-    return std::vector<Coordinate>();
-} 
-
 Colour BlockZ::getColour() {
     return Colour::Red;
 }

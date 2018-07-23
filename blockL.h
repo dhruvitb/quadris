@@ -9,7 +9,6 @@ class BlockL: public GamePiece {
 public:
     BlockL(int levelGenerated);
     ~BlockL() override;
-    std::vector<Coordinate> rotate(Rotation r) override;
     Colour getColour() override;
     char getSymbol() override;
 };

@@ -24,6 +24,7 @@ char BlockI::getSymbol() {
 }
 
 vector<Coordinate> BlockI::rotate(Rotation r) {
+    (void) r;
     ++rotationIndex;
     vector<Coordinate> newCoords;
     Coordinate lowerLeft = getLowerLeft();
