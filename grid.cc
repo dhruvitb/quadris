@@ -205,6 +205,18 @@ void Grid::levelDown() {
     }
 }
 
+void Grid::updateFileName(string s) {
+    if (currentLevel == 3 || currentLevel == 4) {
+        levelFactory->changeFileName(s);
+    }
+}
+
+void Grid::restoreRandom() {
+    if (currentLevel != 0) {
+        levelFactory->randomize();
+    }
+}
+
 void Grid::gameOver() {
     // find out how to implement this
     // it will probably call restart

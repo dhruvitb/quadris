@@ -71,8 +71,11 @@ std::vector<Coordinate> GamePiece::getCoords() {
 Coordinate GamePiece::getLowerLeft() {
     Coordinate lowerLeft = allCoords[0];
     for (Coordinate coord : allCoords) {
-        if (coord.row > lowerLeft.row && coord.col < lowerLeft.col) {
-            lowerLeft = coord;
+        if (coord.row > lowerLeft.row) {
+            lowerLeft.row = coord.row;
+        } 
+        if (coord.col < lowerLeft.col) {
+            lowerLeft.col = coord.col;
         }
     }
     return lowerLeft;

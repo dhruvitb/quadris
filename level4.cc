@@ -17,8 +17,14 @@ shared_ptr<GamePiece> Level4::generatePiece() {
     ++turnCount;
     if (turnCount == 5) {
         resetTurnCount();
+        notifyObservers();
     }
-    return make_shared<BlockO>(getMyLevel());
+    if (random) {
+        //calculate random block generator
+    } else {
+        string s = generateString();
+        return generatePieceFromString(s);
+    }
 }
 
 

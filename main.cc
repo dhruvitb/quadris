@@ -52,11 +52,12 @@ int main(int argc, char *argv[]) {
                 quadris->levelDown();
                 // decrement level if possible
             } else if (cmd == "norandom") {
-                string fileName;
+                string s;
                 try {
-                    cin >> fileName;
+                    cin >> s;
+                    quadris->updateFileName(s);
                 } catch(...) {
-                    // do something
+                    cout << "Invaid file." << endl;
                 }
                 // if level is 3/4 make it read from fileName
                 // finish the try catch block above*****
