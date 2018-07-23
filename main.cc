@@ -20,25 +20,30 @@ int main(int argc, char *argv[]) {
             cin >> cmd;
             if (cmd == "start") {
                 quadris->init();
-                quadris->print();
             }
             if (cmd == "left") {
                 quadris->shiftPiece(Direction::Left);
+                quadris->print();
                 // move the current piece left
             } else if (cmd == "right") {
                 quadris->shiftPiece(Direction::Right);
+                quadris->print();
                 // move the current piece right
             } else if (cmd == "down") {
                 quadris->shiftPiece(Direction::Down);
+                quadris->print();
                 // move the current piece down
             } else if (cmd == "clockwise") {
                 quadris->rotatePiece(Rotation::CW);
+                quadris->print();
                 // rotate 90 degrees clockwise
             } else if (cmd == "counterclockwise") {
                 quadris->rotatePiece(Rotation::CCW);
+                quadris->print();
                 // rotate 90 degrees counterclockwise
             } else if (cmd == "drop") {
                 quadris->drop();
+                quadris->print();
                 // drop the piece, summon next one
                 quadris->getNextPiece();
             } else if (cmd == "levelup") {

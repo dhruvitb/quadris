@@ -61,8 +61,10 @@ void Grid::init() {
     }
     vector<Coordinate> initialCoords = currentPiece->getCoords();
     for (Coordinate coord : initialCoords) {
-        theGrid[coord.col][coord.row].setColour(currentPiece->getColour());
+        theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
+        theGrid[coord.row][coord.col].notifyObservers();
     }
+    print();
 }
 
 void Grid::print() {
@@ -78,36 +80,48 @@ void Grid::drop() {
 bool Grid::movePiece(vector<Coordinate> newPosition) {
     int size = newPosition.size();
     bool valid = true;
-    for (int i = 0; i < size; ++i) {
-        int row = newPosition[i].row;
-        int col = newPosition[i].col;
-        if (!inBounds(row, col, height, width)) {
-            valid = false;
-            break;
-        }
-        if (theGrid[row][col].getInfo().colour != Colour::NoColour) {
+    vector<Coordinate> oldCoords = currentPiece->getCoords();
+    for (Coordinate coord : oldCoords) {
+            theGrid[coord.row][coord.col].setColour(Colour::NoColour);
+    }
+    for (Coordinate coord : newPosition) {
+        if (!inBounds(coord.row, coord.col, height, width) ||
+        theGrid[coord.row][coord.col].getInfo().colour != Colour::NoColour) {
             valid = false;
             break;
         }
     }
     if (valid) {
-        vector<Coordinate> oldCoords = currentPiece->getCoords();
-        for (Coordinate coord : oldCoords) {
-            theGrid[coord.row][coord.col].setColour(Colour::NoColour);
-        }
         currentPiece->setCoords(newPosition);
+    } else {
+        for (Coordinate coord : oldCoords) {
+            theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
+        }
     }
     return valid;
 }
 
 bool Grid::shiftPiece(Direction d) {
     vector<Coordinate> newPosition = currentPiece->shift(d);
-    return movePiece(newPosition);
+    for (auto i : newPosition) {
+        cout << i.col << " " << i.row << endl;
+    }
+    if (movePiece(newPosition)) {
+        for (Coordinate coord : newPosition) {
+            theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
+            theGrid[coord.row][coord.col].notifyObservers();
+        }
+        return true;
+    }
+    return false;
 }
 
 bool Grid::rotatePiece(Rotation r) {
     vector<Coordinate> newPosition = currentPiece->rotate(r);
-    return movePiece(newPosition);
+    if (movePiece(newPosition)) {
+        return true;
+    }
+    return false;
 }
 
 void Grid::getNextPiece() {
@@ -160,7 +174,7 @@ void Grid::gameOver() {
     // it will probably call restart
     vector<Coordinate> coords = currentPiece->getCoords();
     for (Coordinate coord : coords) {
-        if (coord.row > 15) {
+        if (coord.row > 15) { // this is the wrong way around
             cout << "YOU LOSE" << endl; // find out what exactly to do when the game is over
         }
     }

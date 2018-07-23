@@ -20,19 +20,19 @@ bool TextDisplay::notify(Subject<CellInfo> &from) {
     int col = info.col;
     Colour colour = info.colour;
     if (colour == Colour::Cyan) {
-        theDisplay[col][row] = I;
+        theDisplay[row][col] = I;
     } else if (colour == Colour::Blue) {
-        theDisplay[col][row] = J;
+        theDisplay[row][col] = J;
     } else if (colour == Colour::Orange) {
-        theDisplay[col][row] = L;
+        theDisplay[row][col] = L;
     } else if (colour == Colour::Yellow) {
-        theDisplay[col][row] = O;
+        theDisplay[row][col] = O;
     } else if (colour == Colour::Green) {
-        theDisplay[col][row] = S;
+        theDisplay[row][col] = S;
     } else if (colour == Colour::Red) {
-        theDisplay[col][row] = Z;
+        theDisplay[row][col] = Z;
     } else if (colour == Colour::Purple) {
-        theDisplay[col][row] = T;
+        theDisplay[row][col] = T;
     }
     return true;
 }
