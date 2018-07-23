@@ -6,7 +6,7 @@ BlockBomb::BlockBomb() {}
 BlockBomb::~BlockBomb() {}
 
 std::vector<Coordinate> BlockBomb::rotate(Rotation r) {
-    //stuff
+    (void) r;
     return std::vector<Coordinate>();
 } 
     

@@ -43,6 +43,8 @@ public:
     void restart();
     void hint();
     int getScore();
+    bool checkClear(int row);
+    void clearRows();
     bool notify(Subject<LevelInfo> &from) override;
 };
 

@@ -7,6 +7,4 @@ Level4:
             Set the turnsSinceClear 0
         4. Generate a new piece
 
-The idea about returning true for clearing a line is a no go as it stand
-(NotifyObservers will probably need to be overriden for all the classes that
-use it)
+Highscore should update in real time (if current score passes high score)

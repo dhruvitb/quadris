@@ -11,21 +11,7 @@ CellInfo Cell::getInfo() const {
 }
 
 bool Cell::notify(Subject &from) {
-    // figure out what needs to happen here THIS IS STILL BROKEN NEEDS TO BE FIXED
-    CellInfo info = from.getInfo();
-    Request r = info.request;
-    if (r == Request::Clear) {
-        if (colour != Colour::NoColour) {
-            setRequest(Request::Clear);
-            notifyObservers();
-            return true;
-        }
-    } else if (r == Request::Drop) {
-        setRequest(Request::Drop);
-        notifyObservers();
-        return true;
-    }
-    return false;
+
 }
 
 void Cell::setColour(Colour c) {
@@ -34,4 +20,8 @@ void Cell::setColour(Colour c) {
 
 void Cell::setPiece(shared_ptr<GamePiece> newPiece) {
     piece = newPiece;
+}
+
+shared_ptr<GamePiece> Cell::getPiece() {
+    return piece;
 }

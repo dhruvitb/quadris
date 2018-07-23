@@ -18,6 +18,7 @@ public:
     CellInfo getInfo() const override;
     void setColour(Colour c);
     void setPiece(std::shared_ptr<GamePiece> newPiece);
+    shared_ptr<GamePiece> getPiece();
     bool notify(Subject<CellInfo> &from) override;
 };
 

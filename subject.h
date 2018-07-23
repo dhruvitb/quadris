@@ -14,7 +14,7 @@ template <typename InfoType> class Subject {
     Request request;
 public:
     void attach(Observer<InfoType> *o);
-    bool notifyObservers();
+    virtual bool notifyObservers();
     virtual InfoType getInfo() const = 0;
     void setRequest(Request r);
     Request getRequest() const;

@@ -12,6 +12,7 @@
 #include "blockO.h"
 #include "gamepiece.h"
 #include <set>
+#include <algorithm>
 using namespace std;
 
 int Grid::highScore = 0;
@@ -34,10 +35,10 @@ Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
             // attach the up and right cell as observer
             theGrid[i][j].attach(&td);
             if (inBounds(i - 1, j, height, width)) {
-                //theGrid[i][j].attach(&(theGrid[i-1][j]));
+                theGrid[i][j].attach(&(theGrid[i-1][j]));
             }
             if (inBounds(i, j + 1, height, width)) {
-                //theGrid[i][j].attach(&(theGrid[i][j+1]));
+                theGrid[i][j].attach(&(theGrid[i][j+1]));
             }
         }
     }
@@ -62,13 +63,46 @@ void Grid::print() {
     td.print(currentLevel, score, highScore);
 }
 
+bool Grid::checkClear(int row) {
+    for (int i = 0; i < width; ++i) {
+        if (theGrid[row][i].getInfo().colour == Colour::NoColour) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void Grid::clearRows() {
+    vector<Coordinate> finalCoords = currentPiece->getCoords();
+    set<int> rowsSpanned;
+    int rowsCleared = 0;
+    for (Coordinate coord : finalCoords) {
+        rowsSpanned.insert(coord.row);
+    }
+    for (int row : rowsSpanned) {
+        cout << "I should clear row: " << row << endl;
+        if (checkClear(row)) {
+            ++rowsCleared;
+            for (int i = 0; i < width; ++i) {
+                vector<Coordinate> temp =
+                theGrid[row][i].getPiece()->getCoords();
+                temp.erase(std::remove(temp.begin(), temp.end(), 
+                Coordinate{row,i}), temp.end());
+                theGrid[row][i].getPiece()->setCoords(temp);
+                theGrid[row][i].setColour(Colour::NoColour);
+                theGrid[row][i].notifyObservers();
+            }
+        }
+    }
+}
+
 void Grid::drop() {
     while (shiftPiece(Direction::Down));
-    // vector<Coordinate> finalCoords = currentPiece->getCoords();
-    // set<int> rowsSpanned;
-    // for (Coordinate coord : finalCoords) {
-    //     rowsSpanned.insert(coord.row);
-    // }
+    vector<Coordinate> finalCoords = currentPiece->getCoords();
+    for (Coordinate coord : finalCoords) {
+        theGrid[coord.row][coord.col].setPiece(currentPiece);
+    }
+    clearRows();
     getNextPiece();
     //gameOver();
 }
@@ -198,12 +232,10 @@ int Grid::getScore() {
 }
 
 bool Grid::notify(Subject<LevelInfo> &from) {
-    if (from.getInfo().dropBomb) {
-        // switch the current piece to a bomb, drop it, switch back
-        shared_ptr<GamePiece> temp = currentPiece;
-        currentPiece = make_shared<BlockBomb>();
-        drop();
-        currentPiece = temp;
-    }
+    // switch the current piece to a bomb, drop it, switch back
+    shared_ptr<GamePiece> temp = currentPiece;
+    currentPiece = make_shared<BlockBomb>();
+    drop();
+    currentPiece = temp;
     return true;
 }

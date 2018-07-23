@@ -12,6 +12,7 @@ BlockO::~BlockO() {
 }
 
 std::vector<Coordinate> BlockO::rotate(Rotation r) {
+    (void) r;
     return allCoords;
 } 
 
