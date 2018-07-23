@@ -13,13 +13,14 @@ using namespace std;
 
 Level4::Level4() {}
 
-shared_ptr<GamePiece> Level4::generatePiece(string s) {
+shared_ptr<GamePiece> Level4::generatePiece() {
     ++turnCount;
     if (turnCount == 5) {
         resetTurnCount();
     }
     return make_shared<BlockO>(getMyLevel());
 }
+
 
 int Level4::getMyLevel() {
 	return 4;

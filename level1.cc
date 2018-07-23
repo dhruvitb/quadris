@@ -14,7 +14,7 @@ using namespace std;
 
 Level1::Level1() {}
 
-shared_ptr<GamePiece> Level1::generatePiece(string s) {
+shared_ptr<GamePiece> Level1::generatePiece() {
     return make_shared<BlockO>(getMyLevel());
 }
 

@@ -6,7 +6,7 @@ class Level4: public Level {
 
 public:
     Level4();
-    std::shared_ptr<GamePiece> generatePiece(std::string s) override;
+    std::shared_ptr<GamePiece> generatePiece() override;
     int getMyLevel() override;
     // Level4:
     // When you generate a piece you need to do:
