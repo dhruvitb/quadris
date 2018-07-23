@@ -8,13 +8,19 @@ class GamePiece {
 protected:
     std::vector<Coordinate> allCoords;
     int levelGenerated;
+    int rotationIndex;
+    rotationCoordinates *c;
+
+    int findRotationIndex(Rotation change);
 
 public:
     virtual ~GamePiece() = 0;
     
-    virtual std::vector<Coordinate> rotate(Rotation r) = 0;
+    virtual std::vector<Coordinate> rotate(Rotation r);
 
     std::vector<Coordinate> shift(Direction d);
+
+    Coordinate templateCoord(Coordinate c, Coordinate offset); //removes the offset amounts
 
     virtual void setCoords(std::vector<Coordinate> newCoords);
 
