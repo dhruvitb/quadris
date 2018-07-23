@@ -33,6 +33,8 @@ bool TextDisplay::notify(Subject<CellInfo> &from) {
         theDisplay[row][col] = Z;
     } else if (colour == Colour::Purple) {
         theDisplay[row][col] = T;
+    } else if (colour == Colour::NoColour) {
+        theDisplay[row][col] = BLANK;
     }
     return true;
 }

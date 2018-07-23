@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include "structures.h"
+#include <iostream>
 
 template <typename InfoType> class Observer;
 
@@ -25,7 +26,7 @@ void Subject<InfoType>::attach(Observer<InfoType> *o) {
 }
 
 template <typename InfoType> bool Subject<InfoType>::notifyObservers() {
-    for (const auto &ob: observers) {
+    for (Observer<InfoType> *ob: observers) {
         ob->notify(*this);
     }
     return true;

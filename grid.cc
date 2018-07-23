@@ -14,10 +14,10 @@
 using namespace std;
 
 Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
-    levelFactory = make_shared<Level0>();
+    levelFactory = make_shared<Level1>();
     levelFactory->attach(this);
     currentPiece = levelFactory->generatePiece(""); //
-    nextPiece = levelFactory->generatePiece(""); //
+    nextPiece = levelFactory->generatePiece(""); //4
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
@@ -29,12 +29,12 @@ Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             // attach the up and right cell as observer
-            theGrid[i][j].attach(td);
+            theGrid[i][j].attach(&td);
             if (inBounds(i - 1, j, height, width)) {
-                theGrid[i][j].attach(&(theGrid[i-1][j]));
+                //theGrid[i][j].attach(&(theGrid[i-1][j]));
             }
             if (inBounds(i, j + 1, height, width)) {
-                theGrid[i][j].attach(&(theGrid[i][j+1]));
+                //theGrid[i][j].attach(&(theGrid[i][j+1]));
             }
         }
     }
@@ -58,7 +58,7 @@ bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
 int Grid::highScore = 0;
 
 void Grid::print() {
-    td->print(currentLevel, score, highScore);
+    td.print(currentLevel, score, highScore);
 }
 
 void Grid::drop() {
@@ -67,14 +67,14 @@ void Grid::drop() {
     gameOver();
 }
 
-bool Grid::movePiece(vector<Coordinate> newPosition) {
-    int size = newPosition.size();
+bool Grid::movePiece(vector<Coordinate> newCoords) {
     bool valid = true;
     vector<Coordinate> oldCoords = currentPiece->getCoords();
     for (Coordinate coord : oldCoords) {
             theGrid[coord.row][coord.col].setColour(Colour::NoColour);
+            theGrid[coord.row][coord.col].notifyObservers();
     }
-    for (Coordinate coord : newPosition) {
+    for (Coordinate coord : newCoords) {
         if (!inBounds(coord.row, coord.col, height, width) ||
         theGrid[coord.row][coord.col].getInfo().colour != Colour::NoColour) {
             valid = false;
@@ -82,10 +82,11 @@ bool Grid::movePiece(vector<Coordinate> newPosition) {
         }
     }
     if (valid) {
-        currentPiece->setCoords(newPosition);
+        currentPiece->setCoords(newCoords);
     } else {
         for (Coordinate coord : oldCoords) {
             theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
+            theGrid[coord.row][coord.col].notifyObservers();
         }
     }
     return valid;
@@ -93,9 +94,6 @@ bool Grid::movePiece(vector<Coordinate> newPosition) {
 
 bool Grid::shiftPiece(Direction d) {
     vector<Coordinate> newPosition = currentPiece->shift(d);
-    for (auto i : newPosition) {
-        cout << i.col << " " << i.row << endl;
-    }
     if (movePiece(newPosition)) {
         for (Coordinate coord : newPosition) {
             theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
@@ -117,6 +115,11 @@ bool Grid::rotatePiece(Rotation r) {
 void Grid::getNextPiece() {
     currentPiece = nextPiece;
     nextPiece = levelFactory->generatePiece(""); //consider file or random
+    vector<Coordinate> newPieceCoords = currentPiece->getCoords();
+    for (Coordinate coord : newPieceCoords) {
+        theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
+        theGrid[coord.row][coord.col].notifyObservers();
+    }
 }
 
 void Grid::incrementLevel() {
