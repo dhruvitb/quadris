@@ -8,7 +8,8 @@ class GamePiece {
 protected:
     std::vector<Coordinate> allCoords;
     int levelGenerated;
-    int rotationIndex;
+    int rotationIndex = 0;
+    int squaresDeleted = 0;
     int findRotationIndex(Rotation change);
     Coordinate templateCoord(Coordinate c, Coordinate offset); //removes the offset amounts
 public:
@@ -29,6 +30,8 @@ public:
     virtual char getSymbol() = 0;
 
     virtual void undoRotation(Rotation r);
+
+    virtual int getLevelGenerated();
 
     //virtual void drop(); I don't think this is ever needed
 };

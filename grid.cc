@@ -13,6 +13,7 @@
 #include "gamepiece.h"
 #include <set>
 #include <algorithm>
+#include <cmath>
 using namespace std;
 
 int Grid::highScore = 0;
@@ -111,12 +112,16 @@ void Grid::clearRows() {
                 Coordinate{row,i}), temp.end());
                 theGrid[row][i].getPiece()->setCoords(temp);
                 theGrid[row][i].setColour(Colour::NoColour);
+                if (temp.size() == 0) {
+                    score += pow(
+                    (theGrid[row][i].getPiece()->getLevelGenerated() + 1), 2);
+                }
                 //theGrid[row][i].notifyObservers();
             }
             dropRows(row);
         }
     }
-    score += (rowsCleared + currentLevel) * (rowsCleared + currentLevel);
+    score += pow((rowsCleared + currentLevel), 2);
     if (score > highScore) {
         highScore = score;
     }

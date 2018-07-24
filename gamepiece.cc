@@ -90,3 +90,7 @@ void GamePiece::undoRotation(Rotation r) {
         rotationIndex = rotationIndex + 4;
     }
 }
+
+int GamePiece::getLevelGenerated() {
+    return levelGenerated;
+}
