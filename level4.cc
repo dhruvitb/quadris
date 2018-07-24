@@ -15,7 +15,7 @@ Level4::Level4() {}
 
 shared_ptr<GamePiece> Level4::generatePiece() {
     ++turnCount;
-    if (turnCount == 5) {
+    if (turnCount == 5) { 
         resetTurnCount();
         notifyObservers();
     }
@@ -23,14 +23,17 @@ shared_ptr<GamePiece> Level4::generatePiece() {
         vector<string> pieces{"I", "J", "L", "O", "S", "S", "T", "Z", "Z"};
         int size = pieces.size();
         int n = randomInt(size);
-        return generatePieceFromString(pieces[n]);
+        return generatePieceFromString(pieces[n], true);
     } else {
         string s = generateString();
-        return generatePieceFromString(s);
+        return generatePieceFromString(s, true);
     }
 }
 
-
 int Level4::getMyLevel() {
 	return 4;
+}
+
+void Level4::resetTurnCount() {
+    turnCount = 0;
 }

@@ -17,7 +17,7 @@ shared_ptr<GamePiece> Level2::generatePiece() {
     vector<string> pieces{"I", "J", "L", "O", "S", "T", "Z"};
     int size = pieces.size();
     int n = randomInt(size);
-    return generatePieceFromString(pieces[n]);
+    return generatePieceFromString(pieces[n], false);
 }
 
 int Level2::getMyLevel() {

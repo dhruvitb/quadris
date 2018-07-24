@@ -1,10 +1,10 @@
 #include "blockO.h"
-#include "iostream"
 
-BlockO::BlockO(int levelGenerated) {
+BlockO::BlockO(int levelGenerated, bool isHeavy) {
     this->levelGenerated = levelGenerated;
     allCoords = {Coordinate{3,0}, Coordinate{3,1},
     Coordinate{4,0}, Coordinate{4,1}};
+    this->isHeavy = isHeavy;
 }
 
 BlockO::~BlockO() {

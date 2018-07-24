@@ -21,7 +21,7 @@ Level0::Level0() {
  
 shared_ptr<GamePiece> Level0::generatePiece() {
 	string s = generateString();
-	return generatePieceFromString(s);
+	return generatePieceFromString(s, false);
 }
 
 int Level0::getMyLevel() {

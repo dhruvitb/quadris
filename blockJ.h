@@ -7,7 +7,7 @@
 class BlockJ: public GamePiece {
 
 public:
-    BlockJ(int levelGenerated);
+    BlockJ(int levelGenerated, bool isHeavy);
     ~BlockJ() override;
     Colour getColour() override;
     char getSymbol() override;

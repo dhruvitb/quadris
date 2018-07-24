@@ -7,7 +7,7 @@
 class BlockI: public GamePiece {
 
 public:
-    BlockI(int levelGenerated);
+    BlockI(int levelGenerated, bool isHeavy);
     ~BlockI() override;
     std::vector<Coordinate> rotate(Rotation r) override;
     Colour getColour() override;

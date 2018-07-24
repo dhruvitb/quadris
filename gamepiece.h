@@ -10,6 +10,7 @@ protected:
     int levelGenerated;
     int rotationIndex = 0;
     int squaresDeleted = 0;
+    bool isHeavy = false;
     int findRotationIndex(Rotation change);
     Coordinate templateCoord(Coordinate c, Coordinate offset); //removes the offset amounts
 public:
@@ -32,6 +33,8 @@ public:
     virtual void undoRotation(Rotation r);
 
     virtual int getLevelGenerated();
+
+    virtual bool getIsHeavy();
 
     //virtual void drop(); I don't think this is ever needed
 };

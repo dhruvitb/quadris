@@ -6,8 +6,9 @@
 #include "structures.h"
 #include "level.h"
 #include "textdisplay.h"
-//#include "graphicsdisplay.h"
+#include "graphicsdisplay.h"
 #include "observer.h"
+#include "X11/Xlib.h"
 
 const int LEVEL_MAX = 4;
 const int LEVEL_MIN = 0;
@@ -22,15 +23,16 @@ class Grid: public Observer<LevelInfo> {
     std::vector<std::vector<Cell>> theGrid;
     std::shared_ptr<Level> levelFactory;
     TextDisplay td;
-    //GraphicsDisplay *gd;
+    GraphicsDisplay gd;
     std::shared_ptr<GamePiece> currentPiece;
     std::shared_ptr<GamePiece> nextPiece;
     static bool inBounds(int i, int j, int maxI, int maxJ);
     void updateLevelFactory();
-    bool movePiece(std::vector<Coordinate> newPosition);
+    bool validMove(std::vector<Coordinate> newPosition);
     bool checkClear(int row);
     void clearRows();
     void dropRows(int row);
+    bool heavyMove(vector<Coordinate> moveDown);
 public:
     ~Grid();
     Grid();
@@ -46,7 +48,6 @@ public:
     void replaceCurrentPiece(std::string s);
     void restart();
     void hint();
-    int getScore();
     bool notify(Subject<LevelInfo> &from) override;
 };
 

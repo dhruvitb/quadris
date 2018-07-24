@@ -3,10 +3,11 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <cassert>
 #include <algorithm>
 #include "grid.h"
 #include "gamepiece.h"
+#include "X11/Xlib.h"
+#include "graphicsdisplay.h"
 
 using namespace std;
 
@@ -23,10 +24,7 @@ int main(int argc, char *argv[]) {
             commandFile >> cmd;
             if(cmd == "") {
                 commandFile.close();
-                //assert(!commandFile);
-            } /*else {
-                cout << "[from sequence file] " << cmd << endl;
-            }*/
+            }
         }
         if (!commandFile) {
             cin >> cmd;

@@ -1,14 +1,13 @@
 #include "blockI.h"
-#include <iostream>
-#include <vector>
 using namespace std;
 
-BlockI::BlockI(int levelGenerated) {
+BlockI::BlockI(int levelGenerated, bool isHeavy) {
     //cout << "Generating block I" << endl;
     this->levelGenerated = levelGenerated;
     allCoords = {Coordinate{3,0}, Coordinate{3,1},
     Coordinate{3,2}, Coordinate{3,3}};
     rotationIndex = 0;
+    this->isHeavy = isHeavy;
 }
 
 BlockI::~BlockI() {

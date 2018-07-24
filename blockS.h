@@ -7,7 +7,7 @@
 class BlockS: public GamePiece {
 
 public:
-    BlockS(int levelGenerated);
+    BlockS(int levelGenerated, bool isHeavy);
     ~BlockS() override;
     Colour getColour() override;
     char getSymbol() override;

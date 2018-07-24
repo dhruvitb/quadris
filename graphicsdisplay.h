@@ -1,13 +1,19 @@
 #ifndef _GRAPHICS_DISPLAY_H_
 #define _GRAPHICS_DISPLAY_H_
-#include <vector>
-#include <memory>
-#include <X11/Xlib.h>
+#include "observer.h"
 #include "window.h"
+#include "structures.h"
+#include "subject.h"
+#include <memory>
 
 class GraphicsDisplay: public Observer<CellInfo> {
-    std::vector<Xwindow> xw;
+    unique_ptr<Xwindow> window;
+    int width;
+    int height;
+    int squareSize;
 public:
+    GraphicsDisplay(int width, int height);
+    ~GraphicsDisplay();
     bool notify(Subject<CellInfo> &from);
 };
 

@@ -8,6 +8,7 @@ public:
     Level4();
     std::shared_ptr<GamePiece> generatePiece() override;
     int getMyLevel() override;
+    void resetTurnCount() override;
     // Level4:
     // When you generate a piece you need to do:
     //     1. Increase the turn count

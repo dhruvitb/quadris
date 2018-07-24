@@ -20,11 +20,14 @@
 #include <set>
 #include <algorithm>
 #include <cmath>
+#include "window.h"
+#include "graphicsdisplay.h"
+#include "X11/Xlib.h"
 using namespace std;
 
 int Grid::highScore = 0;
 
-Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
+Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}, gd{385, 630} {
     levelFactory = make_shared<Level0>();
     levelFactory->attach(this);
     currentPiece = levelFactory->generatePiece();
@@ -34,6 +37,8 @@ Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
         for (int j = 0; j < width; ++j) {
             Cell c = Cell{Coordinate{i,j}};
             c.attach(&td);
+            c.attach(&gd);
+            c.notifyObservers();
             temp.emplace_back(c);
         }
         theGrid.emplace_back(temp);
@@ -52,7 +57,9 @@ Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
     // }
     vector<Coordinate> initialCoords = currentPiece->getCoords();
     for (Coordinate c : initialCoords) {
-        theGrid[c.row][c.col].setColour(currentPiece->getColour());
+        if (inBounds(c.row, c.col, height, width)) {
+            theGrid[c.row][c.col].setColour(currentPiece->getColour());
+        }
     }
     print();
 }
@@ -110,6 +117,7 @@ void Grid::clearRows() {
     }
     for (int row : rowsSpanned) {
         if (checkClear(row)) {
+            levelFactory->resetTurnCount();
             ++rowsCleared;
             for (int i = 0; i < width; ++i) {
                 Cell &theCell = theGrid[row][i];
@@ -139,21 +147,27 @@ bool Grid::drop() {
     while (shiftPiece(Direction::Down));
     vector<Coordinate> finalCoords = currentPiece->getCoords();
     for (Coordinate c : finalCoords) {
-        if (c.row < 3) { 
+        if (c.row < 3 || !inBounds(c.row, c.col, height, width)) {
             return false;
-            //gameOver();
         }
         theGrid[c.row][c.col].setPiece(currentPiece);
     }
     clearRows();
+    if (finalCoords.size() == 1) { // if the piece is a bomb
+        return true;
+    }
     return (getNextPiece());
 }
 
-bool Grid::movePiece(vector<Coordinate> newCoords) {
+bool Grid::validMove(vector<Coordinate> newCoords) {
     bool valid = true;
     vector<Coordinate> oldCoords = currentPiece->getCoords();
     for (Coordinate c : oldCoords) {
+        if (inBounds(c.row, c.col, height, width)) {
             theGrid[c.row][c.col].setColour(Colour::NoColour);
+        } else {
+            return false;
+        }
     }
     for (Coordinate c : newCoords) {
         if (!inBounds(c.row, c.col, height, width) ||
@@ -172,11 +186,28 @@ bool Grid::movePiece(vector<Coordinate> newCoords) {
     return valid;
 }
 
+bool Grid::heavyMove(vector<Coordinate> moveDown) {
+    for (Coordinate &c : moveDown) {
+        ++c.row;
+    }
+    return validMove(moveDown);
+}
+
 bool Grid::shiftPiece(Direction d) {
     vector<Coordinate> newPosition = currentPiece->shift(d);
-    if (movePiece(newPosition)) {
+    if (validMove(newPosition)) {
         for (Coordinate c : newPosition) {
-            theGrid[c.row][c.col].setColour(currentPiece->getColour());
+            if (inBounds(c.row, c.col, height, width)) {
+                theGrid[c.row][c.col].setColour(currentPiece->getColour());
+            }
+        }
+        if (currentPiece->getIsHeavy()) {
+            if(heavyMove(newPosition)) {
+                for (Coordinate c : newPosition) {
+                    theGrid[c.row+1][c.col].setColour(currentPiece->
+                    getColour());
+                }
+            }
         }
         return true;
     }
@@ -185,7 +216,7 @@ bool Grid::shiftPiece(Direction d) {
 
 bool Grid::rotatePiece(Rotation r) {
     vector<Coordinate> newPosition = currentPiece->rotate(r);
-    if (movePiece(newPosition)) {
+    if (validMove(newPosition)) {
         for (Coordinate c : newPosition) {
             theGrid[c.row][c.col].setColour(currentPiece->getColour());
         }
@@ -202,8 +233,7 @@ bool Grid::getNextPiece() {
     for (Coordinate c : newPieceCoords) {
         Cell &theCell = theGrid[c.row][c.col];
         if (theCell.getInfo().colour != Colour::NoColour) {
-            //gameOver();
-            return false; // might not need to return if the game over function takes over but I think this should be left in
+            return false;
         }
         theCell.setColour(currentPiece->getColour());
     }
@@ -260,20 +290,24 @@ void Grid::replaceCurrentPiece(string s) {
     for (Coordinate c : oldCoords) {
         theGrid[c.row][c.col].setColour(Colour::NoColour);
     }
+    bool isHeavy = false;
+    if (currentLevel > 2) {
+        isHeavy = true;
+    }
     if (s == "I") {
-		currentPiece = make_shared<BlockI>(currentLevel);
+		currentPiece = make_shared<BlockI>(currentLevel, isHeavy);
 	} else if (s == "J") {
-		currentPiece = make_shared<BlockJ>(currentLevel);
+		currentPiece = make_shared<BlockJ>(currentLevel, isHeavy);
 	} else if (s == "L") {
-		currentPiece = make_shared<BlockL>(currentLevel);
+		currentPiece = make_shared<BlockL>(currentLevel, isHeavy);
 	} else if (s == "O") {
-		currentPiece = make_shared<BlockO>(currentLevel);
+		currentPiece = make_shared<BlockO>(currentLevel, isHeavy);
 	} else if (s == "S") {
-		currentPiece = make_shared<BlockS>(currentLevel);
+		currentPiece = make_shared<BlockS>(currentLevel, isHeavy);
 	} else if (s == "Z") {
-		currentPiece = make_shared<BlockZ>(currentLevel);
+		currentPiece = make_shared<BlockZ>(currentLevel, isHeavy);
 	} else { //s == "T"
-		currentPiece = make_shared<BlockT>(currentLevel);
+		currentPiece = make_shared<BlockT>(currentLevel, isHeavy);
 	}    
     vector<Coordinate> temp = currentPiece->getCoords();
     for (Coordinate c : temp) {
@@ -296,6 +330,7 @@ void Grid::restart() {
         for (int j = 0; j < width; ++j) {
             Cell c = Cell{Coordinate{i,j}};
             c.attach(&td);
+            c.attach(&gd);
             c.notifyObservers();
             temp.emplace_back(c);
         }
@@ -312,15 +347,16 @@ void Grid::hint() {
     // find out how to implement this
 }
 
-int Grid::getScore() {
-    return score;
-}
-
 bool Grid::notify(Subject<LevelInfo> &from) {
-    // switch the current piece to a bomb, drop it, switch back
     (void) from;
     shared_ptr<GamePiece> temp = currentPiece;
     currentPiece = make_shared<BlockBomb>();
+    Coordinate bombCell = currentPiece->getCoords()[0];
+    if (theGrid[bombCell.row][bombCell.col].getInfo().colour != 
+    Colour::NoColour) {
+        // force drop() to produce false by giving invalid coords
+        currentPiece->setCoords(vector<Coordinate>{{-1,-1}}); 
+    }
     drop();
     currentPiece = temp;
     return true;

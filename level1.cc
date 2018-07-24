@@ -19,7 +19,7 @@ shared_ptr<GamePiece> Level1::generatePiece() {
     "S", "T", "T", "Z"};
     int size = pieces.size();
     int n = randomInt(size);
-    return generatePieceFromString(pieces[n]);
+    return generatePieceFromString(pieces[n], false);
 }
 
 int Level1::getMyLevel() {

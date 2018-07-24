@@ -16,14 +16,15 @@ protected:
     std::ifstream fileInput;
     int turnCount = 0; //for level 4 
     std::string generateString();
-    std::shared_ptr<GamePiece> generatePieceFromString(std::string s);
-    void resetTurnCount(); // resets the turnsSinceClearedLine
+    std::shared_ptr<GamePiece> generatePieceFromString(std::string s, bool 
+    isHeavy);
     int randomInt(int num); 
 public:
     virtual std::shared_ptr<GamePiece> generatePiece() = 0;
     LevelInfo getInfo() const override;
     void randomize(); //use when you want random input
     void changeFileName (std::string f); 
+    virtual void resetTurnCount(); // resets the turnsSinceClearedLine
     virtual int getMyLevel() = 0;
 };
 

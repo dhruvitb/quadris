@@ -94,3 +94,7 @@ void GamePiece::undoRotation(Rotation r) {
 int GamePiece::getLevelGenerated() {
     return levelGenerated;
 }
+
+bool GamePiece::getIsHeavy() {
+    return isHeavy;
+}

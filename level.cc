@@ -23,21 +23,21 @@ string Level::generateString() {
 	return s;
 }
 
-shared_ptr<GamePiece> Level::generatePieceFromString(string s) {
+shared_ptr<GamePiece> Level::generatePieceFromString(string s, bool isHeavy) {
     if (s == "I") {
-		return make_shared<BlockI>(getMyLevel());
+		return make_shared<BlockI>(getMyLevel(), isHeavy);
 	} else if (s == "J") {
-		return make_shared<BlockJ>(getMyLevel());
+		return make_shared<BlockJ>(getMyLevel(), isHeavy);
 	} else if (s == "L") {
-		return make_shared<BlockL>(getMyLevel());
+		return make_shared<BlockL>(getMyLevel(), isHeavy);
 	} else if (s == "O") {
-		return make_shared<BlockO>(getMyLevel());
+		return make_shared<BlockO>(getMyLevel(), isHeavy);
 	} else if (s == "S") {
-		return make_shared<BlockS>(getMyLevel());
+		return make_shared<BlockS>(getMyLevel(), isHeavy);
 	} else if (s == "Z") {
-		return make_shared<BlockZ>(getMyLevel());
+		return make_shared<BlockZ>(getMyLevel(), isHeavy);
 	} else { //b == "T"
-		return make_shared<BlockT>(getMyLevel());
+		return make_shared<BlockT>(getMyLevel(), isHeavy);
 	}
 }
 
@@ -51,7 +51,6 @@ void Level::changeFileName (string f) {
 }
 
 void Level::resetTurnCount() {
-    turnCount = 0;
     // does nothing normally (in level 4 it has purpose)
 }
 
