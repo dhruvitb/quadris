@@ -75,6 +75,7 @@ bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
 
 void Grid::print() {
     td.print(currentLevel, score, highScore);
+    gd.updateMenu(currentLevel, score, highScore);
 }
 
 bool Grid::checkClear(int row) {
@@ -219,6 +220,14 @@ bool Grid::rotatePiece(Rotation r) {
     if (validMove(newPosition)) {
         for (Coordinate c : newPosition) {
             theGrid[c.row][c.col].setColour(currentPiece->getColour());
+        }
+        if (currentPiece->getIsHeavy()) {
+            if(heavyMove(newPosition)) {
+                for (Coordinate c : newPosition) {
+                    theGrid[c.row + 1][c.col].setColour(currentPiece->
+                    getColour());
+                }
+            }
         }
         return true;
     }

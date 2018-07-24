@@ -23,11 +23,11 @@ char BlockI::getSymbol() {
 }
 
 vector<Coordinate> BlockI::rotate(Rotation r) {
-    (void) r;
+    (void) r; // only 2 positions; direction of rotation does not matter
     ++rotationIndex;
-    vector<Coordinate> newCoords;
+    vector<Coordinate> newCoords; 
     Coordinate lowerLeft = getLowerLeft();
-    RotationCoordinatesL rotationCoords;
+    RotationCoordinatesL rotationCoords; // defined in structures.h
     for (Coordinate coord :
     rotationCoords.RotationCoordinates[rotationIndex % 2]) {
         if (rotationIndex % 2 == 1) {
@@ -40,6 +40,6 @@ vector<Coordinate> BlockI::rotate(Rotation r) {
 }
 
 void BlockI::undoRotation(Rotation r) {
-    (void) r;
+    (void) r; // if a rotation is invalid (off-screen/collision)
     --rotationIndex;
 }

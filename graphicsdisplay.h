@@ -11,10 +11,12 @@ class GraphicsDisplay: public Observer<CellInfo> {
     int width;
     int height;
     int squareSize;
+    int pieceSizeOffset = 2;
 public:
     GraphicsDisplay(int width, int height);
     ~GraphicsDisplay();
     bool notify(Subject<CellInfo> &from);
+    void updateMenu(int level, int score, int hiScore);
 };
 
 #endif
