@@ -35,7 +35,7 @@ struct CellInfo {
     int row;
     int col;
     Colour colour;
-    Request request;
+    char symbol;
 };
 
 struct LevelInfo {

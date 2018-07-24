@@ -35,6 +35,8 @@ bool TextDisplay::notify(Subject<CellInfo> &from) {
         theDisplay[row][col] = T;
     } else if (colour == Colour::NoColour) {
         theDisplay[row][col] = BLANK;
+    } else if (colour == Colour::Brown) {
+        theDisplay[row][col] = BOMB;
     }
     return true;
 }

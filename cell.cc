@@ -7,7 +7,11 @@ colour{Colour::NoColour}, request{Request::NoRequest} {
 }
 
 CellInfo Cell::getInfo() const {
-    return CellInfo{position.row, position.col, colour, request};
+    char symbol = '-';
+    if (piece != nullptr) {
+        symbol = piece->getSymbol();
+    }
+    return CellInfo{position.row, position.col, colour, symbol};
 }
 
 bool Cell::notify(Subject &from) {

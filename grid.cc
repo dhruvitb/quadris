@@ -352,7 +352,7 @@ bool Grid::notify(Subject<LevelInfo> &from) {
     shared_ptr<GamePiece> temp = currentPiece;
     currentPiece = make_shared<BlockBomb>();
     Coordinate bombCell = currentPiece->getCoords()[0];
-    if (theGrid[bombCell.row][bombCell.col].getInfo().colour != 
+    if (theGrid[bombCell.row][bombCell.col].getInfo().colour !=
     Colour::NoColour) {
         // force drop() to produce false by giving invalid coords
         currentPiece->setCoords(vector<Coordinate>{{-1,-1}}); 
