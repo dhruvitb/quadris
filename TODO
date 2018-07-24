@@ -6,7 +6,3 @@ Level4:
             NotifyObservers (i.e. tell the grid to drop a bomb)
             Set the turnsSinceClear 0
         4. Generate a new piece
-
-Highscore should update in real time (if current score passes high score)
-
-

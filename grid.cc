@@ -110,6 +110,7 @@ void Grid::clearRows() {
     }
     for (int row : rowsSpanned) {
         if (checkClear(row)) {
+            cout << "a row was cleared" << std::endl;
             ++rowsCleared;
             for (int i = 0; i < width; ++i) {
                 vector<Coordinate> temp =
@@ -127,7 +128,9 @@ void Grid::clearRows() {
             dropRows(row);
         }
     }
-    score += pow((rowsCleared + currentLevel), 2);
+    if (rowsCleared > 0) {
+        score += pow((rowsCleared + currentLevel), 2);
+    }
     if (score > highScore) {
         highScore = score;
     }
@@ -222,7 +225,8 @@ void Grid::levelUp() {
     if (currentLevel < LEVEL_MAX) {
         ++currentLevel;
         updateLevelFactory();
-        cout << "current level is: " << currentLevel << endl;
+        cout << "Current level is: " << currentLevel << endl;
+        print();
     }
 }
 
@@ -230,8 +234,9 @@ void Grid::levelDown() {
     if (currentLevel > LEVEL_MIN) {
         --currentLevel;
         updateLevelFactory();
+        cout << "Current level is: " << currentLevel << endl;
+        print();
     }
-    cout << "current level is: " << currentLevel << endl;
 }
 
 void Grid::updateFileName(string s) {
