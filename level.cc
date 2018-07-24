@@ -11,15 +11,15 @@ using namespace std;
 
 string Level::generateString() {
 	string s;
-	if (fileInput.is_open()) {
-		if (fileInput.eof()) {
-			fileInput.close();
-			fileInput.open(fileName);
-		}
-	} else {
+	if (!(fileInput.is_open())) {
 		fileInput.open(fileName);
 	}
 	fileInput >> s;
+	if (s == "" || s == "\n") {
+		fileInput.close();
+		fileInput.open(fileName);
+		fileInput >> s;
+	}
 	return s;
 }
 
@@ -55,9 +55,10 @@ void Level::resetTurnCount() {
     // does nothing normally (in level 4 it has purpose)
 }
 
-void Level::openFile(std::string newFile) {
-    fileInput.open(newFile);
-}
+int Level::randomInt(int num) {
+	int x = rand() % num;
+	return x;
+} 
 
 LevelInfo Level::getInfo() const {
     return LevelInfo{true};

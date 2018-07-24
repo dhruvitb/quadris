@@ -7,6 +7,7 @@
 #include "gamepiece.h"
 #include "structures.h"
 #include "subject.h"
+#include <cstdlib>
 
 class Level: public Subject<LevelInfo> {
 protected:
@@ -17,13 +18,13 @@ protected:
     std::string generateString();
     std::shared_ptr<GamePiece> generatePieceFromString(std::string s);
     void resetTurnCount(); // resets the turnsSinceClearedLine
+    int randomInt(int num); 
 public:
     virtual std::shared_ptr<GamePiece> generatePiece() = 0;
     LevelInfo getInfo() const override;
     void randomize(); //use when you want random input
     void changeFileName (std::string f); 
     virtual int getMyLevel() = 0;
-    void openFile(std::string newFile);
 };
 
 #endif

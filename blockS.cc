@@ -2,8 +2,8 @@
 
 BlockS::BlockS(int levelGenerated) {
     this->levelGenerated = levelGenerated;
-    allCoords = {Coordinate{0,1}, Coordinate{0,2},
-    Coordinate{1,0}, Coordinate{1,1}};
+    allCoords = {Coordinate{3,1}, Coordinate{3,2},
+    Coordinate{4,0}, Coordinate{4,1}};
 }
 
 BlockS::~BlockS() {

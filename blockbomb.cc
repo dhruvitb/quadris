@@ -1,7 +1,9 @@
 #include "blockbomb.h"
 #include <vector>
 
-BlockBomb::BlockBomb() {}
+BlockBomb::BlockBomb() {
+    allCoords = {Coordinate{3,5}};
+}
 
 BlockBomb::~BlockBomb() {}
 
