@@ -75,7 +75,7 @@ bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
 
 void Grid::print() {
     td.print(currentLevel, score, highScore, nextPiece);
-    gd.updateMenu(currentLevel, score, highScore);
+    gd.updateMenu(currentLevel, score, highScore, nextPiece);
 }
 
 bool Grid::checkClear(int row) {

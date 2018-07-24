@@ -1,4 +1,6 @@
 #include "graphicsdisplay.h"
+#include "gamepiece.h"
+#include "window.h"
 using namespace std;
 
 GraphicsDisplay::GraphicsDisplay(int width, int height):
@@ -19,7 +21,7 @@ bool GraphicsDisplay::notify(Subject<CellInfo> &from) {
     int col = info.col;
     Colour colour = info.colour;
     // convert the colours in our enum class to ints for the window.h class
-    int colourValue = (int) colour + 1;
+    int colourValue = (int) colour;
     // make the squares a little bit smaller to make grid effect
     window->fillRectangle(squareSize * col + pieceSizeOffset,
     squareSize * row + pieceSizeOffset, squareSize - pieceSizeOffset,
@@ -27,9 +29,25 @@ bool GraphicsDisplay::notify(Subject<CellInfo> &from) {
     return true;
 }
 
-void GraphicsDisplay::updateMenu(int level, int score, int hiScore) {
-    window->fillRectangle(390, 80, 100, 80, 0);
+void GraphicsDisplay::updateMenu(int level, int score, int hiScore,
+shared_ptr<GamePiece> next) {
+    window->fillRectangle(390, 80, 100, 80, 10);
     window->drawString(400, 100, "Level:     " + to_string(level));
     window->drawString(400, 120, "Score:     " + to_string(score));
     window->drawString(400, 140, "Hi Score:  " + to_string(hiScore));
+    drawNext(next);
+}
+
+void GraphicsDisplay::drawNext(shared_ptr<GamePiece> next) {
+    vector<Coordinate> coords = next->getCoords();
+    Colour colour = next->getColour();
+    int colourValue = (int) colour;
+    window->fillRectangle(390, 150, (35 + pieceSizeOffset) * 4, 
+    (35 + pieceSizeOffset) * (3 + 2), 10);
+    for (Coordinate c : coords) {
+        window->fillRectangle((c.col * 25) + 405 + pieceSizeOffset, 
+        (c.row * 25) + 150 + pieceSizeOffset, 
+        25 - pieceSizeOffset, 25 - pieceSizeOffset,
+        colourValue);
+    }   
 }

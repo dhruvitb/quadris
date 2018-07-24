@@ -16,18 +16,18 @@ public:
             int height = 500); // Constructor; displays the window.
     ~Xwindow(); // Destructor; destroys the window.
     enum {
-        White = 0,
-        Black,
-        Red,
-        Green,
+        Cyan = 0,
         Blue,
-        Cyan,
-        Yellow,
-        Magenta,
         Orange,
+        Yellow,
+        Green,
+        Red,
+        Magenta,
         Brown,
-        DarkGreen
-    }; // Available colours.
+        Black,
+        DarkGreen,
+        White
+    }; // available colours
 
     // Draws a rectangle
     void fillRectangle(int x, int y, int width, int height, int colour = Black);
