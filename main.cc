@@ -15,11 +15,11 @@ using namespace std;
 //checks if command contains action and ensures the command is valid
 //there may be a multiplier
 bool validCommand(string command, string action) {
-    bool contains = command.find(action);
+    bool contains = (command.find(action) != string::npos);
     cout << contains << endl;
     bool valid;
     stringstream ss(command);
-    int n;
+    int n = 0;
     string s;
     ss >> n >> s;
     cout << "multiplier is: " << n << endl;
@@ -90,6 +90,7 @@ int main(int argc, char *argv[]) {
                 break;
             }
         }
+        cout << "Please do this: " << cmd << endl;
         if (validCommand(cmd, "left")) {
             quadris->shiftPiece(Direction::Left);
             quadris->print();
