@@ -3,6 +3,7 @@
 #include "observer.h"
 #include "subject.h"
 #include "structures.h"
+#include "gamepiece.h"
 #include <vector>
 
 class TextDisplay: public Observer<CellInfo> {
@@ -18,7 +19,7 @@ class TextDisplay: public Observer<CellInfo> {
     const char BOMB = '*';
 public:
     TextDisplay();
-    void print(int level, int score, int highScore);
+    void print(int level, int score, int hiScore, shared_ptr<GamePiece> next);
     bool notify(Subject<CellInfo> &from) override;
 };
 

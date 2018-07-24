@@ -1,5 +1,6 @@
 #include "textdisplay.h"
 #include "iostream"
+#include "gamepiece.h"
 using namespace std;
 
 TextDisplay::TextDisplay() {
@@ -41,15 +42,34 @@ bool TextDisplay::notify(Subject<CellInfo> &from) {
     return true;
 }
 
-void TextDisplay::print(int level, int score, int highScore) {
+void TextDisplay::print(int level, int score, int hiScore, 
+shared_ptr<GamePiece> next) {
     int width = 11;
     int height = 18;
     cout << "Level:    " << level << endl;
     cout << "Score:    " << score << endl;
-    cout << "Hi Score: " << highScore << endl;
+    cout << "Hi Score: " << hiScore << endl;
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             cout << theDisplay[i][j];
+        }
+        cout << endl;
+    }
+    cout << "Next Piece:" << std::endl;
+    vector<Coordinate> coords = next->getCoords();
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            bool isOccupied = false;
+            Coordinate temp = Coordinate{i + 3, j};
+            for (Coordinate c : coords) {
+                if (temp == c) {
+                    cout << next->getSymbol();
+                    isOccupied = true;
+                }
+            }
+            if (!isOccupied) {
+                cout << " ";
+            }
         }
         cout << endl;
     }
