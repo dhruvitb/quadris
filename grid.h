@@ -29,6 +29,9 @@ class Grid: public Observer<LevelInfo> {
     void incrementLevel();
     void decrementLevel();
     bool movePiece(std::vector<Coordinate> newPosition);
+    bool checkClear(int row);
+    void clearRows();
+    void dropRows(int row);
 public:
     ~Grid();
     Grid();
@@ -45,8 +48,6 @@ public:
     void restart();
     void hint();
     int getScore();
-    bool checkClear(int row);
-    void clearRows();
     bool notify(Subject<LevelInfo> &from) override;
 };
 

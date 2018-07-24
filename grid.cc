@@ -45,7 +45,7 @@ Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
     vector<Coordinate> initialCoords = currentPiece->getCoords();
     for (Coordinate coord : initialCoords) {
         theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
-        theGrid[coord.row][coord.col].notifyObservers();
+        //theGrid[coord.row][coord.col].notifyObservers();
     }
     print();
 }
@@ -72,6 +72,28 @@ bool Grid::checkClear(int row) {
     return true;
 }
 
+void Grid::dropRows(int row) {
+    while (row > 0) {
+        for (int i = 0; i < width; ++i) {
+            theGrid[row-1][i].setColour(Colour::NoColour);
+            shared_ptr<GamePiece> cellsPiece = theGrid[row-1][i].getPiece();
+            if (cellsPiece) {
+                vector<Coordinate> temp = cellsPiece->getCoords();
+                for (Coordinate &c : temp) {
+                    if (c.row == row - 1) {
+                        c.row = row;
+                        theGrid[row-1][c.col].setPiece(nullptr);
+                        theGrid[row][c.col].setPiece(cellsPiece);
+                    }
+                    theGrid[c.row][c.col].setColour(cellsPiece->getColour());
+                }
+                cellsPiece->setCoords(temp);
+            }
+        }
+        --row;
+    }
+}
+
 void Grid::clearRows() {
     vector<Coordinate> finalCoords = currentPiece->getCoords();
     set<int> rowsSpanned;
@@ -80,7 +102,6 @@ void Grid::clearRows() {
         rowsSpanned.insert(coord.row);
     }
     for (int row : rowsSpanned) {
-        cout << "I should clear row: " << row << endl;
         if (checkClear(row)) {
             ++rowsCleared;
             for (int i = 0; i < width; ++i) {
@@ -90,9 +111,14 @@ void Grid::clearRows() {
                 Coordinate{row,i}), temp.end());
                 theGrid[row][i].getPiece()->setCoords(temp);
                 theGrid[row][i].setColour(Colour::NoColour);
-                theGrid[row][i].notifyObservers();
+                //theGrid[row][i].notifyObservers();
             }
+            dropRows(row);
         }
+    }
+    score += (rowsCleared + currentLevel) * (rowsCleared + currentLevel);
+    if (score > highScore) {
+        highScore = score;
     }
 }
 
@@ -112,7 +138,7 @@ bool Grid::movePiece(vector<Coordinate> newCoords) {
     vector<Coordinate> oldCoords = currentPiece->getCoords();
     for (Coordinate coord : oldCoords) {
             theGrid[coord.row][coord.col].setColour(Colour::NoColour);
-            theGrid[coord.row][coord.col].notifyObservers();
+            //theGrid[coord.row][coord.col].notifyObservers();
     }
     for (Coordinate coord : newCoords) {
         if (!inBounds(coord.row, coord.col, height, width) ||
@@ -126,7 +152,7 @@ bool Grid::movePiece(vector<Coordinate> newCoords) {
     } else {
         for (Coordinate coord : oldCoords) {
             theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
-            theGrid[coord.row][coord.col].notifyObservers();
+            //theGrid[coord.row][coord.col].notifyObservers();
         }
     }
     return valid;
@@ -137,7 +163,7 @@ bool Grid::shiftPiece(Direction d) {
     if (movePiece(newPosition)) {
         for (Coordinate coord : newPosition) {
             theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
-            theGrid[coord.row][coord.col].notifyObservers();
+            //theGrid[coord.row][coord.col].notifyObservers();
         }
         return true;
     }
@@ -149,7 +175,7 @@ bool Grid::rotatePiece(Rotation r) {
     if (movePiece(newPosition)) {
         for (Coordinate coord : newPosition) {
             theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
-            theGrid[coord.row][coord.col].notifyObservers();
+            //theGrid[coord.row][coord.col].notifyObservers();
         }
         return true;
     }
@@ -163,7 +189,7 @@ void Grid::getNextPiece() {
     vector<Coordinate> newPieceCoords = currentPiece->getCoords();
     for (Coordinate coord : newPieceCoords) {
         theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
-        theGrid[coord.row][coord.col].notifyObservers();
+        //theGrid[coord.row][coord.col].notifyObservers();
     }
 }
 
@@ -229,9 +255,6 @@ void Grid::gameOver() {
 }
 
 void Grid::restart() {
-    if (score > this->highScore) {
-        highScore = score;
-    }
     //enter fields of grid that need to be changed when restarted
 }
 
@@ -245,6 +268,7 @@ int Grid::getScore() {
 
 bool Grid::notify(Subject<LevelInfo> &from) {
     // switch the current piece to a bomb, drop it, switch back
+    (void) from;
     shared_ptr<GamePiece> temp = currentPiece;
     currentPiece = make_shared<BlockBomb>();
     drop();

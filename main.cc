@@ -21,25 +21,30 @@ int main(int argc, char *argv[]) {
             if (cmd == "start") {
                 quadris->print();
             }
-            if (cmd == "left") {
-                quadris->shiftPiece(Direction::Left);
+            if (cmd == "left" || cmd == "l") {
+                if (quadris->shiftPiece(Direction::Left)) {
                 quadris->print();
+                }
                 // move the current piece left
-            } else if (cmd == "right") {
-                quadris->shiftPiece(Direction::Right);
-                quadris->print();
+            } else if (cmd == "right" || cmd == "r") {
+                if (quadris->shiftPiece(Direction::Right)) {
+                    quadris->print();
+                }
                 // move the current piece right
-            } else if (cmd == "down") {
-                quadris->shiftPiece(Direction::Down);
-                quadris->print();
+            } else if (cmd == "down" || cmd == "d") {
+                if (quadris->shiftPiece(Direction::Down)) {
+                    quadris->print();
+                }
                 // move the current piece down
-            } else if (cmd == "clockwise") {
-                quadris->rotatePiece(Rotation::CW);
-                quadris->print();
+            } else if (cmd == "clockwise" || cmd == "cw") {
+                if (quadris->rotatePiece(Rotation::CW)) {
+                    quadris->print();
+                }
                 // rotate 90 degrees clockwise
-            } else if (cmd == "counterclockwise") {
-                quadris->rotatePiece(Rotation::CCW);
-                quadris->print();
+            } else if (cmd == "counterclockwise" || cmd == "ccw") {
+                if (quadris->rotatePiece(Rotation::CCW)) {
+                    quadris->print();
+                }
                 // rotate 90 degrees counterclockwise
             } else if (cmd == "drop") {
                 quadris->drop();

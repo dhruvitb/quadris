@@ -11,11 +11,13 @@ CellInfo Cell::getInfo() const {
 }
 
 bool Cell::notify(Subject &from) {
-
+    (void) from;
+    return true; // this function might be unused
 }
 
 void Cell::setColour(Colour c) {
     colour = c;
+    notifyObservers();
 }
 
 void Cell::setPiece(shared_ptr<GamePiece> newPiece) {
