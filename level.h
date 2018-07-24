@@ -19,11 +19,14 @@ protected:
     std::shared_ptr<GamePiece> generatePieceFromString(std::string s, bool 
     isHeavy);
     int randomInt(int num); 
+    int seed;
 public:
+    Level();
     virtual std::shared_ptr<GamePiece> generatePiece() = 0;
     LevelInfo getInfo() const override;
     void randomize(); //use when you want random input
     void changeFileName (std::string f); 
+    void changeSeed (int x);
     virtual void resetTurnCount(); // resets the turnsSinceClearedLine
     virtual int getMyLevel() = 0;
 };

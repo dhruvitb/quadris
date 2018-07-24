@@ -9,13 +9,14 @@
 #include "blockbomb.h"
 using namespace std;
 
-string Level::generateString() {
+Level::Level() {
+	srand(seed);
+}
+
+string Level::generateString() { //file has already been opened
 	string s;
-	if (!(fileInput.is_open())) {
-		fileInput.open(fileName);
-	}
 	fileInput >> s;
-	if (s == "" || s == "\n") {
+	if (s == "" || s == "\n") { //reached the EOF
 		fileInput.close();
 		fileInput.open(fileName);
 		fileInput >> s;
@@ -36,18 +37,37 @@ shared_ptr<GamePiece> Level::generatePieceFromString(string s, bool isHeavy) {
 		return make_shared<BlockS>(getMyLevel(), isHeavy);
 	} else if (s == "Z") {
 		return make_shared<BlockZ>(getMyLevel(), isHeavy);
-	} else { //b == "T"
+	} else { //s == "T"
 		return make_shared<BlockT>(getMyLevel(), isHeavy);
 	}
 }
 
 void Level::randomize() {
-    random = true;
+	if (random == true) {
+		cout << "Level " << getMyLevel() << " is already random" << endl;
+	} else {
+		random = true;
+		cout << "Random blocks have been restored" << endl;
+	}
 }
 
 void Level::changeFileName (string f) {
-    fileName = f;
-    random = false;
+    if (fileInput) {
+		fileInput.close();
+	}
+	fileName = f;
+	fileInput.open(fileName);
+	if (!fileInput) {
+		cout << "Invalid file: " << fileName << " :(" << endl;
+	} else {
+		random = false;
+		cout << "New input file is: " << fileName << endl;
+	}
+}
+
+void Level::changeSeed (int x) {
+	seed = x;
+	srand(seed);
 }
 
 void Level::resetTurnCount() {
@@ -56,6 +76,7 @@ void Level::resetTurnCount() {
 
 int Level::randomInt(int num) {
 	int x = rand() % num;
+	//cout << "random number is: " << x << endl;
 	return x;
 } 
 

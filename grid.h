@@ -23,7 +23,9 @@ class Grid: public Observer<LevelInfo> {
     std::vector<std::vector<Cell>> theGrid;
     std::shared_ptr<Level> levelFactory;
     TextDisplay td;
+    bool textOnly;
     GraphicsDisplay gd;
+    bool graphicsOnly;
     std::shared_ptr<GamePiece> currentPiece;
     std::shared_ptr<GamePiece> nextPiece;
     static bool inBounds(int i, int j, int maxI, int maxJ);
@@ -36,14 +38,19 @@ class Grid: public Observer<LevelInfo> {
 public:
     ~Grid();
     Grid();
+    void init(); //attaches gd, sets level
     void print();
+    void changeTextOnly();
+    void changeGraphicsOnly();
     bool drop();
     bool shiftPiece(Direction d);
     bool rotatePiece(Rotation r);
     bool getNextPiece();
     void levelUp();
     void levelDown();
+    void updateLevel(int lvl);
     void updateFileName(std::string f);
+    void updateSeed(int x);
     void restoreRandom();
     void replaceCurrentPiece(std::string s);
     void restart();

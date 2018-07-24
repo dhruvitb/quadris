@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <memory>
@@ -11,34 +12,89 @@
 
 using namespace std;
 
+//checks if command contains action and ensures the command is valid
+//there may be a multiplier
+bool validCommand(string command, string action) {
+    bool contains = command.find(action);
+    cout << contains << endl;
+    bool valid;
+    stringstream ss(command);
+    int n;
+    string s;
+    ss >> n >> s;
+    cout << "multiplier is: " << n << endl;
+    cout << "command is: " << s << endl;
+    cout << "action is: " << action << endl;
+    if (n >= 0 && s == action) {
+        valid = true;
+    }
+    cout << valid << endl;
+    return contains && valid;
+}
+
+//finds the multiplier
+int multiplier(string command, string action) {
+}
+
 int main(int argc, char *argv[]) {
-    (void) argc; // REMOVE THESE ONCE YOU ACTUALLY MAKE USE OF THEM MAYBE LAMDLKANVJISFNLVKSJFDNVLKV
-    (void) argv; // REMOVE THESE ONCE YOU ACTUALLY MAKE USE OF THEM MAYBE LAMDLKANVJISFNLVKSJFDNVLKV
-    // FIND OUT HOW TO READ -ARG N TYPE COMMAND LINE ARGUMENTS
     unique_ptr<Grid> quadris = make_unique<Grid>();
     ifstream commandFile;
+    //startlevel is separate because scriptfile and seed depend on the level
+    for (int i = 1; i < argc; ++i) {
+        string option = argv[i];
+        if (option == "-startlevel") {
+            string lvl = argv[i+1];
+            stringstream ss(lvl); //convert from string to int
+            int x;
+            ss >> x;
+            quadris->updateLevel(x);
+            ++i;
+            //change the level
+        }
+    }
+    for (int i = 1; i < argc; ++i) {
+        string option = argv[i];
+        if (option == "-text") {
+            quadris->changeTextOnly();
+        } else if (option == "graphics") {
+            quadris->changeGraphicsOnly();
+        }else if (option == "-seed") {
+            string seed = argv[i+1];
+            stringstream ss(seed); //convert from string to int
+            int x;
+            ss >> x;
+            ++i;
+            quadris->updateSeed(x);
+            //do something with seed
+        } else if (option == "-scriptfile") {
+            string file = argv[i+1]; //changes default file for level 0
+            ++i;
+            quadris->updateFileName(file);
+            //do something with file
+        } 
+    }
+    quadris->init(); //considers command-line interface
+    quadris->print();
 
     while (true) {
         string cmd;
         if(commandFile) {
             commandFile >> cmd;
-            if(cmd == "") {
+            if(cmd == "") { //means file has reached EOF
                 commandFile.close();
             }
         }
         if (!commandFile) {
             cin >> cmd;
-            if (cmd == "") {
+            if (cmd == "") { //no more user input so end program
                 break;
             }
         }
-        if (cmd == "start") {
-            quadris->print();
-        } else if (cmd == "left" || cmd == "l") {
+        if (validCommand(cmd, "left")) {
             quadris->shiftPiece(Direction::Left);
             quadris->print();
             // move the current piece left
-        } else if (cmd == "right" || cmd == "r") {
+        } else if (validCommand(cmd, "right")) {
             quadris->shiftPiece(Direction::Right);
             quadris->print();
             // move the current piece right
@@ -101,7 +157,7 @@ int main(int argc, char *argv[]) {
 
             commandFile.open(fileName);
             if (!commandFile) {
-                cout << "invalid file :(" << endl;
+                cout << "Invalid file: " << fileName << " :(" << endl;
             }
             // execute sequence of commands in fileName
         } else if (cmd == "I" || cmd == "J" || cmd == "L" || cmd == "O"

@@ -28,21 +28,22 @@ using namespace std;
 int Grid::highScore = 0;
 
 Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}, gd{385, 630} {
-    levelFactory = make_shared<Level0>();
-    levelFactory->attach(this);
-    currentPiece = levelFactory->generatePiece();
-    nextPiece = levelFactory->generatePiece();
-    for (int i = 0; i < height; ++i) {
+    //Dhruvit to to get the window not to appear upon executing constructor
+    updateLevelFactory();
+    //levelFactory->attach(this);
+    /*currentPiece = levelFactory->generatePiece();
+    nextPiece = levelFactory->generatePiece();*/
+    /*for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
             Cell c = Cell{Coordinate{i,j}};
             c.attach(&td);
-            c.attach(&gd);
-            c.notifyObservers();
+            //c.attach(&gd);
+            c.notifyObservers(); //is this still necessary?
             temp.emplace_back(c);
         }
         theGrid.emplace_back(temp);
-    }
+    }*/
     // for (int i = 0; i < height; ++i) {
     //     for (int j = 0; j < width; ++j) {
     //         // attach the up and right cell as observer
@@ -55,17 +56,52 @@ Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}, gd{385, 630} {
     //         }
     //     }
     // }
+
+    /*vector<Coordinate> initialCoords = currentPiece->getCoords();
+    for (Coordinate c : initialCoords) {
+        if (inBounds(c.row, c.col, height, width)) {
+            theGrid[c.row][c.col].setColour(currentPiece->getColour());
+        }
+    }*/
+    //print();
+}
+
+Grid::~Grid() {}
+
+void Grid::init() {
+    for (int i = 0; i < height; ++i) {
+        vector<Cell> temp;
+        for (int j = 0; j < width; ++j) {
+            Cell c = Cell{Coordinate{i,j}};
+            if (!graphicsOnly) {
+                c.attach(&td);
+            }
+            if (!textOnly) {
+                c.attach(&gd);
+            }
+            c.notifyObservers(); 
+            temp.emplace_back(c);
+        }
+        theGrid.emplace_back(temp);
+    }
+    /*for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+            Cell &theCell = theGrid[i][j];
+            if (!textOnly) {
+                theCell.attach(&gd);
+                theCell.notifyObservers();
+            }
+        }
+    }*/
+    currentPiece = levelFactory->generatePiece();
+    nextPiece = levelFactory->generatePiece();
+
     vector<Coordinate> initialCoords = currentPiece->getCoords();
     for (Coordinate c : initialCoords) {
         if (inBounds(c.row, c.col, height, width)) {
             theGrid[c.row][c.col].setColour(currentPiece->getColour());
         }
     }
-    print();
-}
-
-Grid::~Grid() {
-
 }
 
 bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
@@ -75,6 +111,14 @@ bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
 
 void Grid::print() {
     td.print(currentLevel, score, highScore);
+}
+
+void Grid::changeTextOnly() {
+    textOnly = true;
+}
+
+void Grid::changeGraphicsOnly() {
+    graphicsOnly = true;
 }
 
 bool Grid::checkClear(int row) {
@@ -259,8 +303,10 @@ void Grid::levelUp() {
     if (currentLevel < LEVEL_MAX) {
         ++currentLevel;
         updateLevelFactory();
-        cout << "Current level is: " << currentLevel << endl;
+        //cout << "Current level is: " << currentLevel << endl;
         print();
+    } else {
+        cout << "Level is oustide range of [0,4]" << endl;
     }
 }
 
@@ -268,20 +314,37 @@ void Grid::levelDown() {
     if (currentLevel > LEVEL_MIN) {
         --currentLevel;
         updateLevelFactory();
-        cout << "Current level is: " << currentLevel << endl;
         print();
+    } else {
+        cout << "Level is oustide range of [0,4]" << endl;
     }
+}
+void Grid::updateLevel(int lvl) {
+    currentLevel = lvl;
+    updateLevelFactory();
 }
 
 void Grid::updateFileName(string s) {
     if (currentLevel == 0 || currentLevel == 3 || currentLevel == 4) {
         levelFactory->changeFileName(s);
+    } else {
+        cout << "Level " << currentLevel << " does not allow input file" << endl;
     }
+}
+
+void Grid::updateSeed(int x) {
+    levelFactory->changeSeed(x);
 }
 
 void Grid::restoreRandom() {
     if (currentLevel == 3 || currentLevel == 4) {
         levelFactory->randomize();
+    } else {
+        if (currentLevel == 0) {
+            cout << "Level " << currentLevel << " can not be random" << endl;
+        } else {
+            cout << "Level " << currentLevel << " is already random" << endl;
+        }
     }
 }
 
