@@ -33,26 +33,26 @@ Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}/*, gd{}*/ {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
             Cell c = Cell{Coordinate{i,j}};
+            c.attach(&td);
             temp.emplace_back(c);
         }
         theGrid.emplace_back(temp);
     }
-    for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j) {
-            // attach the up and right cell as observer
-            theGrid[i][j].attach(&td);
-            if (inBounds(i - 1, j, height, width)) {
-                theGrid[i][j].attach(&(theGrid[i-1][j]));
-            }
-            if (inBounds(i, j + 1, height, width)) {
-                theGrid[i][j].attach(&(theGrid[i][j+1]));
-            }
-        }
-    }
+    // for (int i = 0; i < height; ++i) {
+    //     for (int j = 0; j < width; ++j) {
+    //         // attach the up and right cell as observer
+    //         theGrid[i][j].attach(&td);
+    //         if (inBounds(i - 1, j, height, width)) {
+    //             theGrid[i][j].attach(&(theGrid[i-1][j])); // CELLS NO LONGER OBSERVE EACH OTHER LOL
+    //         }
+    //         if (inBounds(i, j + 1, height, width)) {
+    //             theGrid[i][j].attach(&(theGrid[i][j+1])); // CELLS NO LONGER OBSERVE EACH OTHER LOL
+    //         }
+    //     }
+    // }
     vector<Coordinate> initialCoords = currentPiece->getCoords();
-    for (Coordinate coord : initialCoords) {
-        theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
-        //theGrid[coord.row][coord.col].notifyObservers();
+    for (Coordinate c : initialCoords) {
+        theGrid[c.row][c.col].setColour(currentPiece->getColour());
     }
     print();
 }
@@ -110,20 +110,19 @@ void Grid::clearRows() {
     }
     for (int row : rowsSpanned) {
         if (checkClear(row)) {
-            cout << "a row was cleared" << std::endl;
             ++rowsCleared;
             for (int i = 0; i < width; ++i) {
+                Cell &theCell = theGrid[row][i];
                 vector<Coordinate> temp =
-                theGrid[row][i].getPiece()->getCoords();
+                theCell.getPiece()->getCoords();
                 temp.erase(std::remove(temp.begin(), temp.end(), 
                 Coordinate{row,i}), temp.end());
-                theGrid[row][i].getPiece()->setCoords(temp);
-                theGrid[row][i].setColour(Colour::NoColour);
+                theCell.getPiece()->setCoords(temp);
+                theCell.setColour(Colour::NoColour);
                 if (temp.size() == 0) {
                     score += pow(
-                    (theGrid[row][i].getPiece()->getLevelGenerated() + 1), 2);
+                    (theCell.getPiece()->getLevelGenerated() + 1), 2);
                 }
-                //theGrid[row][i].notifyObservers();
             }
             dropRows(row);
         }
@@ -136,27 +135,29 @@ void Grid::clearRows() {
     }
 }
 
-void Grid::drop() {
+bool Grid::drop() {
     while (shiftPiece(Direction::Down));
     vector<Coordinate> finalCoords = currentPiece->getCoords();
-    for (Coordinate coord : finalCoords) {
-        theGrid[coord.row][coord.col].setPiece(currentPiece);
+    for (Coordinate c : finalCoords) {
+        if (c.row < 3) { 
+            return false;
+            //gameOver();
+        }
+        theGrid[c.row][c.col].setPiece(currentPiece);
     }
     clearRows();
-    getNextPiece();
-    //gameOver();
+    return (getNextPiece());
 }
 
 bool Grid::movePiece(vector<Coordinate> newCoords) {
     bool valid = true;
     vector<Coordinate> oldCoords = currentPiece->getCoords();
-    for (Coordinate coord : oldCoords) {
-            theGrid[coord.row][coord.col].setColour(Colour::NoColour);
-            //theGrid[coord.row][coord.col].notifyObservers();
+    for (Coordinate c : oldCoords) {
+            theGrid[c.row][c.col].setColour(Colour::NoColour);
     }
-    for (Coordinate coord : newCoords) {
-        if (!inBounds(coord.row, coord.col, height, width) ||
-        theGrid[coord.row][coord.col].getInfo().colour != Colour::NoColour) {
+    for (Coordinate c : newCoords) {
+        if (!inBounds(c.row, c.col, height, width) ||
+        theGrid[c.row][c.col].getInfo().colour != Colour::NoColour) {
             valid = false;
             break;
         }
@@ -164,9 +165,8 @@ bool Grid::movePiece(vector<Coordinate> newCoords) {
     if (valid) {
         currentPiece->setCoords(newCoords);
     } else {
-        for (Coordinate coord : oldCoords) {
-            theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
-            //theGrid[coord.row][coord.col].notifyObservers();
+        for (Coordinate c : oldCoords) {
+            theGrid[c.row][c.col].setColour(currentPiece->getColour());
         }
     }
     return valid;
@@ -175,9 +175,8 @@ bool Grid::movePiece(vector<Coordinate> newCoords) {
 bool Grid::shiftPiece(Direction d) {
     vector<Coordinate> newPosition = currentPiece->shift(d);
     if (movePiece(newPosition)) {
-        for (Coordinate coord : newPosition) {
-            theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
-            //theGrid[coord.row][coord.col].notifyObservers();
+        for (Coordinate c : newPosition) {
+            theGrid[c.row][c.col].setColour(currentPiece->getColour());
         }
         return true;
     }
@@ -187,9 +186,8 @@ bool Grid::shiftPiece(Direction d) {
 bool Grid::rotatePiece(Rotation r) {
     vector<Coordinate> newPosition = currentPiece->rotate(r);
     if (movePiece(newPosition)) {
-        for (Coordinate coord : newPosition) {
-            theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
-            //theGrid[coord.row][coord.col].notifyObservers();
+        for (Coordinate c : newPosition) {
+            theGrid[c.row][c.col].setColour(currentPiece->getColour());
         }
         return true;
     }
@@ -197,14 +195,19 @@ bool Grid::rotatePiece(Rotation r) {
     return false;
 }
 
-void Grid::getNextPiece() {
+bool Grid::getNextPiece() {
     currentPiece = nextPiece;
     nextPiece = levelFactory->generatePiece(); //consider file or random
     vector<Coordinate> newPieceCoords = currentPiece->getCoords();
-    for (Coordinate coord : newPieceCoords) {
-        theGrid[coord.row][coord.col].setColour(currentPiece->getColour());
-        //theGrid[coord.row][coord.col].notifyObservers();
+    for (Coordinate c : newPieceCoords) {
+        Cell &theCell = theGrid[c.row][c.col];
+        if (theCell.getInfo().colour != Colour::NoColour) {
+            //gameOver();
+            return false; // might not need to return if the game over function takes over but I think this should be left in
+        }
+        theCell.setColour(currentPiece->getColour());
     }
+    return true;
 }
 
 void Grid::updateLevelFactory() {
@@ -216,9 +219,10 @@ void Grid::updateLevelFactory() {
         levelFactory = make_shared<Level2>();
     } else if (currentLevel == 1) {
         levelFactory = make_shared<Level1>();
-    } else { // changeLevel checks if the level is in bounds
+    } else { 
         levelFactory = make_shared<Level0>();
     }
+    levelFactory->attach(this);
 }
 
 void Grid::levelUp() {
@@ -277,19 +281,31 @@ void Grid::replaceCurrentPiece(string s) {
     }
 }
 
-void Grid::gameOver() {
-    // find out how to implement this
-    // it will probably call restart
-    vector<Coordinate> coords = currentPiece->getCoords();
-    for (Coordinate coord : coords) {
-        if (coord.row > 15) { // this is the wrong way around
-            cout << "YOU LOSE" << endl; // find out what exactly to do when the game is over
-        }
-    }
-}
-
 void Grid::restart() {
     //enter fields of grid that need to be changed when restarted
+    turnCount = 0; // MAYBE WE SHOULD REMOVE TURNCOUNT AS A FIELD IT'S NEVER USED LOL
+    currentLevel = 0;
+    score = 0;
+    levelFactory = make_shared<Level0>();
+    levelFactory->attach(this);
+    currentPiece = levelFactory->generatePiece();
+    nextPiece = levelFactory->generatePiece();
+    theGrid.clear();
+    for (int i = 0; i < height; ++i) {
+        vector<Cell> temp;
+        for (int j = 0; j < width; ++j) {
+            Cell c = Cell{Coordinate{i,j}};
+            c.attach(&td);
+            c.notifyObservers();
+            temp.emplace_back(c);
+        }
+        theGrid.emplace_back(temp);
+    }
+    vector<Coordinate> initialCoords = currentPiece->getCoords();
+    for (Coordinate c : initialCoords) {
+        theGrid[c.row][c.col].setColour(currentPiece->getColour());
+    }
+    print();
 }
 
 void Grid::hint() {

@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <cassert>
+#include <algorithm>
 #include "grid.h"
 #include "gamepiece.h"
 
@@ -56,7 +57,25 @@ int main(int argc, char *argv[]) {
             quadris->print();
             // rotate 90 degrees counterclockwise
         } else if (cmd == "drop") {
-            quadris->drop();
+            if (!quadris->drop()) {
+                cout << "Game Over! Keep playing? Y/N" << endl;
+                string answer;
+                while (true) {
+                    cin >> answer;
+                    transform(answer.begin(), answer.end(),
+                    answer.end(), ::tolower);
+                    if (answer == "y" || answer == "yes") {
+                        quadris->restart();
+                        break;
+                    } else if (answer == "n" || answer == "no") {
+                        answer = "endGame";
+                        break;
+                    }
+                }
+                if (answer == "endGame") {
+                    break;
+                }
+            }
             quadris->print();
             // drop the piece, summon next one (the drop function handles this)
         } else if (cmd == "levelup") {
@@ -94,6 +113,7 @@ int main(int argc, char *argv[]) {
             // change the current block to the block
         } else if (cmd == "restart") {
             // clear the board and start new game
+            quadris->restart();
         } else if (cmd == "hint") {
             // display a hint
         } else {

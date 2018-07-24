@@ -35,16 +35,15 @@ public:
     ~Grid();
     Grid();
     void print();
-    void drop();
+    bool drop();
     bool shiftPiece(Direction d);
     bool rotatePiece(Rotation r);
-    void getNextPiece();
+    bool getNextPiece();
     void levelUp();
     void levelDown();
     void updateFileName(std::string f);
     void restoreRandom();
     void replaceCurrentPiece(std::string s);
-    void gameOver();
     void restart();
     void hint();
     int getScore();
