@@ -16,7 +16,7 @@ using namespace std;
 Level0::Level0() {
 	random = false;
 	fileName = "sequence.txt";
-	openFile(fileName);
+	fileInput.open(fileName);
 }
  
 shared_ptr<GamePiece> Level0::generatePiece() {

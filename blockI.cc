@@ -4,10 +4,10 @@
 using namespace std;
 
 BlockI::BlockI(int levelGenerated) {
-    cout << "Generating block I" << endl;
+    //cout << "Generating block I" << endl;
     this->levelGenerated = levelGenerated;
-    allCoords = {Coordinate{0,0}, Coordinate{0,1},
-    Coordinate{0,2}, Coordinate{0,3}};
+    allCoords = {Coordinate{3,0}, Coordinate{3,1},
+    Coordinate{3,2}, Coordinate{3,3}};
     rotationIndex = 0;
 }
 

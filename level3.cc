@@ -15,7 +15,10 @@ Level3::Level3() {}
 
 shared_ptr<GamePiece> Level3::generatePiece() {
     if (random) {
-        //calculate random block generator
+        vector<string> pieces{"I", "J", "L", "O", "S", "S", "T", "Z", "Z"};
+        int size = pieces.size();
+        int n = randomInt(size);
+        return generatePieceFromString(pieces[n]);
     } else {
         string s = generateString();
         return generatePieceFromString(s);

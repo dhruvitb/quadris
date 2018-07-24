@@ -14,8 +14,10 @@ using namespace std;
 Level2::Level2() {}
 
 shared_ptr<GamePiece> Level2::generatePiece() {
-    //calculation to generate piece - no input file
-    return make_shared<BlockO>(myLevel);
+    vector<string> pieces{"I", "J", "L", "O", "S", "T", "Z"};
+    int size = pieces.size();
+    int n = randomInt(size);
+    return generatePieceFromString(pieces[n]);
 }
 
 int Level2::getMyLevel() {

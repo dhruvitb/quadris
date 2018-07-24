@@ -26,8 +26,7 @@ class Grid: public Observer<LevelInfo> {
     std::shared_ptr<GamePiece> currentPiece;
     std::shared_ptr<GamePiece> nextPiece;
     static bool inBounds(int i, int j, int maxI, int maxJ);
-    void incrementLevel();
-    void decrementLevel();
+    void updateLevelFactory();
     bool movePiece(std::vector<Coordinate> newPosition);
     bool checkClear(int row);
     void clearRows();
@@ -44,6 +43,7 @@ public:
     void levelDown();
     void updateFileName(std::string f);
     void restoreRandom();
+    void replaceCurrentPiece(std::string s);
     void gameOver();
     void restart();
     void hint();

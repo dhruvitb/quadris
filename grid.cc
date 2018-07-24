@@ -8,8 +8,14 @@
 #include "level2.h"
 #include "level3.h"
 #include "level4.h"
-#include "blockbomb.h"
+#include "blockI.h"
+#include "blockJ.h"
+#include "blockL.h"
 #include "blockO.h"
+#include "blockS.h"
+#include "blockT.h"
+#include "blockZ.h"
+#include "blockbomb.h"
 #include "gamepiece.h"
 #include <set>
 #include <algorithm>
@@ -198,24 +204,14 @@ void Grid::getNextPiece() {
     }
 }
 
-void Grid::incrementLevel() {
-    if (currentLevel == 0) {
-        levelFactory = make_shared<Level1>();
-    } else if (currentLevel == 1) {
-        levelFactory = make_shared<Level2>();
-    } else if (currentLevel == 2) {
-        levelFactory = make_shared<Level3>();
-    } else { // changeLevel checks if the level is in bounds
-        levelFactory = make_shared<Level4>();
-    }
-}
-
-void Grid::decrementLevel() {
+void Grid::updateLevelFactory() {
     if (currentLevel == 4) {
-        levelFactory = make_shared<Level3>();
+        levelFactory = make_shared<Level4>();
     } else if (currentLevel == 3) {
-        levelFactory = make_shared<Level2>();
+        levelFactory = make_shared<Level3>();
     } else if (currentLevel == 2) {
+        levelFactory = make_shared<Level2>();
+    } else if (currentLevel == 1) {
         levelFactory = make_shared<Level1>();
     } else { // changeLevel checks if the level is in bounds
         levelFactory = make_shared<Level0>();
@@ -225,26 +221,54 @@ void Grid::decrementLevel() {
 void Grid::levelUp() {
     if (currentLevel < LEVEL_MAX) {
         ++currentLevel;
-        incrementLevel();
+        updateLevelFactory();
+        cout << "current level is: " << currentLevel << endl;
     }
 }
 
 void Grid::levelDown() {
     if (currentLevel > LEVEL_MIN) {
         --currentLevel;
-        decrementLevel();
+        updateLevelFactory();
     }
+    cout << "current level is: " << currentLevel << endl;
 }
 
 void Grid::updateFileName(string s) {
-    if (currentLevel == 3 || currentLevel == 4) {
+    if (currentLevel == 0 || currentLevel == 3 || currentLevel == 4) {
         levelFactory->changeFileName(s);
     }
 }
 
 void Grid::restoreRandom() {
-    if (currentLevel != 0) {
+    if (currentLevel == 3 || currentLevel == 4) {
         levelFactory->randomize();
+    }
+}
+
+void Grid::replaceCurrentPiece(string s) {
+    vector<Coordinate> oldCoords = currentPiece->getCoords();
+    for (Coordinate c : oldCoords) {
+        theGrid[c.row][c.col].setColour(Colour::NoColour);
+    }
+    if (s == "I") {
+		currentPiece = make_shared<BlockI>(currentLevel);
+	} else if (s == "J") {
+		currentPiece = make_shared<BlockJ>(currentLevel);
+	} else if (s == "L") {
+		currentPiece = make_shared<BlockL>(currentLevel);
+	} else if (s == "O") {
+		currentPiece = make_shared<BlockO>(currentLevel);
+	} else if (s == "S") {
+		currentPiece = make_shared<BlockS>(currentLevel);
+	} else if (s == "Z") {
+		currentPiece = make_shared<BlockZ>(currentLevel);
+	} else { //s == "T"
+		currentPiece = make_shared<BlockT>(currentLevel);
+	}    
+    vector<Coordinate> temp = currentPiece->getCoords();
+    for (Coordinate c : temp) {
+        theGrid[c.row][c.col].setColour(currentPiece->getColour());
     }
 }
 
