@@ -4,7 +4,7 @@
 using namespace std;
 
 enum class Colour {Cyan, Blue, Orange, Yellow, Green, Red, Purple, Brown,
-                    Black, LightGrey, NoColour};
+                    Black, NoColour, White};
 
 enum class Direction {Left, Down, Right};
 

@@ -2,12 +2,12 @@
 using namespace std;
 
 Cell::Cell(Coordinate position): position{position},
-colour{Colour::NoColour}, request{Request::NoRequest} {
+colour{Colour::NoColour}, request{Request::NoRequest} { // requests probably should be removed
 
 }
 
 CellInfo Cell::getInfo() const {
-    char symbol = '-';
+    char symbol = '-'; // might remove the whole symbol field in general it's never used
     if (piece != nullptr) {
         symbol = piece->getSymbol();
     }
@@ -16,12 +16,12 @@ CellInfo Cell::getInfo() const {
 
 bool Cell::notify(Subject &from) {
     (void) from;
-    return true; // this function might be unused
+    return true; // this function might be unused yeah we should probably get rid of it ajknclsajnvisnc
 }
 
 void Cell::setColour(Colour c) {
     colour = c;
-    notifyObservers();
+    notifyObservers(); // when a colour change occurs, notify its observers
 }
 
 void Cell::setPiece(shared_ptr<GamePiece> newPiece) {

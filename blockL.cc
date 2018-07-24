@@ -2,7 +2,6 @@
 using namespace std;
 
 BlockL::BlockL(int levelGenerated, bool isHeavy) {
-    //cout << "Generating block L" << endl;
     this->levelGenerated = levelGenerated;
     allCoords = {Coordinate{3,0}, Coordinate{3,1},
     Coordinate{3,2}, Coordinate{4,0}};

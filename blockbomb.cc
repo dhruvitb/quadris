@@ -8,7 +8,7 @@ BlockBomb::BlockBomb() {
 BlockBomb::~BlockBomb() {}
 
 std::vector<Coordinate> BlockBomb::rotate(Rotation r) {
-    (void) r;
+    (void) r; // bomb is incapable of rotation
     return std::vector<Coordinate>();
 } 
     

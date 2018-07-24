@@ -40,7 +40,7 @@ int GamePiece::findRotationIndex(Rotation change) { //-1 if ccw, +1 if cw
 
 vector<Coordinate> GamePiece::shift(Direction d) {
     vector<Coordinate> copy = allCoords; // a vector we can mutate
-    if (d == Direction::Right) {
+    if (d == Direction::Right) { // add to coordinates depending on direction
         for (Coordinate &c: copy) {
             ++c.col;
         }
@@ -61,14 +61,15 @@ Coordinate GamePiece::templateCoord(Coordinate c, Coordinate offset) {
 }
 
 void GamePiece::setCoords(vector<Coordinate> newCoords) {
-    allCoords = newCoords;
+    allCoords = newCoords; 
 }
 
 std::vector<Coordinate> GamePiece::getCoords() {
-    return allCoords;
+    return allCoords; 
 }
 
 Coordinate GamePiece::getLowerLeft() {
+    // return the lower left coordinate of the smallest bounding box
     Coordinate lowerLeft = allCoords[0];
     for (Coordinate coord : allCoords) {
         if (coord.row > lowerLeft.row) {
