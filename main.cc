@@ -15,21 +15,17 @@ using namespace std;
 //checks if command contains action and ensures the command is valid
 //there may be a multiplier
 bool validCommand(string command, string action) {
-    bool contains = (command.find(action) != string::npos);
-    cout << contains << endl;
-    bool valid;
     stringstream ss(command);
-    int n = 0;
-    string s;
-    ss >> n >> s;
-    cout << "multiplier is: " << n << endl;
-    cout << "command is: " << s << endl;
-    cout << "action is: " << action << endl;
-    if (n >= 0 && s == action) {
-        valid = true;
-    }
-    cout << valid << endl;
-    return contains && valid;
+
+    int n = -1;
+    string realCommand;
+
+    if('0' <= command[0] && command[0] <= '9')
+        ss >> n;
+
+    ss >> realCommand;
+
+    return (realCommand == action);
 }
 
 //finds the multiplier
