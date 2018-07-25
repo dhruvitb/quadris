@@ -23,9 +23,9 @@ class Grid: public Observer<LevelInfo> {
     std::vector<std::vector<Cell>> theGrid;
     std::shared_ptr<Level> levelFactory;
     TextDisplay td;
-    bool textOnly;
+    bool textOnly = false;
     GraphicsDisplay gd;
-    bool graphicsOnly;
+    bool graphicsOnly = false;
     std::shared_ptr<GamePiece> currentPiece;
     std::shared_ptr<GamePiece> nextPiece;
     static bool inBounds(int i, int j, int maxI, int maxJ);

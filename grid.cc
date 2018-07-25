@@ -342,7 +342,11 @@ void Grid::updateFileName(string s) {
 }
 
 void Grid::updateSeed(int x) {
-    levelFactory->changeSeed(x);
+    if (currentLevel != 0) {
+        levelFactory->changeSeed(x);
+    } else {
+        cout << "Level 0 can not have a seed" << endl;
+    }
 }
 
 void Grid::restoreRandom() {
