@@ -141,7 +141,11 @@ int main(int argc, char *argv[]) {
             stringstream ss(lvl); //convert from string to int
             int x;
             ss >> x;
-            quadris->updateLevel(x);
+            if (x < 0 || x > 4) {
+                cout << "Invalid level: " << x << endl;
+            } else {
+                quadris->updateLevel(x);
+            }
             ++i;
             //change the level
         }
@@ -316,6 +320,7 @@ int main(int argc, char *argv[]) {
             quadris->restart();
         } else if (cmd == "hint") {
             quadris->hint();
+            quadris->print();
             // display a hint
         } else {
             cout << "Invalid command: " << cmd << endl;

@@ -197,6 +197,7 @@ void Grid::clearRows() {
 }
 
 bool Grid::drop() {
+    removeHint();
     while (shiftPiece(Direction::Down));
     vector<Coordinate> finalCoords = currentPiece->getCoords();
     for (Coordinate c : finalCoords) {
@@ -213,28 +214,31 @@ bool Grid::drop() {
     return (getNextPiece());
 }
 
-bool Grid::validMove(vector<Coordinate> newCoords) {
+bool Grid::validMove(vector<Coordinate> newCoords, shared_ptr<GamePiece> piece) {
     bool valid = true;
-    vector<Coordinate> oldCoords = currentPiece->getCoords();
+    vector<Coordinate> oldCoords = piece->getCoords();
     for (Coordinate c : oldCoords) {
         if (inBounds(c.row, c.col, height, width)) {
             theGrid[c.row][c.col].setColour(Colour::NoColour);
+            //cout << "Removing colour in (" << c.row << "," << c.col << ")" << endl;
         } else {
             return false;
         }
     }
     for (Coordinate c : newCoords) {
         if (!inBounds(c.row, c.col, height, width) ||
-        theGrid[c.row][c.col].getInfo().colour != Colour::NoColour) {
+        (theGrid[c.row][c.col].getInfo().colour != Colour::NoColour &&
+        theGrid[c.row][c.col].getInfo().colour != Colour::Black)) {
             valid = false;
             break;
         }
     }
     if (valid) {
-        currentPiece->setCoords(newCoords);
+        piece->setCoords(newCoords);
+        removeHint();
     } else {
         for (Coordinate c : oldCoords) {
-            theGrid[c.row][c.col].setColour(currentPiece->getColour());
+            theGrid[c.row][c.col].setColour(piece->getColour());
         }
     }
     return valid;
@@ -244,12 +248,12 @@ bool Grid::heavyMove(vector<Coordinate> moveDown) {
     for (Coordinate &c : moveDown) {
         ++c.row;
     }
-    return validMove(moveDown);
+    return validMove(moveDown, currentPiece);
 }
 
 bool Grid::shiftPiece(Direction d) {
     vector<Coordinate> newPosition = currentPiece->shift(d);
-    if (validMove(newPosition)) {
+    if (validMove(newPosition, currentPiece)) {
         for (Coordinate c : newPosition) {
             if (inBounds(c.row, c.col, height, width)) {
                 theGrid[c.row][c.col].setColour(currentPiece->getColour());
@@ -270,7 +274,7 @@ bool Grid::shiftPiece(Direction d) {
 
 bool Grid::rotatePiece(Rotation r) {
     vector<Coordinate> newPosition = currentPiece->rotate(r);
-    if (validMove(newPosition)) {
+    if (validMove(newPosition, currentPiece)) {
         for (Coordinate c : newPosition) {
             theGrid[c.row][c.col].setColour(currentPiece->getColour());
         }
@@ -471,43 +475,153 @@ void Grid::restart() {
 }
 
 void Grid::hint() {
-    shared_ptr<BlockHint> theHint = make_shared<BlockHint>();
-    theHint->setRotationIndex(currentPiece->getRotationIndex());
-    cout << "able to set rotation" << endl;
+    shared_ptr<GamePiece> theHint = make_shared<BlockHint>();
+    //give hintPiece the necessary fields from currentPiece
     theHint->setCoords(currentPiece->getCoords());
-    cout << "able to set the coordinates" << endl;
-    //char symb = currentPiece->getSymbol();
-    //string s;
-    //s.push_back(symb); //convert the symb into a string
-    //shared_ptr<GamePiece> temp = createPiece(s);
-    //shift the hint piece so it is in the correct column
+    theHint->setRotationIndex(currentPiece->getRotationIndex());
+    //keeps a copy of current piece coordinates
+    vector<Coordinate> copyCurrentCoords = currentPiece->getCoords();
+    //removes colour from the cells
+    for (Coordinate c : copyCurrentCoords) {
+        theGrid[c.row][c.col].setColour(Colour::NoColour);
+    }
+    //find the optimal column for hint ****To be improved
+    int furthestCol = width - 3; 
+    if (currentPiece->getSymbol() == 'I') { //special case for I
+        furthestCol = width - 4;
+    } 
+    int randomCol = rand() % furthestCol; //random column for left side of block
+    int offset = currentPiece->getLowerLeft().col - randomCol;
+    //update thehint piece with the offset amount
+    vector<Coordinate> hintCoords = theHint->getCoords();
+    for (Coordinate &c : hintCoords) {
+        c.col = c.col - offset;
+    }
+    cout << "offset by: " << offset << endl;
+    theHint->setCoords(hintCoords);
+    
+    /*//debugging
+    cout << "AFTER THE HINT PIECE HAS BEEN TRANSLATED LEFT" << endl;
+    cout << "Current piece coordinates are:" << endl;
+    vector<Coordinate> curr = currentPiece->getCoords();
+    for (int i = 0; i < (int)(curr.size()); ++i) {
+        int r = curr[i].row;
+        int c = curr[i].col;
+        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
+    }
+    cout << "Hint piece coordinates are:" << endl;
+    vector<Coordinate> hint = theHint->getCoords();
+    for (int i = 0; i < (int)(hint.size()); ++i) {
+        int r = hint[i].row;
+        int c = hint[i].col;
+        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
+    }*/
+
+    //try to move the hint block as far down as possible
+    for (int i = 0; i < 15; ++i) {
+    vector<Coordinate> tryCoords = theHint->shift(Direction::Down);
+        if (validMove(tryCoords, theHint)) {
+            cout << "dropping" << endl;
+        } else {
+            break;
+        }
+    };
+
+    /*//debugging
+    cout << "AFTER THE HINT PIECE HAS BEEN MOVED DOWN" << endl;
+    cout << "Current piece coordinates are:" << endl;
+    vector<Coordinate> curr2 = currentPiece->getCoords();
+    for (int i = 0; i < (int)(curr.size()); ++i) {
+        int r = curr2[i].row;
+        int c = curr2[i].col;
+        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
+    }
+    cout << "Hint piece coordinates are:" << endl;
+    vector<Coordinate> hint2 = theHint->getCoords();
+    for (int i = 0; i < (int)(hint.size()); ++i) {
+        int r = hint2[i].row;
+        int c = hint2[i].col;
+        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
+    }*/
+
+    //set the hintPiece to theHint
+    hintPiece = theHint;
+
+    //give the cell the hint piece
+    hintCoords = hintPiece->getCoords();
+    for (Coordinate c : hintCoords) {
+        if (inBounds(c.row, c.col, height, width)) {
+            theGrid[c.row][c.col].setPiece(theHint);
+            theGrid[c.row][c.col].setColour(theHint->getColour());
+            cout << "symbol of hint is " << hintPiece->getSymbol() << endl;
+            cout << "symbol at cell is " << theGrid[c.row][c.col].getInfo().symbol << endl;
+        }
+    }
+    //add colour of current cell back to cells
+    for (Coordinate c : copyCurrentCoords) {
+        theGrid[c.row][c.col].setColour(currentPiece->getColour());
+    }
+
+    /*shared_ptr<BlockHint> theHint = make_shared<BlockHint>();
+    theHint->setRotationIndex(currentPiece->getRotationIndex());
+    vector<Coordinate> newHintCoords = currentPiece->getCoords(); //gets mutated
+    vector<Coordinate> currentPieceCoords = currentPiece->getCoords(); //
+    //clears the colours from current piece
+    for (Coordinate c : currentPieceCoords) {
+        theGrid[c.row][c.col].setColour(Colour::NoColour);
+    }
+    
+    //theHint->setCoords(currentPiece->getCoords());
+    int randomNum = currentPiece->getLevelGenerated();
+    srand(randomNum);
     int num = width - 3; //special case for I??? // number of columns possible
     int randomCol = rand() % num; //random column for left side of block
-    int currentCol = (theHint->getLowerLeft()).col;
-    cout << "able to get the lower left coord" << endl;
+    int currentCol = (currentPiece->getLowerLeft()).col;
     int offset = currentCol - randomCol;
-    cout << "offset by: " << offset;
-    vector<Coordinate> newHintCoords = theHint->getCoords();
+
+    //vector<Coordinate> newHintCoords = theHint->getCoords();
     for (Coordinate &c : newHintCoords) {
-        c.col += offset;
+        c.col -= offset;
     }
-    theHint->setCoords(newHintCoords);
+    theHint->setCoords(newHintCoords); //must set in order to use shift function
     //find the lowest point the set of coordinates temp can drop to
     while (true) {
-        vector<Coordinate> newPosition = theHint->shift(Direction::Down);
-        if (validMove(newPosition)) {
-            theHint->setCoords(newPosition);
+        //vector<Coordinate> newPosition = theHint->shift(Direction::Down);
+        if (validMove(theHint->shift(Direction::Down), theHint, true)) {
+            cout << "block is shifted down" << endl;
         } else {
             break;
         }
     }
+    //debugging
+    cout << "AFTER THE HINT PIECE HAS BEEN SHIFTED DOWN" << endl;
+    cout << "Current piece coordinates are:" << endl;
+    vector<Coordinate> curr4 = currentPiece->getCoords();
+    for (int i = 0; i < (int)(curr4.size()); ++i) {
+        int r = curr4[i].row;
+        int c = curr4[i].col;
+        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
+    }
+    cout << "Hint piece coordinates are:" << endl;
+    vector<Coordinate> hint4 = theHint->getCoords();
+    for (int i = 0; i < (int)(hint4.size()); ++i) {
+        int r = hint4[i].row;
+        int c = hint4[i].col;
+        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
+    }
     newHintCoords = theHint->getCoords();
     for (Coordinate c : newHintCoords) {
-                if (inBounds(c.row, c.col, height, width)) {
-                    theGrid[c.row][c.col].setColour(theHint->getColour());
-                }
-            }
+        if (inBounds(c.row, c.col, height, width)) {
+                theGrid[c.row][c.col].setColour(theHint->getColour());
+                cout << "symbol of hint is " << theHint->getSymbol() << endl;
+                cout << "symbol at cell is " << theGrid[c.row][c.col].getInfo().symbol << endl;
+        }
+    }
     hintPiece = theHint;
+    //puts the colour back into the current piece
+    for (Coordinate c : currentPieceCoords) {
+        theGrid[c.row][c.col].setColour(currentPiece->getColour());
+    }*/
 }
 
 bool Grid::notify(Subject<LevelInfo> &from) {
@@ -532,5 +646,17 @@ void Grid::applyColourScheme(std::string s) {
             Cell c = Cell{Coordinate{i,j}};
             c.notifyObservers();
         }
+    }
+}
+
+void Grid::removeHint() {
+    if (hintPiece != nullptr) {
+        vector<Coordinate> hintCoords = hintPiece->getCoords();
+        for (Coordinate c : hintCoords) {
+            Cell theCell = theGrid[c.row][c.col];
+            theCell.setColour(Colour::NoColour);
+            theCell.setPiece(nullptr);
+        }
+        hintPiece = nullptr;
     }
 }

@@ -1,7 +1,9 @@
 #include "blockhint.h"
 #include <vector>
 
-BlockHint::BlockHint() {}
+BlockHint::BlockHint() {
+    isHeavy = false;
+}
 
 BlockHint::~BlockHint() {}
 

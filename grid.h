@@ -33,7 +33,8 @@ class Grid: public Observer<LevelInfo> {
     // changes the levelFactor to be equal to the changed level
     void updateLevelFactory();
     // checks each coordinate in newPosition to see if it's valid
-    bool validMove(std::vector<Coordinate> newPosition);
+    // isHint is used specifically for checking validity of hint pieces
+    bool validMove(std::vector<Coordinate> newPosition, shared_ptr<GamePiece> piece);
     // returns true if a line can be cleared (if it's filled)
     bool checkClear(int row);
     // clears rows if they are filled
@@ -65,6 +66,7 @@ public:
     void hint(); // displays a hint for current piece
     bool notify(Subject<LevelInfo> &from) override; // receives notification
     void applyColourScheme(std::string s);
+    void removeHint();
 };
 
 #endif
