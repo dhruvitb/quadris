@@ -4,15 +4,13 @@
 using namespace std;
 
 enum class Colour {Cyan, Blue, Orange, Yellow, Green, Red, Purple, Brown,
-                    Black, NoColour, White};
+                    Black, NoColour, White}; // available colours
 
-enum class Direction {Left, Down, Right};
+enum class Direction {Left, Down, Right}; // available movement directions
 
-enum class Rotation {CW = 1, CCW = -1};
+enum class Rotation {CW = 1, CCW = -1}; // available rotation directions
 
-enum class Piece{I,J,L,O,S,Z,T};
-
-enum class Request{Clear, Drop, NoRequest};
+enum class Piece{I,J,L,O,S,Z,T}; // 
 
 struct Coordinate {
     int row;

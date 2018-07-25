@@ -27,7 +27,7 @@ using namespace std;
 
 int Grid::highScore = 0;
 
-Grid::Grid(): turnCount{0}, currentLevel{0}, score{0}, td{}, gd{385, 630} {
+Grid::Grid(): currentLevel{0}, score{0}, td{}, gd{385, 630} {
     //Dhruvit to to get the window not to appear upon executing constructor
     updateLevelFactory();
     //levelFactory->attach(this);
@@ -84,18 +84,8 @@ void Grid::init() {
         }
         theGrid.emplace_back(temp);
     }
-    /*for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j) {
-            Cell &theCell = theGrid[i][j];
-            if (!textOnly) {
-                theCell.attach(&gd);
-                theCell.notifyObservers();
-            }
-        }
-    }*/
     currentPiece = levelFactory->generatePiece();
     nextPiece = levelFactory->generatePiece();
-
     vector<Coordinate> initialCoords = currentPiece->getCoords();
     for (Coordinate c : initialCoords) {
         if (inBounds(c.row, c.col, height, width)) {
@@ -125,7 +115,7 @@ void Grid::changeGraphicsOnly() {
 bool Grid::checkClear(int row) {
     for (int i = 0; i < width; ++i) {
         if (theGrid[row][i].getInfo().colour == Colour::NoColour) {
-            return false;
+            return false; // if one of the cells does not have a piece in it
         }
     }
     return true;
@@ -134,18 +124,25 @@ bool Grid::checkClear(int row) {
 void Grid::dropRows(int row) {
     while (row > 0) {
         for (int i = 0; i < width; ++i) {
+            // clear the previous row
             theGrid[row-1][i].setColour(Colour::NoColour);
+            // get the piece that occupies the cell in the previous row
             shared_ptr<GamePiece> cellsPiece = theGrid[row-1][i].getPiece();
-            if (cellsPiece) {
+            if (cellsPiece) { // if there is a piece on the cell
                 vector<Coordinate> temp = cellsPiece->getCoords();
                 for (Coordinate &c : temp) {
                     if (c.row == row - 1) {
+                        // update the coordinates in the previous row to be in
+                        // this row, and remove the pointer from the old 
+                        // coordinate and add to the cell below it
                         c.row = row;
-                        theGrid[row-1][c.col].setPiece(nullptr);
+                        theGrid[row-1][c.col].setPiece(nullptr); 
                         theGrid[row][c.col].setPiece(cellsPiece);
                     }
+                    // update the colour of the cell
                     theGrid[c.row][c.col].setColour(cellsPiece->getColour());
                 }
+                // change coords of piece to match its location displayed
                 cellsPiece->setCoords(temp);
             }
         }
@@ -155,36 +152,40 @@ void Grid::dropRows(int row) {
 
 void Grid::clearRows() {
     vector<Coordinate> finalCoords = currentPiece->getCoords();
-    set<int> rowsSpanned;
-    int rowsCleared = 0;
+    set<int> rowsSpanned; // every unique row that might need to be cleared
+    int rowsCleared = 0; // number of rows cleared at once
     for (Coordinate coord : finalCoords) {
         rowsSpanned.insert(coord.row);
     }
     for (int row : rowsSpanned) {
         if (checkClear(row)) {
+            // since we have cleared a row, we reset the brick piece counter 
+            // in levelFactory 
             levelFactory->resetTurnCount();
             ++rowsCleared;
             for (int i = 0; i < width; ++i) {
                 Cell &theCell = theGrid[row][i];
+                // remove the coordinate of the cell being cleared from the 
+                // list of coordinates in the related piece
                 vector<Coordinate> temp =
                 theCell.getPiece()->getCoords();
                 temp.erase(std::remove(temp.begin(), temp.end(), 
                 Coordinate{row,i}), temp.end());
-                theCell.getPiece()->setCoords(temp);
-                theCell.setColour(Colour::NoColour);
-                if (temp.size() == 0) {
+                theCell.getPiece()->setCoords(temp); // set the new coords
+                theCell.setColour(Colour::NoColour); // make colour blank
+                if (temp.size() == 0) { // if the piece has been cleared
                     score += pow(
                     (theCell.getPiece()->getLevelGenerated() + 1), 2);
                 }
             }
-            dropRows(row);
+            dropRows(row); // drop the rows above the row that was cleared
         }
     }
-    if (rowsCleared > 0) {
+    if (rowsCleared > 0) { // calculate scores if rows were cleared
         score += pow((rowsCleared + currentLevel), 2);
     }
     if (score > highScore) {
-        highScore = score;
+        highScore = score; // keep highscore updated
     }
 }
 
@@ -389,7 +390,6 @@ void Grid::replaceCurrentPiece(string s) {
 
 void Grid::restart() {
     //enter fields of grid that need to be changed when restarted
-    turnCount = 0; // MAYBE WE SHOULD REMOVE TURNCOUNT AS A FIELD IT'S NEVER USED LOL
     currentLevel = 0;
     score = 0;
     levelFactory = make_shared<Level0>();

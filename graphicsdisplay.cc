@@ -31,6 +31,7 @@ bool GraphicsDisplay::notify(Subject<CellInfo> &from) {
 
 void GraphicsDisplay::updateMenu(int level, int score, int hiScore,
 shared_ptr<GamePiece> next) {
+    // update the values on the side menu
     window->fillRectangle(390, 80, 100, 80, 10);
     window->drawString(400, 100, "Level:     " + to_string(level));
     window->drawString(400, 120, "Score:     " + to_string(score));
@@ -39,6 +40,7 @@ shared_ptr<GamePiece> next) {
 }
 
 void GraphicsDisplay::drawNext(shared_ptr<GamePiece> next) {
+    // draw the next piece in queue
     vector<Coordinate> coords = next->getCoords();
     Colour colour = next->getColour();
     int colourValue = (int) colour;
