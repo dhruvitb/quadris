@@ -12,29 +12,92 @@
 
 using namespace std;
 
-//checks if command contains action and ensures the command is valid
-//there may be a multiplier
-bool validCommand(string command, string action) {
-    bool contains = (command.find(action) != string::npos);
-    cout << contains << endl;
-    bool valid;
-    stringstream ss(command);
-    int n = 0;
-    string s;
-    ss >> n >> s;
-    cout << "multiplier is: " << n << endl;
-    cout << "command is: " << s << endl;
-    cout << "action is: " << action << endl;
-    if (n >= 0 && s == action) {
-        valid = true;
+//returns the full string if input is unique or "" otherwise
+string checkUniqueness(string input) { //assume command has no prefix (no number)
+    //an array of possible commands
+    vector<string> commands {"left", "right", "down", "clockwise", "counterclockwise", "drop",
+    "levelup", "leveldown", "norandom", "random", "sequence", "I", "J", "L", "O", "S", "T", "Z", 
+    "restart", "hint"};
+    int matches = 0;
+    int index; //the index for the matching command
+    int size = commands.size();
+    for (int i = 0; i < size; ++i) {
+        if (commands[i].find(input) == 0) {
+            ++matches;
+            index = i;
+        }
     }
-    cout << valid << endl;
-    return contains && valid;
+    if (matches == 1) {
+        return commands[index];
+    }
+    return "";
 }
 
-//finds the multiplier
-int multiplier(string command, string action) {
+//mutates multiplier and returns the string part of the command
+string updateMultiplier(string command, int &multiplier) {
+    //updates multiplier
+    int n = -1;
+    string input;
+    stringstream ss(command);
+    ss >> n >> input; //n will become 0 if 0right or right (prefix and no prefix)
+    if (n == 0 && (command.at(0) != '0')) { //no prefix so input needs the correct command
+        stringstream ss(command);
+        ss >> input;
+    }
+    //both n (multiplier) and input (user entered) reflect the actual command
+    if (command.at(0) == '0') {
+        multiplier = 0;
+    } else if (isdigit(command.at(0))) { 
+        multiplier = n;
+    } //else the multiplier value doesn't get mutated (default value 1)
+    string u = checkUniqueness(input); //u for unique
+    /*if (u != "") { //shouldn't matter if the multiplier for these are changed
+        if (u == "random" || u == "sequence" || u == "I" || u == "J" || u == "L" ||
+            u == "O" || u == "S" || u == "T" || u == "Z" || u == "restart" || 
+            u == "hint") {
+            multiplier = 1; //these commands should only occur once
+        }        
+    }*/
+    return input;
 }
+
+//checks if command contains action and ensures the command is valid
+//mutates multiplier
+/*bool validCommand(string command, string action, int &multiplier) {
+    bool contains = (command.find(action) != string::npos);
+    if (!contains) {
+        return false; 
+    } //doesn't need to know if it is valid
+    bool valid = false;
+    stringstream ss(command);
+    int n = -1;
+    string s;
+    ss >> n >> s; //n will become 0 if 0right or right
+    //no digit in front (i.e. right)
+    if (n == 0) {
+        stringstream ss(command);
+        ss >> s;
+    }
+    if (s == action) {
+        valid = true;
+        //actions where muliplier don't have an effect
+        if (s == "random" || s == "sequence" || s == "I" || s == "J" || s == "L" ||
+            s == "O" || s == "S" || s == "T" || s == "Z" || s == "restart" || 
+            s == "hint") {
+            return true; //contains && valid are both true
+        }
+        //case for 0right
+        if (command.at(0) == '0') {
+            multiplier = 0;
+        } else if (isdigit(command.at(0))) { 
+            multiplier = n;
+        } 
+        //if there is no digit in front (including negatives), multiplier doesn't change
+        //default value is 1
+    }
+    return contains && valid;
+}*/
+
 
 int main(int argc, char *argv[]) {
     unique_ptr<Grid> quadris = make_unique<Grid>();
@@ -78,6 +141,9 @@ int main(int argc, char *argv[]) {
 
     while (true) {
         string cmd;
+        int multiplier = 1;
+
+        //finds command from either file or keyboard
         if(commandFile) {
             commandFile >> cmd;
             if(cmd == "") { //means file has reached EOF
@@ -90,54 +156,88 @@ int main(int argc, char *argv[]) {
                 break;
             }
         }
-        cout << "Please do this: " << cmd << endl;
-        if (validCommand(cmd, "left")) {
-            quadris->shiftPiece(Direction::Left);
+
+        //update multiplier for command
+        string input = updateMultiplier(cmd, multiplier);
+        
+        //checks for uniqueness of command
+        string temp = checkUniqueness(input);
+        if (temp != "") {
+            cmd = temp; //gives cmd the unique string, else the call is invalid
+        }
+
+        //prossess the command
+        if (cmd == "left") {
+            for (int i = 0; i < multiplier; ++i) {
+                quadris->shiftPiece(Direction::Left);  
+            }
             quadris->print();
             // move the current piece left
-        } else if (validCommand(cmd, "right")) {
-            quadris->shiftPiece(Direction::Right);
+        } else if (cmd == "right") {
+            for (int i = 0; i < multiplier; ++i) {
+                quadris->shiftPiece(Direction::Right);  
+            }
             quadris->print();
             // move the current piece right
-        } else if (cmd == "down" || cmd == "d") {
-            quadris->shiftPiece(Direction::Down);
+        } else if (cmd == "down") {
+            for (int i = 0; i < multiplier; ++i) {
+                quadris->shiftPiece(Direction::Down);  
+            }
             quadris->print();
             // move the current piece down
-        } else if (cmd == "clockwise" || cmd == "cw") {
-            quadris->rotatePiece(Rotation::CW);
+        } else if (cmd == "clockwise") {
+            for (int i = 0; i < multiplier; ++i) {
+                quadris->rotatePiece(Rotation::CW);  
+            }
             quadris->print();
             // rotate 90 degrees clockwise
-        } else if (cmd == "counterclockwise" || cmd == "ccw") {
-            quadris->rotatePiece(Rotation::CCW);
+        } else if (cmd == "counterclockwise") {
+            for (int i = 0; i < multiplier; ++i) {
+                quadris->rotatePiece(Rotation::CCW);  
+            }
             quadris->print();
             // rotate 90 degrees counterclockwise
         } else if (cmd == "drop") {
-            if (!quadris->drop()) {
-                cout << "Game Over! Keep playing? Y/N" << endl;
-                string answer;
-                while (true) {
-                    cin >> answer;
-                    transform(answer.begin(), answer.end(),
-                    answer.end(), ::tolower);
-                    if (answer == "y" || answer == "yes") {
-                        quadris->restart();
-                        break;
-                    } else if (answer == "n" || answer == "no") {
-                        answer = "endGame";
+            string answer = "";
+            bool restartGame = false;
+            //Dhruvit to double check the multiplier to the drop function
+            for (int i = 0; i < multiplier; ++i) {
+                if (!quadris->drop()) {
+                    cout << "Game Over! Keep playing? Y/N" << endl;
+                    //string answer;
+                    while (true) {
+                        cin >> answer;
+                        transform(answer.begin(), answer.end(),
+                        answer.end(), ::tolower); //what does this do, Dhruvit?
+                        if (answer == "y" || answer == "yes") {
+                            restartGame = true;
+                            quadris->restart();
+                            break;
+                        } else if (answer == "n" || answer == "no") {
+                            answer = "endGame";
+                            break;
+                        }
+                    }
+                    if (answer == "endGame" || restartGame) {
                         break;
                     }
-                }
-                if (answer == "endGame") {
-                    break;
-                }
+                } 
+            }
+            if (answer == "endGame") {
+                cout << "Thanks for playing!" << endl;
+                break;
             }
             quadris->print();
             // drop the piece, summon next one (the drop function handles this)
         } else if (cmd == "levelup") {
-            quadris->levelUp();
+            for (int i = 0; i < multiplier; ++i) {
+                quadris->levelUp();  
+            }
             // increment level if possible
         } else if (cmd == "leveldown") {
-            quadris->levelDown();
+            for (int i = 0; i < multiplier; ++i) {
+                quadris->levelDown();  
+            }
             // decrement level if possible
         } else if (cmd == "norandom") {
             string s;
@@ -161,8 +261,8 @@ int main(int argc, char *argv[]) {
                 cout << "Invalid file: " << fileName << " :(" << endl;
             }
             // execute sequence of commands in fileName
-        } else if (cmd == "I" || cmd == "J" || cmd == "L" || cmd == "O"
-        || cmd == "S" || cmd == "T" || cmd == "Z") {
+        } else if (cmd == "I" || cmd == "J" || cmd == "L" || cmd == "O" || cmd == "S" || 
+            cmd == "T" || cmd == "Z") {
             quadris->replaceCurrentPiece(cmd);
             quadris->print();
             // change the current block to the block

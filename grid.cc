@@ -315,7 +315,7 @@ void Grid::levelUp() {
         //cout << "Current level is: " << currentLevel << endl;
         print();
     } else {
-        cout << "Level is oustide range of [0,4]" << endl;
+        cout << "Level is outside range of [0,4]" << endl;
     }
 }
 
@@ -413,6 +413,7 @@ void Grid::restart() {
         theGrid[c.row][c.col].setColour(currentPiece->getColour());
     }
     print();
+    cout << "You are restarting at level 0" << endl;
 }
 
 void Grid::hint() {
