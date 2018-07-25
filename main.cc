@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
         string option = argv[i];
         if (option == "-text") {
             quadris->changeTextOnly();
-        } else if (option == "graphics") {
+        } else if (option == "-graphics") {
             quadris->changeGraphicsOnly();
         }else if (option == "-seed") {
             string seed = argv[i+1];
