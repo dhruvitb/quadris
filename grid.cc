@@ -16,10 +16,12 @@
 #include "blockT.h"
 #include "blockZ.h"
 #include "blockbomb.h"
+#include "blockhint.h"
 #include "gamepiece.h"
 #include <set>
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include "window.h"
 #include "graphicsdisplay.h"
 #include "X11/Xlib.h"
@@ -322,7 +324,7 @@ void Grid::levelUp() {
         //cout << "Current level is: " << currentLevel << endl;
         print();
     } else {
-        cout << "Level is outside range of [0,4]" << endl;
+        cout << "Level is outside range of [" << LEVEL_MIN << "," << LEVEL_MAX << "]" << endl;
     }
 }
 
@@ -332,7 +334,7 @@ void Grid::levelDown() {
         updateLevelFactory();
         print();
     } else {
-        cout << "Level is oustide range of [0,4]" << endl;
+        cout << "Level is outside range of [" << LEVEL_MIN << "," << LEVEL_MAX << "]" << endl;
     }
 }
 void Grid::updateLevel(int lvl) {
@@ -369,12 +371,11 @@ void Grid::restoreRandom() {
     }
 }
 
-void Grid::replaceCurrentPiece(string s) {
+shared_ptr<GamePiece> Grid::createPiece(string s) {
     bool isHeavy = false;
     if (currentLevel > 2) {
         isHeavy = true;
     }
-
     shared_ptr<GamePiece> newPiece;
     if (s == "I") {
 		newPiece = make_shared<BlockI>(currentLevel, isHeavy);
@@ -391,7 +392,11 @@ void Grid::replaceCurrentPiece(string s) {
 	} else { //s == "T"
 		newPiece = make_shared<BlockT>(currentLevel, isHeavy);
 	}   
+    return newPiece;
+}
 
+void Grid::replaceCurrentPiece(string s) {
+    shared_ptr<GamePiece> newPiece = createPiece(s);
     //only makes changes if the block are different
     if (currentPiece->getColour() != newPiece->getColour()) {
         bool replaceable = true;
@@ -466,7 +471,43 @@ void Grid::restart() {
 }
 
 void Grid::hint() {
-    // find out how to implement this
+    shared_ptr<BlockHint> theHint = make_shared<BlockHint>();
+    theHint->setRotationIndex(currentPiece->getRotationIndex());
+    cout << "able to set rotation" << endl;
+    theHint->setCoords(currentPiece->getCoords());
+    cout << "able to set the coordinates" << endl;
+    //char symb = currentPiece->getSymbol();
+    //string s;
+    //s.push_back(symb); //convert the symb into a string
+    //shared_ptr<GamePiece> temp = createPiece(s);
+    //shift the hint piece so it is in the correct column
+    int num = width - 3; //special case for I??? // number of columns possible
+    int randomCol = rand() % num; //random column for left side of block
+    int currentCol = (theHint->getLowerLeft()).col;
+    cout << "able to get the lower left coord" << endl;
+    int offset = currentCol - randomCol;
+    cout << "offset by: " << offset;
+    vector<Coordinate> newHintCoords = theHint->getCoords();
+    for (Coordinate &c : newHintCoords) {
+        c.col += offset;
+    }
+    theHint->setCoords(newHintCoords);
+    //find the lowest point the set of coordinates temp can drop to
+    while (true) {
+        vector<Coordinate> newPosition = theHint->shift(Direction::Down);
+        if (validMove(newPosition)) {
+            theHint->setCoords(newPosition);
+        } else {
+            break;
+        }
+    }
+    newHintCoords = theHint->getCoords();
+    for (Coordinate c : newHintCoords) {
+                if (inBounds(c.row, c.col, height, width)) {
+                    theGrid[c.row][c.col].setColour(theHint->getColour());
+                }
+            }
+    hintPiece = theHint;
 }
 
 bool Grid::notify(Subject<LevelInfo> &from) {
@@ -485,7 +526,7 @@ bool Grid::notify(Subject<LevelInfo> &from) {
 }
 
 void Grid::applyColourScheme(std::string s) {
-    (&gd)->changeColourScheme(s);
+    gd.changeColourScheme(s);
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Cell c = Cell{Coordinate{i,j}};

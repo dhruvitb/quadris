@@ -38,6 +38,8 @@ bool TextDisplay::notify(Subject<CellInfo> &from) {
         theDisplay[row][col] = BLANK;
     } else if (colour == Colour::Brown) {
         theDisplay[row][col] = BOMB;
+    } else if (colour == Colour::Black) {
+        theDisplay[row][col] = HINT;
     }
     return true;
 }
