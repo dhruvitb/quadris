@@ -362,33 +362,71 @@ void Grid::restoreRandom() {
 }
 
 void Grid::replaceCurrentPiece(string s) {
-    vector<Coordinate> oldCoords = currentPiece->getCoords();
-    for (Coordinate c : oldCoords) {
-        theGrid[c.row][c.col].setColour(Colour::NoColour);
-    }
     bool isHeavy = false;
     if (currentLevel > 2) {
         isHeavy = true;
     }
+
+    shared_ptr<GamePiece> newPiece;
     if (s == "I") {
-		currentPiece = make_shared<BlockI>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockI>(currentLevel, isHeavy);
 	} else if (s == "J") {
-		currentPiece = make_shared<BlockJ>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockJ>(currentLevel, isHeavy);
 	} else if (s == "L") {
-		currentPiece = make_shared<BlockL>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockL>(currentLevel, isHeavy);
 	} else if (s == "O") {
-		currentPiece = make_shared<BlockO>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockO>(currentLevel, isHeavy);
 	} else if (s == "S") {
-		currentPiece = make_shared<BlockS>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockS>(currentLevel, isHeavy);
 	} else if (s == "Z") {
-		currentPiece = make_shared<BlockZ>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockZ>(currentLevel, isHeavy);
 	} else { //s == "T"
-		currentPiece = make_shared<BlockT>(currentLevel, isHeavy);
-	}    
-    vector<Coordinate> temp = currentPiece->getCoords();
-    for (Coordinate c : temp) {
-        theGrid[c.row][c.col].setColour(currentPiece->getColour());
-    }
+		newPiece = make_shared<BlockT>(currentLevel, isHeavy);
+	}   
+
+    //only makes changes if the block are different
+    if (currentPiece->getColour() != newPiece->getColour()) {
+        bool replaceable = true;
+        Coordinate lowerLeft = currentPiece->getLowerLeft();
+        Coordinate lowerLeftTemplate {4,0}; //by our own definition
+        if (newPiece->getSymbol() == 'I') {
+            lowerLeftTemplate.row = 3;
+        }
+        Coordinate offset = lowerLeft - lowerLeftTemplate;
+        vector<Coordinate> temp = newPiece->getCoords();
+        //increment temp by offset coordinates
+        for (Coordinate &c : temp) {
+            c = c + offset;
+        }
+        newPiece->setCoords(temp);
+        //checks to make sure the replacement coordinates is possible
+        //first remove colour from old coordinates
+        vector<Coordinate> oldCoords = currentPiece->getCoords();
+        for (Coordinate c : oldCoords) {
+            theGrid[c.row][c.col].setColour(Colour::NoColour);
+        }
+        //then check the colour of the new coordinates
+        for (Coordinate c : newPiece->getCoords()) {
+            Cell &theCell = theGrid[c.row][c.col];
+            if (theCell.getInfo().colour != Colour::NoColour) {
+                replaceable = false;
+                cout << "Invalid command: block can not fit" << endl;
+                break;
+            }
+        }
+        if (replaceable) {
+            currentPiece = newPiece;
+            //add colour to new coordinates
+            for (Coordinate c : currentPiece->getCoords()) {
+                theGrid[c.row][c.col].setColour(currentPiece->getColour());
+            }
+        } else {
+            //put the colour of the original piece back
+            for (Coordinate c : oldCoords) {
+                theGrid[c.row][c.col].setColour(currentPiece->getColour());
+            }    
+        }
+    } 
 }
 
 void Grid::restart() {
