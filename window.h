@@ -3,6 +3,7 @@
 #include <X11/Xlib.h>
 #include <iostream>
 #include <string>
+#include "structures.h"
 
 class Xwindow {
     Display *d;
@@ -10,7 +11,7 @@ class Xwindow {
     int s;
     GC gc;
     unsigned long colours[11];
-
+    std::string scheme;
 public:
     Xwindow(int width = 500,
             int height = 500); // Constructor; displays the window.
@@ -45,6 +46,8 @@ public:
                  int colour);
     // Draws a circle
     void fillCircle(int x, int y, int r, int colour);
+
+    void changeColour(std::string s);
 };
 
 #endif

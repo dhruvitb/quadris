@@ -59,7 +59,7 @@ struct rotationCoordinates {
             Coordinate{1,1}, Coordinate{0,1}}
     };
     static Coordinate getLowerAndLeft() {
-        return Coordinate{2,0};
+        return Coordinate{2,0}; //by our own definition
     }    
 };
  

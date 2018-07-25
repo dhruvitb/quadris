@@ -21,6 +21,7 @@ public:
     void updateMenu(int level, int score, int hiScore, shared_ptr<GamePiece>
     next);
     void removeWindow();
+    void changeColourScheme(std::string s);
 };
 
 #endif

@@ -62,6 +62,7 @@ public:
     void restart(); // reinitializes the game (saves high score)
     void hint(); // displays a hint for current piece
     bool notify(Subject<LevelInfo> &from) override; // receives notification
+    void applyColourScheme(std::string s);
 };
 
 #endif

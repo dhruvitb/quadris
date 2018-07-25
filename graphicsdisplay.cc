@@ -53,9 +53,13 @@ void GraphicsDisplay::drawNext(shared_ptr<GamePiece> next) {
         (c.row * 25) + 150 + pieceSizeOffset, 
         25 - pieceSizeOffset, 25 - pieceSizeOffset,
         colourValue);
-    }   
+    }
 }
 
 void GraphicsDisplay::removeWindow() {
     window = nullptr;
+}
+
+void GraphicsDisplay::changeColourScheme(std::string s) {
+    window->changeColour(s);
 }

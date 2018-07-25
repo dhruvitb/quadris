@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <vector>
 #include <unistd.h>
 
 using namespace std;
@@ -30,12 +31,34 @@ Xwindow::Xwindow(int width, int height) {
     // Set up colours.
     XColor xcolour;
     Colormap cmap;
+
+    //color schemes
     // char color_vals[11][11] = {"white",  "black", "red",      "green",
     //                            "blue",   "cyan",  "yellow",   "magenta",
     //                            "orange", "brown", "darkgreen"};
-    char color_vals[11][11] = {"cyan", "blue", "orange", "yellow", "green",
-                               "red", "magenta", "brown", "black", "dimgray",
-                               "white"};
+    char color_vals[12][20] = {"cyan", "blue", "orange", "yellow", "green", "red", 
+            "magenta", "brown", "black", "dimgray", "white", "Default"}; 
+    //changes color scheme if it is not the Default one
+    if (scheme == "Pastel") {
+        char new_colors[12][20] = {"paleturquoise", "mediumaquamarine", "lightsalmon", 
+            "palegoldenrod", "palegreen", "lightcoral", "plum", "peru", "black", "dimgray", 
+            "white", "Pastel"}; 
+        for (int i = 0; i < 11; ++i) {
+            for (int j = 0; j < 20; ++j) {
+                color_vals[i][j] = new_colors[i][j];
+            }
+        }
+    } else if (scheme == "Dark") {
+        char new_colors[12][20] = {"darkcyan", "navyblue", "darkorange", "yellow", "darkgreen", "darkred",
+            "darkmagenta", "brown", "black", "dimgray", "white"};  
+        for (int i = 0; i < 11; ++i) {
+            for (int j = 0; j < 20; ++j) {
+                color_vals[i][j] = new_colors[i][j];
+            }
+        }
+    } /*else {
+        cout << "Colour scheme: " << scheme << endl;
+    }*/ 
 
     cmap = DefaultColormap(d, DefaultScreen(d));
     for (int i = 0; i < 11; ++i) {
@@ -104,4 +127,22 @@ void Xwindow::fillCircle(int x, int y, int r, int colour) {
     XSetForeground(d, gc, colours[colour]);
     XFillArc(d, w, gc, x, y, r, r, 0 * 64, 360 * 64);
     XSetForeground(d, gc, colours[Black]);
+}
+
+void Xwindow::changeColour(std::string s) {
+    vector<string> colourTemplate{"Default", "Pastel", "Dark"};
+    bool valid = false;
+    int size = colourTemplate.size();
+    for (int i = 0; i < size; ++i) {
+        if (colourTemplate[i] == s) {
+            valid = true;
+            break;
+        }
+    }
+    if (valid) {
+        scheme = s;
+        cout << "You have selected the following colour scheme: " << scheme << endl;
+    } else {
+        cout << "Invalid colour scheme: " << s << endl;
+    }
 }
