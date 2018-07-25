@@ -256,7 +256,7 @@ bool Grid::shiftPiece(Direction d) {
         if (currentPiece->getIsHeavy()) {
             if(heavyMove(newPosition)) {
                 for (Coordinate c : newPosition) {
-                    theGrid[c.row+1][c.col].setColour(currentPiece->
+                    theGrid[c.row + 1][c.col].setColour(currentPiece->
                     getColour());
                 }
             }

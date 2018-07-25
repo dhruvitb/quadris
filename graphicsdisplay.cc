@@ -48,6 +48,7 @@ void GraphicsDisplay::drawNext(shared_ptr<GamePiece> next) {
     int colourValue = (int) colour;
     window->fillRectangle(390, 150, (35 + pieceSizeOffset) * 4, 
     (35 + pieceSizeOffset) * (3 + 2), 10);
+    window->drawString(400, 200, "Next Piece:");
     for (Coordinate c : coords) {
         window->fillRectangle((c.col * 25) + 405 + pieceSizeOffset, 
         (c.row * 25) + 150 + pieceSizeOffset, 
