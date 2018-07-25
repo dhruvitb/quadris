@@ -14,11 +14,6 @@ CellInfo Cell::getInfo() const {
     return CellInfo{position.row, position.col, colour, symbol};
 }
 
-bool Cell::notify(Subject &from) {
-    (void) from;
-    return true; // this function might be unused yeah we should probably get rid of it ajknclsajnvisnc
-}
-
 void Cell::setColour(Colour c) {
     colour = c;
     notifyObservers(); // when a colour change occurs, notify its observers

@@ -30,42 +30,7 @@ using namespace std;
 int Grid::highScore = 0;
 
 Grid::Grid(): currentLevel{0}, score{0}, td{}, gd{385, 630} {
-    //Dhruvit to to get the window not to appear upon executing constructor
     updateLevelFactory();
-    //levelFactory->attach(this);
-    /*currentPiece = levelFactory->generatePiece();
-    nextPiece = levelFactory->generatePiece();*/
-    /*for (int i = 0; i < height; ++i) {
-        vector<Cell> temp;
-        for (int j = 0; j < width; ++j) {
-            Cell c = Cell{Coordinate{i,j}};
-            c.attach(&td);
-            //c.attach(&gd);
-            c.notifyObservers(); //is this still necessary?
-            temp.emplace_back(c);
-        }
-        theGrid.emplace_back(temp);
-    }*/
-    // for (int i = 0; i < height; ++i) {
-    //     for (int j = 0; j < width; ++j) {
-    //         // attach the up and right cell as observer
-    //         theGrid[i][j].attach(&td);
-    //         if (inBounds(i - 1, j, height, width)) {
-    //             theGrid[i][j].attach(&(theGrid[i-1][j])); // CELLS NO LONGER OBSERVE EACH OTHER LOL
-    //         }
-    //         if (inBounds(i, j + 1, height, width)) {
-    //             theGrid[i][j].attach(&(theGrid[i][j+1])); // CELLS NO LONGER OBSERVE EACH OTHER LOL
-    //         }
-    //     }
-    // }
-
-    /*vector<Coordinate> initialCoords = currentPiece->getCoords();
-    for (Coordinate c : initialCoords) {
-        if (inBounds(c.row, c.col, height, width)) {
-            theGrid[c.row][c.col].setColour(currentPiece->getColour());
-        }
-    }*/
-    //print();
 }
 
 Grid::~Grid() {}
@@ -143,7 +108,7 @@ void Grid::dropRows(int row) {
                         // this row, and remove the pointer from the old 
                         // coordinate and add to the cell below it
                         c.row = row;
-                        theGrid[row-1][c.col].setPiece(nullptr); 
+                        theGrid[row-1][c.col].setPiece(nullptr);
                         theGrid[row][c.col].setPiece(cellsPiece);
                     }
                     // update the colour of the cell
@@ -252,18 +217,23 @@ bool Grid::heavyMove(vector<Coordinate> moveDown) {
     return validMove(moveDown, currentPiece);
 }
 
-bool Grid::shiftPiece(Direction d) {
-    vector<Coordinate> newPosition = currentPiece->shift(d);
-    if (validMove(newPosition, currentPiece)) {
+bool Grid::shiftPiece(Direction d, shared_ptr<GamePiece> piece) {
+    if (!piece) {
+        // have to do it this way since it won't allow currentPiece as a 
+        // default parameter
+        piece = currentPiece;
+    }
+    vector<Coordinate> newPosition = piece->shift(d);
+    if (validMove(newPosition, piece)) {
         for (Coordinate c : newPosition) {
             if (inBounds(c.row, c.col, height, width)) {
-                theGrid[c.row][c.col].setColour(currentPiece->getColour());
+                theGrid[c.row][c.col].setColour(piece->getColour());
             }
         }
-        if (currentPiece->getIsHeavy()) {
+        if (piece->getIsHeavy()) {
             if(heavyMove(newPosition)) {
                 for (Coordinate c : newPosition) {
-                    theGrid[c.row + 1][c.col].setColour(currentPiece->
+                    theGrid[c.row + 1][c.col].setColour(piece->
                     getColour());
                 }
             }
@@ -458,6 +428,8 @@ void Grid::restart() {
     currentPiece = levelFactory->generatePiece();
     nextPiece = levelFactory->generatePiece();
     theGrid.clear();
+    heldPiece = nullptr;
+    holdSwapped = false;
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
@@ -502,129 +474,21 @@ void Grid::hint() {
     }
     cout << "offset by: " << offset << endl;
     theHint->setCoords(hintCoords);
-    
-    /*//debugging
-    cout << "AFTER THE HINT PIECE HAS BEEN TRANSLATED LEFT" << endl;
-    cout << "Current piece coordinates are:" << endl;
-    vector<Coordinate> curr = currentPiece->getCoords();
-    for (int i = 0; i < (int)(curr.size()); ++i) {
-        int r = curr[i].row;
-        int c = curr[i].col;
-        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
-    }
-    cout << "Hint piece coordinates are:" << endl;
-    vector<Coordinate> hint = theHint->getCoords();
-    for (int i = 0; i < (int)(hint.size()); ++i) {
-        int r = hint[i].row;
-        int c = hint[i].col;
-        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
-    }*/
-
-    //try to move the hint block as far down as possible
-    for (int i = 0; i < 15; ++i) {
-    vector<Coordinate> tryCoords = theHint->shift(Direction::Down);
-        if (validMove(tryCoords, theHint)) {
-            cout << "dropping" << endl;
-        } else {
-            break;
-        }
-    };
-
-    /*//debugging
-    cout << "AFTER THE HINT PIECE HAS BEEN MOVED DOWN" << endl;
-    cout << "Current piece coordinates are:" << endl;
-    vector<Coordinate> curr2 = currentPiece->getCoords();
-    for (int i = 0; i < (int)(curr.size()); ++i) {
-        int r = curr2[i].row;
-        int c = curr2[i].col;
-        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
-    }
-    cout << "Hint piece coordinates are:" << endl;
-    vector<Coordinate> hint2 = theHint->getCoords();
-    for (int i = 0; i < (int)(hint.size()); ++i) {
-        int r = hint2[i].row;
-        int c = hint2[i].col;
-        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
-    }*/
-
+    while (shiftPiece(Direction::Down, theHint));
     //set the hintPiece to theHint
     hintPiece = theHint;
-
     //give the cell the hint piece
     hintCoords = hintPiece->getCoords();
     for (Coordinate c : hintCoords) {
         if (inBounds(c.row, c.col, height, width)) {
             theGrid[c.row][c.col].setPiece(theHint);
             theGrid[c.row][c.col].setColour(theHint->getColour());
-            cout << "symbol of hint is " << hintPiece->getSymbol() << endl;
-            cout << "symbol at cell is " << theGrid[c.row][c.col].getInfo().symbol << endl;
         }
     }
     //add colour of current cell back to cells
     for (Coordinate c : copyCurrentCoords) {
         theGrid[c.row][c.col].setColour(currentPiece->getColour());
     }
-
-    /*shared_ptr<BlockHint> theHint = make_shared<BlockHint>();
-    theHint->setRotationIndex(currentPiece->getRotationIndex());
-    vector<Coordinate> newHintCoords = currentPiece->getCoords(); //gets mutated
-    vector<Coordinate> currentPieceCoords = currentPiece->getCoords(); //
-    //clears the colours from current piece
-    for (Coordinate c : currentPieceCoords) {
-        theGrid[c.row][c.col].setColour(Colour::NoColour);
-    }
-    
-    //theHint->setCoords(currentPiece->getCoords());
-    int randomNum = currentPiece->getLevelGenerated();
-    srand(randomNum);
-    int num = width - 3; //special case for I??? // number of columns possible
-    int randomCol = rand() % num; //random column for left side of block
-    int currentCol = (currentPiece->getLowerLeft()).col;
-    int offset = currentCol - randomCol;
-
-    //vector<Coordinate> newHintCoords = theHint->getCoords();
-    for (Coordinate &c : newHintCoords) {
-        c.col -= offset;
-    }
-    theHint->setCoords(newHintCoords); //must set in order to use shift function
-    //find the lowest point the set of coordinates temp can drop to
-    while (true) {
-        //vector<Coordinate> newPosition = theHint->shift(Direction::Down);
-        if (validMove(theHint->shift(Direction::Down), theHint, true)) {
-            cout << "block is shifted down" << endl;
-        } else {
-            break;
-        }
-    }
-    //debugging
-    cout << "AFTER THE HINT PIECE HAS BEEN SHIFTED DOWN" << endl;
-    cout << "Current piece coordinates are:" << endl;
-    vector<Coordinate> curr4 = currentPiece->getCoords();
-    for (int i = 0; i < (int)(curr4.size()); ++i) {
-        int r = curr4[i].row;
-        int c = curr4[i].col;
-        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
-    }
-    cout << "Hint piece coordinates are:" << endl;
-    vector<Coordinate> hint4 = theHint->getCoords();
-    for (int i = 0; i < (int)(hint4.size()); ++i) {
-        int r = hint4[i].row;
-        int c = hint4[i].col;
-        cout << "Coordinate " << i << " is (" << r << ", " << c << ")" << endl;
-    }
-    newHintCoords = theHint->getCoords();
-    for (Coordinate c : newHintCoords) {
-        if (inBounds(c.row, c.col, height, width)) {
-                theGrid[c.row][c.col].setColour(theHint->getColour());
-                cout << "symbol of hint is " << theHint->getSymbol() << endl;
-                cout << "symbol at cell is " << theGrid[c.row][c.col].getInfo().symbol << endl;
-        }
-    }
-    hintPiece = theHint;
-    //puts the colour back into the current piece
-    for (Coordinate c : currentPieceCoords) {
-        theGrid[c.row][c.col].setColour(currentPiece->getColour());
-    }*/
 }
 
 bool Grid::notify(Subject<LevelInfo> &from) {
@@ -687,7 +551,7 @@ void Grid::removeHint() {
     if (hintPiece != nullptr) {
         vector<Coordinate> hintCoords = hintPiece->getCoords();
         for (Coordinate c : hintCoords) {
-            Cell theCell = theGrid[c.row][c.col];
+            Cell &theCell = theGrid[c.row][c.col];
             theCell.setColour(Colour::NoColour);
             theCell.setPiece(nullptr);
         }

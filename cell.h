@@ -7,7 +7,7 @@
 #include "cell.h"
 #include <memory>
 
-class Cell: public Subject<CellInfo>, public Observer<CellInfo> {
+class Cell: public Subject<CellInfo> {
     Coordinate position; // coordinates of the cell
     Colour colour; // colour of the cell
     std::shared_ptr<GamePiece> piece; // piece the cell has (once dropped)
@@ -23,8 +23,6 @@ public:
     void setPiece(std::shared_ptr<GamePiece> newPiece);
     // get the piece this cell has
     shared_ptr<GamePiece> getPiece();
-    // this might not be needed anymore since the cells do not observer each other oankajnclsjnckjnc
-    bool notify(Subject<CellInfo> &from) override;
 };
 
 #endif

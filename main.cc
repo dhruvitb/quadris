@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
     }
     quadris->init(colourScheme); //considers command-line interface
     quadris->print();
-
+    
     while (true) {
         string cmd;
         int multiplier = 1;
@@ -231,7 +231,7 @@ int main(int argc, char *argv[]) {
         if (cmd == "left") {
             repeat = min(multiplier, 11);
             for (int i = 0; i < repeat; ++i) {
-                quadris->shiftPiece(Direction::Left);  
+                quadris->shiftPiece(Direction::Left);
             }
             quadris->print();
             // move the current piece left

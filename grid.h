@@ -58,7 +58,8 @@ public:
     void changeTextOnly(); // toggles text-only mode
     void changeGraphicsOnly(); // toggles graphics-only mode
     bool drop(); // drops current piece
-    bool shiftPiece(Direction d); // moves current piece in given direction
+    // moves current piece in given direction
+    bool shiftPiece(Direction d, shared_ptr<GamePiece> piece = nullptr);
     bool rotatePiece(Rotation r); // rotates current piece in given rotation
     bool getNextPiece(); // gets the next piece from the levelFactory
     void levelUp(); // increases the level if possible
