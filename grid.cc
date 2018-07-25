@@ -70,9 +70,9 @@ Grid::Grid(): currentLevel{0}, score{0}, td{}, gd{385, 630} {
 
 Grid::~Grid() {}
 
-void Grid::init() {
-    if (textOnly) {
-        gd.removeWindow();
+void Grid::init(string scheme) {
+    if (!textOnly) {
+        gd.init(scheme);
     }
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
@@ -523,14 +523,4 @@ bool Grid::notify(Subject<LevelInfo> &from) {
     drop();
     currentPiece = temp;
     return true;
-}
-
-void Grid::applyColourScheme(std::string s) {
-    gd.changeColourScheme(s);
-    for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j) {
-            Cell c = Cell{Coordinate{i,j}};
-            c.notifyObservers();
-        }
-    }
 }

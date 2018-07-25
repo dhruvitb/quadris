@@ -7,8 +7,13 @@ GraphicsDisplay::GraphicsDisplay(int width, int height):
 width{width}, height{height}, squareSize{35} {
     // make a window with extra space to have gaps in the grid
     // plus extra space for the menu
+    window = nullptr;
+    
+}
+
+void GraphicsDisplay::init(string scheme) {
     window = make_unique<Xwindow>(width + pieceSizeOffset + 150,
-    height + pieceSizeOffset);
+    height + pieceSizeOffset, scheme);
 }
 
 GraphicsDisplay::~GraphicsDisplay() {
@@ -55,12 +60,4 @@ void GraphicsDisplay::drawNext(shared_ptr<GamePiece> next) {
         25 - pieceSizeOffset, 25 - pieceSizeOffset,
         colourValue);
     }
-}
-
-void GraphicsDisplay::removeWindow() {
-    window = nullptr;
-}
-
-void GraphicsDisplay::changeColourScheme(std::string s) {
-    window->changeColour(s);
 }

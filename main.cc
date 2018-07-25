@@ -133,6 +133,7 @@ bool validCommand(string command, string action) {
 int main(int argc, char *argv[]) {
     unique_ptr<Grid> quadris = make_unique<Grid>();
     ifstream commandFile;
+    string colourScheme = "Default";
     //startlevel is separate because scriptfile and seed depend on the level
     for (int i = 1; i < argc; ++i) {
         string option = argv[i];
@@ -166,13 +167,13 @@ int main(int argc, char *argv[]) {
             quadris->updateFileName(file);
             //do something with file
         }  else if (option == "-colourscheme") {
-            string colour = argv[i+1];
+            colourScheme = argv[i+1];
             ++i;
             //quadris->applyColourScheme(cscheme);
             //do something with colourscheme
         }
     }
-    quadris->init(); //considers command-line interface
+    quadris->init(colourScheme); //considers command-line interface
     quadris->print();
 
     while (true) {

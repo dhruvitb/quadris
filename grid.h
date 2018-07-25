@@ -46,7 +46,7 @@ class Grid: public Observer<LevelInfo> {
 public:
     ~Grid();
     Grid();
-    void init(); //attaches gd, sets level
+    void init(std::string scheme); //attaches gd, sets level
     void print(); // updates & prints textDisplay and graphicsDisplay
     void changeTextOnly(); // toggles text-only mode
     void changeGraphicsOnly(); // toggles graphics-only mode
@@ -64,7 +64,6 @@ public:
     void restart(); // reinitializes the game (saves high score)
     void hint(); // displays a hint for current piece
     bool notify(Subject<LevelInfo> &from) override; // receives notification
-    void applyColourScheme(std::string s);
 };
 
 #endif

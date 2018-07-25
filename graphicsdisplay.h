@@ -17,11 +17,10 @@ class GraphicsDisplay: public Observer<CellInfo> {
 public:
     GraphicsDisplay(int width, int height);
     ~GraphicsDisplay();
+    void init(std::string scheme);
     bool notify(Subject<CellInfo> &from);
     void updateMenu(int level, int score, int hiScore, shared_ptr<GamePiece>
     next);
-    void removeWindow();
-    void changeColourScheme(std::string s);
 };
 
 #endif

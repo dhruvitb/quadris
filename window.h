@@ -14,7 +14,8 @@ class Xwindow {
     std::string scheme;
 public:
     Xwindow(int width = 500,
-            int height = 500); // Constructor; displays the window.
+            int height = 500,
+            std::string scheme = "Default"); // Constructor; displays the window.
     ~Xwindow(); // Destructor; destroys the window.
     enum {
         Cyan = 0,
@@ -46,8 +47,6 @@ public:
                  int colour);
     // Draws a circle
     void fillCircle(int x, int y, int r, int colour);
-
-    void changeColour(std::string s);
 };
 
 #endif

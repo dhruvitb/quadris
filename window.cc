@@ -9,7 +9,7 @@
 
 using namespace std;
 
-Xwindow::Xwindow(int width, int height) {
+Xwindow::Xwindow(int width, int height, string scheme): scheme{scheme} {
     d = XOpenDisplay(NULL);
     if (d == NULL) {
         cerr << "Cannot open display" << endl;
@@ -56,9 +56,10 @@ Xwindow::Xwindow(int width, int height) {
                 color_vals[i][j] = new_colors[i][j];
             }
         }
-    } /*else {
-        cout << "Colour scheme: " << scheme << endl;
-    }*/ 
+    } else if (scheme != "Default") {
+        cout << "Invalid colour scheme: " << scheme << endl;
+    }
+    cout << "Will be using " << scheme << " colour scheme" << endl;
 
     cmap = DefaultColormap(d, DefaultScreen(d));
     for (int i = 0; i < 11; ++i) {
@@ -127,22 +128,4 @@ void Xwindow::fillCircle(int x, int y, int r, int colour) {
     XSetForeground(d, gc, colours[colour]);
     XFillArc(d, w, gc, x, y, r, r, 0 * 64, 360 * 64);
     XSetForeground(d, gc, colours[Black]);
-}
-
-void Xwindow::changeColour(std::string s) {
-    vector<string> colourTemplate{"Default", "Pastel", "Dark"};
-    bool valid = false;
-    int size = colourTemplate.size();
-    for (int i = 0; i < size; ++i) {
-        if (colourTemplate[i] == s) {
-            valid = true;
-            break;
-        }
-    }
-    if (valid) {
-        scheme = s;
-        cout << "You have selected the following colour scheme: " << scheme << endl;
-    } else {
-        cout << "Invalid colour scheme: " << s << endl;
-    }
 }
