@@ -35,29 +35,40 @@ bool GraphicsDisplay::notify(Subject<CellInfo> &from) {
 }
 
 void GraphicsDisplay::updateMenu(int level, int score, int hiScore,
-shared_ptr<GamePiece> next) {
+shared_ptr<GamePiece> next, shared_ptr<GamePiece> held) {
     // update the values on the side menu
-    if (window != nullptr) {
+    if (window) {
         window->fillRectangle(390, 80, 100, 80, 10);
         window->drawString(400, 100, "Level:     " + to_string(level));
         window->drawString(400, 120, "Score:     " + to_string(score));
         window->drawString(400, 140, "Hi Score:  " + to_string(hiScore));
-        drawNext(next);
+        drawSidePieces(next, held);
     }
 }
 
-void GraphicsDisplay::drawNext(shared_ptr<GamePiece> next) {
+void GraphicsDisplay::drawSidePieces(shared_ptr<GamePiece> next,
+shared_ptr<GamePiece> held) {
     // draw the next piece in queue
     vector<Coordinate> coords = next->getCoords();
     Colour colour = next->getColour();
     int colourValue = (int) colour;
-    window->fillRectangle(390, 150, (35 + pieceSizeOffset) * 4, 
-    (35 + pieceSizeOffset) * (3 + 2), 10);
+    // cover the area with a white rectangle first
+    window->fillRectangle(390, 150, 150, 300, 10);
     window->drawString(400, 200, "Next Piece:");
     for (Coordinate c : coords) {
         window->fillRectangle((c.col * 25) + 405 + pieceSizeOffset, 
-        (c.row * 25) + 150 + pieceSizeOffset, 
-        25 - pieceSizeOffset, 25 - pieceSizeOffset,
-        colourValue);
+        (c.row * 25) + 150 + pieceSizeOffset, 25 - pieceSizeOffset, 
+        25 - pieceSizeOffset, colourValue);
+    }
+    if (held) {
+        coords = held->getCoords();
+        colour = held->getColour();
+        colourValue = (int) colour;
+        window->drawString(400, 320, "Held Piece:");
+        for (Coordinate c : coords) {
+            window->fillRectangle((c.col * 25) + 405 + pieceSizeOffset,
+            (c.row * 25) + 270 + pieceSizeOffset, 25 - pieceSizeOffset,
+            25 - pieceSizeOffset, colourValue);
+        }
     }
 }

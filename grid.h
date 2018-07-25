@@ -28,6 +28,7 @@ class Grid: public Observer<LevelInfo> {
     std::shared_ptr<GamePiece> currentPiece; // the current piece on the board
     std::shared_ptr<GamePiece> nextPiece; // the next piece in the queue
     std::shared_ptr<GamePiece> hintPiece; //filled when hint is called
+    std::shared_ptr<GamePiece> heldPiece;
     // returns whether a Coordinate is within the bounds of the board
     static bool inBounds(int i, int j, int maxI, int maxJ); 
     // changes the levelFactor to be equal to the changed level
@@ -42,7 +43,12 @@ class Grid: public Observer<LevelInfo> {
     void dropRows(int row);
     // moves a piece down after a move on heavy turns
     bool heavyMove(vector<Coordinate> moveDown);
-    shared_ptr<GamePiece> createPiece(std::string s);
+    // if the player has already swapped with the held piece this turn
+    bool holdSwapped = false;
+    // helper for replaceCurrentPiece
+    shared_ptr<GamePiece> createPiece(std::string s, 
+    int levelGenerated, bool isHeavy);
+
 public:
     ~Grid();
     Grid();
@@ -60,9 +66,12 @@ public:
     void updateFileName(std::string f); // adds a file to read from???????????????????????????????????????
     void updateSeed(int x); // changes the seed for block generation to x
     void restoreRandom(); // restores randomness to a level
-    void replaceCurrentPiece(std::string s); // replaces current piece with s
+    // replaces current piece with s keeping the position of lower left
+    void replaceCurrentPiece(std::string s, int levelGenerated, bool isHeavy);
+    int getCurrentLevel();
     void restart(); // reinitializes the game (saves high score)
     void hint(); // displays a hint for current piece
+    bool hold(); // holds the current piece for later use
     bool notify(Subject<LevelInfo> &from) override; // receives notification
 };
 

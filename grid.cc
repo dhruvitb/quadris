@@ -106,9 +106,9 @@ bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
 
 void Grid::print() {
     if (!graphicsOnly) {
-        td.print(currentLevel, score, highScore, nextPiece);
+        td.print(currentLevel, score, highScore, nextPiece, heldPiece);
     }
-    gd.updateMenu(currentLevel, score, highScore, nextPiece);
+    gd.updateMenu(currentLevel, score, highScore, nextPiece, heldPiece);
 }
 
 void Grid::changeTextOnly() {
@@ -210,6 +210,7 @@ bool Grid::drop() {
         return true;
     }
     levelFactory->incrementTurnCount();
+    holdSwapped = false;
     return (getNextPiece());
 }
 
@@ -371,38 +372,40 @@ void Grid::restoreRandom() {
     }
 }
 
-shared_ptr<GamePiece> Grid::createPiece(string s) {
-    bool isHeavy = false;
-    if (currentLevel > 2) {
-        isHeavy = true;
-    }
+shared_ptr<GamePiece> Grid::createPiece(string s, int levelGenerated, 
+bool isHeavy) {
     shared_ptr<GamePiece> newPiece;
     if (s == "I") {
-		newPiece = make_shared<BlockI>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockI>(levelGenerated, isHeavy);
 	} else if (s == "J") {
-		newPiece = make_shared<BlockJ>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockJ>(levelGenerated, isHeavy);
 	} else if (s == "L") {
-		newPiece = make_shared<BlockL>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockL>(levelGenerated, isHeavy);
 	} else if (s == "O") {
-		newPiece = make_shared<BlockO>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockO>(levelGenerated, isHeavy);
 	} else if (s == "S") {
-		newPiece = make_shared<BlockS>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockS>(levelGenerated, isHeavy);
 	} else if (s == "Z") {
-		newPiece = make_shared<BlockZ>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockZ>(levelGenerated, isHeavy);
 	} else { //s == "T"
-		newPiece = make_shared<BlockT>(currentLevel, isHeavy);
+		newPiece = make_shared<BlockT>(levelGenerated, isHeavy);
 	}   
     return newPiece;
 }
 
-void Grid::replaceCurrentPiece(string s) {
-    shared_ptr<GamePiece> newPiece = createPiece(s);
+void Grid::replaceCurrentPiece(string s, int levelGenerated, bool isHeavy) {
+
+    shared_ptr<GamePiece> newPiece = createPiece(s, levelGenerated, isHeavy);
     //only makes changes if the block are different
     if (currentPiece->getColour() != newPiece->getColour()) {
         bool replaceable = true;
         Coordinate lowerLeft = currentPiece->getLowerLeft();
         Coordinate lowerLeftTemplate {4,0}; //by our own definition
         if (newPiece->getSymbol() == 'I') {
+            if (lowerLeft.col > 7) {
+                replaceable = false;
+                cout << "Invalid command: block cannot fit" << endl;
+            }
             lowerLeftTemplate.row = 3;
         }
         Coordinate offset = lowerLeft - lowerLeftTemplate;
@@ -423,7 +426,7 @@ void Grid::replaceCurrentPiece(string s) {
             Cell &theCell = theGrid[c.row][c.col];
             if (theCell.getInfo().colour != Colour::NoColour) {
                 replaceable = false;
-                cout << "Invalid command: block can not fit" << endl;
+                cout << "Invalid command: block cannot fit" << endl;
                 break;
             }
         }
@@ -518,9 +521,55 @@ bool Grid::notify(Subject<LevelInfo> &from) {
     if (theGrid[bombCell.row][bombCell.col].getInfo().colour !=
     Colour::NoColour) {
         // force drop() to produce false by giving invalid coords
-        currentPiece->setCoords(vector<Coordinate>{{-1,-1}}); 
+        currentPiece->setCoords(vector<Coordinate>{{-1,-1}});
     }
     drop();
     currentPiece = temp;
     return true;
+}
+
+bool Grid::hold() {
+    // make a temp copy of the currentPiece to swap
+    if (holdSwapped) {
+        cout << "You've already held a piece this turn" << endl;
+        return true;
+    }
+    string currentPieceName;
+    currentPieceName.push_back(currentPiece->getSymbol());
+    shared_ptr<GamePiece> temp = createPiece(currentPieceName, 
+    currentPiece->getLevelGenerated(), currentPiece->getIsHeavy());
+    if (heldPiece) {
+        vector<Coordinate> oldCoords = currentPiece->getCoords();
+        vector<Coordinate> heldCoords = heldPiece->getCoords();
+        for (Coordinate c : oldCoords) {
+            theGrid[c.row][c.col].setColour(Colour::NoColour);
+        }
+        for (Coordinate c : heldCoords) {
+            Cell &theCell = theGrid[c.row][c.col];
+            if (theCell.getInfo().colour != Colour::NoColour) {
+                return false;
+            }
+            theCell.setColour(heldPiece->getColour());
+        }
+        string heldPieceName;
+        heldPieceName.push_back(heldPiece->getSymbol());
+        currentPiece = createPiece(heldPieceName, 
+        heldPiece->getLevelGenerated(), heldPiece->getIsHeavy());
+        heldPiece = temp;
+        holdSwapped = true;
+    } else { // if this is the first time, i.e. heldPiece is nullptr
+        vector<Coordinate> tempCoords = currentPiece->getCoords();
+        for (Coordinate c : tempCoords) {
+            theGrid[c.row][c.col].setColour(Colour::NoColour);
+        }
+        getNextPiece();
+        heldPiece = temp;
+    }
+    print();
+    return true;
+}
+
+
+int Grid::getCurrentLevel() {
+    return currentLevel;
 }
