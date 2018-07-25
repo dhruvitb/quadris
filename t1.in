@@ -1,0 +1,8 @@
+//call ./quadris -startlevel 4 -scriptfile sequence1.txt
+
+drop 
+drop
+norandom sequence2.txt
+drop
+drop
+drop

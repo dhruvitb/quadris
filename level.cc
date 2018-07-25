@@ -46,19 +46,24 @@ void Level::randomize() {
 	if (random == true) {
 		cout << "Level " << getMyLevel() << " is already random" << endl;
 	} else {
+		if (fileInput.is_open()) {
+			fileInput.close();
+		}
 		random = true;
 		cout << "Random blocks have been restored" << endl;
 	}
 }
 
 void Level::changeFileName (string f) {
-    if (fileInput) {
+	bool readingFile = fileInput.is_open();
+    if (readingFile) {
 		fileInput.close();
 	}
 	fileName = f;
 	fileInput.open(fileName);
 	if (!fileInput) {
 		cout << "Invalid file: " << fileName << " :(" << endl;
+		random = true;
 	} else {
 		random = false;
 		cout << "New input file is: " << fileName << endl;
@@ -82,5 +87,9 @@ int Level::randomInt(int num) {
 
 LevelInfo Level::getInfo() const {
     return LevelInfo{true};
+}
+
+void Level::incrementTurnCount() {
+	// does nothing normally (in level 4 )
 }
 

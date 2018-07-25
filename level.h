@@ -28,6 +28,7 @@ public:
     void changeFileName (std::string f); 
     void changeSeed (int x);
     virtual void resetTurnCount(); // resets the turnsSinceClearedLine
+    virtual void incrementTurnCount();
     virtual int getMyLevel() = 0;
 };
 

@@ -202,6 +202,7 @@ bool Grid::drop() {
     if (finalCoords.size() == 1) { // if the piece is a bomb
         return true;
     }
+    levelFactory->incrementTurnCount();
     return (getNextPiece());
 }
 
@@ -338,12 +339,17 @@ void Grid::updateFileName(string s) {
     if (currentLevel == 0 || currentLevel == 3 || currentLevel == 4) {
         levelFactory->changeFileName(s);
     } else {
-        cout << "Level " << currentLevel << " does not allow input file" << endl;
+        cout << "Level " << currentLevel << 
+        " does not allow input file" << endl;
     }
 }
 
 void Grid::updateSeed(int x) {
-    levelFactory->changeSeed(x);
+    if (currentLevel != 0) {
+        levelFactory->changeSeed(x);
+    } else {
+        cout << "Level 0 can not have a seed" << endl;
+    }
 }
 
 void Grid::restoreRandom() {

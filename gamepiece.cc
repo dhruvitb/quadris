@@ -24,7 +24,8 @@ int GamePiece::findRotationIndex(Rotation change) { //-1 if ccw, +1 if cw
     vector<Coordinate> currentRotation = c.allRotations[rotationIndex];
     vector<Coordinate> nextRotation = c.allRotations[findRotationIndex(r)];
     Coordinate lowerLeftTemplate = rotationCoordinates::getLowerAndLeft();
-    Coordinate offset = {lowerLeft.row - lowerLeftTemplate.row, lowerLeft.col - lowerLeftTemplate.col};
+    Coordinate offset = {lowerLeft.row - lowerLeftTemplate.row, 
+                        lowerLeft.col - lowerLeftTemplate.col};
     int sizeCoords = allCoords.size();
     int sizeTemplate = currentRotation.size();
     for (int i = 0; i < sizeTemplate; ++i) {
