@@ -62,6 +62,20 @@ string updateMultiplier(string command, int &multiplier) {
 }
 
 //checks if command contains action and ensures the command is valid
+//there may be a multiplier
+bool validCommand(string command, string action) {
+    stringstream ss(command);
+
+    int n = -1;
+    string realCommand;
+
+    if('0' <= command[0] && command[0] <= '9')
+        ss >> n;
+
+    ss >> realCommand;
+
+    return (realCommand == action);
+}
 //mutates multiplier
 /*bool validCommand(string command, string action, int &multiplier) {
     bool contains = (command.find(action) != string::npos);

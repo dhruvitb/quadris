@@ -10,14 +10,11 @@
 template <typename InfoType> class Observer;
 
 template <typename InfoType> class Subject {
-    std::vector<Observer<InfoType>*> observers;
-    Request request;
+    std::vector<Observer<InfoType>*> observers; // list of its observers
 public:
-    void attach(Observer<InfoType> *o);
-    virtual bool notifyObservers();
-    virtual InfoType getInfo() const = 0;
-    void setRequest(Request r);
-    Request getRequest() const;
+    void attach(Observer<InfoType> *o); // add a new observer
+    virtual bool notifyObservers(); // notify all its observers
+    virtual InfoType getInfo() const = 0; // get info for this subject
 };
 
 template <typename InfoType>
@@ -30,14 +27,6 @@ template <typename InfoType> bool Subject<InfoType>::notifyObservers() {
         ob->notify(*this);
     }
     return true;
-}
-
-template <typename InfoType> void Subject<InfoType>::setRequest(Request r) {
-    request = r;
-}
-
-template <typename InfoType> Request Subject<InfoType>::getRequest() const {
-    return request;
 }
 
 #endif

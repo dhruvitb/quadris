@@ -9,11 +9,11 @@
 
 class GraphicsDisplay: public Observer<CellInfo> {
     unique_ptr<Xwindow> window;
-    int width;
-    int height;
-    int squareSize;
-    int pieceSizeOffset = 2;
-    void drawNext(shared_ptr<GamePiece> next);
+    int width; // width of the window
+    int height; // height of the window
+    int squareSize; // size of the squares to be drawn
+    int pieceSizeOffset = 2; // distance between pieces (to give grid effect)
+    void drawNext(shared_ptr<GamePiece> next); // show next piece
 public:
     GraphicsDisplay(int width, int height);
     ~GraphicsDisplay();

@@ -2,12 +2,12 @@
 using namespace std;
 
 Cell::Cell(Coordinate position): position{position},
-colour{Colour::NoColour}, request{Request::NoRequest} { // requests probably should be removed
+colour{Colour::NoColour} { 
 
 }
 
 CellInfo Cell::getInfo() const {
-    char symbol = '-'; // might remove the whole symbol field in general it's never used
+    char symbol = '-';
     if (piece != nullptr) {
         symbol = piece->getSymbol();
     }

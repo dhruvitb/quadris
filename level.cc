@@ -89,3 +89,7 @@ LevelInfo Level::getInfo() const {
     return LevelInfo{true};
 }
 
+void Level::incrementTurnCount() {
+	// does nothing normally (in level 4 )
+}
+

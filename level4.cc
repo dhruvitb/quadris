@@ -14,7 +14,7 @@ using namespace std;
 Level4::Level4() {}
 
 shared_ptr<GamePiece> Level4::generatePiece() {
-    ++turnCount;
+    cout << "the turncount for brick is: " << turnCount << endl;
     if (turnCount == 5) { 
         resetTurnCount();
         notifyObservers();
@@ -36,4 +36,8 @@ int Level4::getMyLevel() {
 
 void Level4::resetTurnCount() {
     turnCount = 0;
+}
+
+void Level4::incrementTurnCount() {
+    ++turnCount;
 }

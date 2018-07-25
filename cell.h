@@ -10,7 +10,6 @@
 class Cell: public Subject<CellInfo>, public Observer<CellInfo> {
     Coordinate position; // coordinates of the cell
     Colour colour; // colour of the cell
-    Request request; // unused we should probably get rid of this in general kjnvlasjnljsnvkadjfnvj
     std::shared_ptr<GamePiece> piece; // piece the cell has (once dropped)
     std::vector<Observer<CellInfo>*> observers; // observers of the cell
 public:
