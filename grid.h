@@ -49,6 +49,8 @@ class Grid: public Observer<LevelInfo> {
     // helper for replaceCurrentPiece
     shared_ptr<GamePiece> createPiece(std::string s, 
     int levelGenerated, bool isHeavy);
+    //removes any data related to hint andsets hintPiece to nullptr
+    void removeHint(); 
 
 public:
     ~Grid();
@@ -64,17 +66,16 @@ public:
     void levelUp(); // increases the level if possible
     void levelDown(); // decreases the level if possible
     void updateLevel(int lvl); // changes the level to be lvl
-    void updateFileName(std::string f); // adds a file to read from???????????????????????????????????????
+    void updateFileName(std::string f); // reads blocks in from file f, if valid
     void updateSeed(int x); // changes the seed for block generation to x
     void restoreRandom(); // restores randomness to a level
     // replaces current piece with s keeping the position of lower left
     void replaceCurrentPiece(std::string s, int levelGenerated, bool isHeavy);
-    int getCurrentLevel();
+    int getCurrentLevel(); //returns the current level
     void restart(); // reinitializes the game (saves high score)
     void hint(); // displays a hint for current piece
     bool hold(); // holds the current piece for later use
     bool notify(Subject<LevelInfo> &from) override; // receives notification
-    void removeHint();
 };
 
 #endif
