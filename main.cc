@@ -202,33 +202,39 @@ int main(int argc, char *argv[]) {
             cmd = temp; //gives cmd the unique string, else the call is invalid
         }
 
+        int repeat; //to protect against the user from putting in large numbers
         //prossess the command
         if (cmd == "left") {
-            for (int i = 0; i < multiplier; ++i) {
+            repeat = min(multiplier, 11);
+            for (int i = 0; i < repeat; ++i) {
                 quadris->shiftPiece(Direction::Left);  
             }
             quadris->print();
             // move the current piece left
         } else if (cmd == "right") {
-            for (int i = 0; i < multiplier; ++i) {
+            repeat = min(multiplier, 11);
+            for (int i = 0; i < repeat; ++i) {
                 quadris->shiftPiece(Direction::Right);  
             }
             quadris->print();
             // move the current piece right
         } else if (cmd == "down") {
-            for (int i = 0; i < multiplier; ++i) {
+            repeat = min(multiplier, 18);
+            for (int i = 0; i < repeat; ++i) {
                 quadris->shiftPiece(Direction::Down);  
             }
             quadris->print();
             // move the current piece down
         } else if (cmd == "clockwise") {
-            for (int i = 0; i < multiplier; ++i) {
+            repeat = multiplier % 4;
+            for (int i = 0; i < repeat; ++i) {
                 quadris->rotatePiece(Rotation::CW);  
             }
             quadris->print();
             // rotate 90 degrees clockwise
         } else if (cmd == "counterclockwise") {
-            for (int i = 0; i < multiplier; ++i) {
+            repeat = multiplier % 4;
+            for (int i = 0; i < repeat; ++i) {
                 quadris->rotatePiece(Rotation::CCW);  
             }
             quadris->print();
@@ -237,6 +243,7 @@ int main(int argc, char *argv[]) {
             string answer = "";
             bool restartGame = false;
             //Dhruvit to double check the multiplier to the drop function
+            repeat = min(multiplier, 15);
             for (int i = 0; i < multiplier; ++i) {
                 if (!quadris->drop()) {
                     cout << "Game Over! Keep playing? Y/N" << endl;
@@ -266,12 +273,14 @@ int main(int argc, char *argv[]) {
             quadris->print();
             // drop the piece, summon next one (the drop function handles this)
         } else if (cmd == "levelup") {
-            for (int i = 0; i < multiplier; ++i) {
+            repeat = min(LEVEL_MAX, multiplier);
+            for (int i = 0; i < repeat; ++i) {
                 quadris->levelUp();  
             }
             // increment level if possible
         } else if (cmd == "leveldown") {
-            for (int i = 0; i < multiplier; ++i) {
+            repeat = min(LEVEL_MAX, multiplier);
+            for (int i = 0; i < repeat; ++i) {
                 quadris->levelDown();  
             }
             // decrement level if possible
@@ -306,6 +315,7 @@ int main(int argc, char *argv[]) {
             // clear the board and start new game
             quadris->restart();
         } else if (cmd == "hint") {
+            quadris->hint();
             // display a hint
         } else {
             cout << "Invalid command: " << cmd << endl;

@@ -17,6 +17,7 @@ class TextDisplay: public Observer<CellInfo> {
     const char T = 'T';
     const char BLANK = '-';
     const char BOMB = '*';
+    const char HINT = '?';
 public:
     TextDisplay();
     void print(int level, int score, int hiScore, shared_ptr<GamePiece> next);

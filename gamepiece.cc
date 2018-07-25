@@ -100,3 +100,11 @@ int GamePiece::getLevelGenerated() {
 bool GamePiece::getIsHeavy() {
     return isHeavy;
 }
+
+void GamePiece::setRotationIndex(int i) {
+    rotationIndex = i;
+}
+
+int GamePiece::getRotationIndex() {
+    return rotationIndex;
+}

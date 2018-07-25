@@ -27,6 +27,7 @@ class Grid: public Observer<LevelInfo> {
     bool graphicsOnly; // changed by command line arguments
     std::shared_ptr<GamePiece> currentPiece; // the current piece on the board
     std::shared_ptr<GamePiece> nextPiece; // the next piece in the queue
+    std::shared_ptr<GamePiece> hintPiece; //filled when hint is called
     // returns whether a Coordinate is within the bounds of the board
     static bool inBounds(int i, int j, int maxI, int maxJ); 
     // changes the levelFactor to be equal to the changed level
@@ -41,6 +42,7 @@ class Grid: public Observer<LevelInfo> {
     void dropRows(int row);
     // moves a piece down after a move on heavy turns
     bool heavyMove(vector<Coordinate> moveDown);
+    shared_ptr<GamePiece> createPiece(std::string s);
 public:
     ~Grid();
     Grid();

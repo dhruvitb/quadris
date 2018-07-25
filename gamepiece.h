@@ -36,6 +36,8 @@ public:
     virtual int getLevelGenerated();
     // find out of the piece is heavy or not (level 3 and 4)
     virtual bool getIsHeavy();
+    virtual void setRotationIndex(int i);
+    virtual int getRotationIndex();
 };
 
 #endif
