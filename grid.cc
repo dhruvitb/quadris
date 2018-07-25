@@ -378,7 +378,7 @@ void Grid::replaceCurrentPiece(string s, int levelGenerated, bool isHeavy) {
         if (newPiece->getSymbol() == 'I') {
             if (lowerLeft.col > 7) {
                 replaceable = false;
-                cout << "Invalid command: block cannot fit" << endl;
+                //cout << "Invalid command: block cannot fit" << endl;
             }
             lowerLeftTemplate.row = 3;
         }
@@ -398,9 +398,11 @@ void Grid::replaceCurrentPiece(string s, int levelGenerated, bool isHeavy) {
         //then check the colour of the new coordinates
         for (Coordinate c : newPiece->getCoords()) {
             Cell &theCell = theGrid[c.row][c.col];
-            if (theCell.getInfo().colour != Colour::NoColour) {
+            if (!(inBounds(c.row, c.col, height, width)) ||
+                (theCell.getInfo().colour != Colour::NoColour &&
+                theCell.getInfo().colour != Colour::Black )) {
                 replaceable = false;
-                cout << "Invalid command: block cannot fit" << endl;
+                //cout << "Invalid command: block cannot fit" << endl;
                 break;
             }
         }
@@ -411,6 +413,8 @@ void Grid::replaceCurrentPiece(string s, int levelGenerated, bool isHeavy) {
                 theGrid[c.row][c.col].setColour(currentPiece->getColour());
             }
         } else {
+            cout << "Invalid command: block cannot fit" << endl;
+
             //put the colour of the original piece back
             for (Coordinate c : oldCoords) {
                 theGrid[c.row][c.col].setColour(currentPiece->getColour());
