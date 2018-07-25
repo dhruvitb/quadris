@@ -61,6 +61,21 @@ string updateMultiplier(string command, int &multiplier) {
     return input;
 }
 
+//makes sure colourScheme is valid
+/*bool validColourScheme(string s) {
+    bool valid = false;
+    vector<string> library = {"Pastel", "Dark"};
+    int size = library.size();
+    for (int i; i < size; ++i) {
+        if (library[i] == s) {
+            valid = true;
+            break;
+        }
+    }
+    return valid;
+}*/
+
+/*
 //checks if command contains action and ensures the command is valid
 //there may be a multiplier
 bool validCommand(string command, string action) {
@@ -76,6 +91,8 @@ bool validCommand(string command, string action) {
 
     return (realCommand == action);
 }
+*/
+
 //mutates multiplier
 /*bool validCommand(string command, string action, int &multiplier) {
     bool contains = (command.find(action) != string::npos);
@@ -148,7 +165,12 @@ int main(int argc, char *argv[]) {
             ++i;
             quadris->updateFileName(file);
             //do something with file
-        } 
+        }  else if (option == "-colourscheme") {
+            string colour = argv[i+1];
+            ++i;
+            //quadris->applyColourScheme(cscheme);
+            //do something with colourscheme
+        }
     }
     quadris->init(); //considers command-line interface
     quadris->print();

@@ -478,3 +478,13 @@ bool Grid::notify(Subject<LevelInfo> &from) {
     currentPiece = temp;
     return true;
 }
+
+void Grid::applyColourScheme(std::string s) {
+    (&gd)->changeColourScheme(s);
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
+            Cell c = Cell{Coordinate{i,j}};
+            c.notifyObservers();
+        }
+    }
+}

@@ -53,3 +53,7 @@ void GraphicsDisplay::drawNext(shared_ptr<GamePiece> next) {
         colourValue);
     }   
 }
+
+void GraphicsDisplay::changeColourScheme(std::string s) {
+    window->changeColour(s);
+}

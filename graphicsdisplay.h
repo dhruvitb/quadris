@@ -20,6 +20,7 @@ public:
     bool notify(Subject<CellInfo> &from);
     void updateMenu(int level, int score, int hiScore, shared_ptr<GamePiece>
     next);
+    void changeColourScheme(std::string s);
 };
 
 #endif
