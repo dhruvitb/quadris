@@ -32,11 +32,13 @@ bool GraphicsDisplay::notify(Subject<CellInfo> &from) {
 void GraphicsDisplay::updateMenu(int level, int score, int hiScore,
 shared_ptr<GamePiece> next) {
     // update the values on the side menu
-    window->fillRectangle(390, 80, 100, 80, 10);
-    window->drawString(400, 100, "Level:     " + to_string(level));
-    window->drawString(400, 120, "Score:     " + to_string(score));
-    window->drawString(400, 140, "Hi Score:  " + to_string(hiScore));
-    drawNext(next);
+    if (window != nullptr) {
+        window->fillRectangle(390, 80, 100, 80, 10);
+        window->drawString(400, 100, "Level:     " + to_string(level));
+        window->drawString(400, 120, "Score:     " + to_string(score));
+        window->drawString(400, 140, "Hi Score:  " + to_string(hiScore));
+        drawNext(next);
+    }
 }
 
 void GraphicsDisplay::drawNext(shared_ptr<GamePiece> next) {
@@ -51,7 +53,11 @@ void GraphicsDisplay::drawNext(shared_ptr<GamePiece> next) {
         (c.row * 25) + 150 + pieceSizeOffset, 
         25 - pieceSizeOffset, 25 - pieceSizeOffset,
         colourValue);
-    }   
+    }
+}
+
+void GraphicsDisplay::removeWindow() {
+    window = nullptr;
 }
 
 void GraphicsDisplay::changeColourScheme(std::string s) {

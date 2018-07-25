@@ -71,6 +71,9 @@ Grid::Grid(): currentLevel{0}, score{0}, td{}, gd{385, 630} {
 Grid::~Grid() {}
 
 void Grid::init() {
+    if (textOnly) {
+        gd.removeWindow();
+    }
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
@@ -81,7 +84,7 @@ void Grid::init() {
             if (!textOnly) {
                 c.attach(&gd);
             }
-            c.notifyObservers(); 
+            c.notifyObservers();
             temp.emplace_back(c);
         }
         theGrid.emplace_back(temp);
@@ -102,7 +105,9 @@ bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
 }
 
 void Grid::print() {
-    td.print(currentLevel, score, highScore, nextPiece);
+    if (!graphicsOnly) {
+        td.print(currentLevel, score, highScore, nextPiece);
+    }
     gd.updateMenu(currentLevel, score, highScore, nextPiece);
 }
 
