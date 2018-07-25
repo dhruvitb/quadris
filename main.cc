@@ -17,7 +17,7 @@ string checkUniqueness(string input) { //assume command has no prefix (no number
     //an array of possible commands
     vector<string> commands {"left", "right", "down", "clockwise", "counterclockwise", "drop",
     "levelup", "leveldown", "norandom", "random", "sequence", "I", "J", "L", "O", "S", "T", "Z", 
-    "restart", "hint"};
+    "restart", "hint", "hold"};
     int matches = 0;
     int index; //the index for the matching command
     int size = commands.size();
@@ -129,10 +129,30 @@ bool validCommand(string command, string action) {
     return contains && valid;
 }*/
 
+bool gameOver() {
+    string answer;
+    bool restartGame;
+    cout << "Game Over! Keep playing? Y/N" << endl;
+    while (true) {
+        cin >> answer;
+        transform(answer.begin(), answer.end(), answer.end(), ::tolower);
+        if (answer == "y" || answer == "yes") {
+            restartGame = true;
+            break;
+        } else if (answer == "n" || answer == "no") {
+            restartGame = false;
+            cout << "Thanks for playing!" << endl;
+            break;
+        }
+    }
+    return restartGame;
+}
+
 
 int main(int argc, char *argv[]) {
     unique_ptr<Grid> quadris = make_unique<Grid>();
     ifstream commandFile;
+    string colourScheme = "Default";
     //startlevel is separate because scriptfile and seed depend on the level
     for (int i = 1; i < argc; ++i) {
         string option = argv[i];
@@ -170,13 +190,13 @@ int main(int argc, char *argv[]) {
             quadris->updateFileName(file);
             //do something with file
         }  else if (option == "-colourscheme") {
-            string colour = argv[i+1];
+            colourScheme = argv[i+1];
             ++i;
             //quadris->applyColourScheme(cscheme);
             //do something with colourscheme
         }
     }
-    quadris->init(); //considers command-line interface
+    quadris->init(colourScheme); //considers command-line interface
     quadris->print();
 
     while (true) {
@@ -244,35 +264,22 @@ int main(int argc, char *argv[]) {
             quadris->print();
             // rotate 90 degrees counterclockwise
         } else if (cmd == "drop") {
-            string answer = "";
+            bool lostGame = false;
             bool restartGame = false;
-            //Dhruvit to double check the multiplier to the drop function
             repeat = min(multiplier, 15);
             for (int i = 0; i < multiplier; ++i) {
                 if (!quadris->drop()) {
-                    cout << "Game Over! Keep playing? Y/N" << endl;
-                    //string answer;
-                    while (true) {
-                        cin >> answer;
-                        transform(answer.begin(), answer.end(),
-                        answer.end(), ::tolower); //what does this do, Dhruvit?
-                        if (answer == "y" || answer == "yes") {
-                            restartGame = true;
-                            quadris->restart();
-                            break;
-                        } else if (answer == "n" || answer == "no") {
-                            answer = "endGame";
-                            break;
-                        }
-                    }
-                    if (answer == "endGame" || restartGame) {
-                        break;
-                    }
-                } 
+                    restartGame = gameOver();
+                    lostGame = true;
+                    break;
+                }
             }
-            if (answer == "endGame") {
-                cout << "Thanks for playing!" << endl;
-                break;
+            if (lostGame) {
+                if (restartGame) {
+                    quadris->restart();
+                } else {
+                    break;
+                }
             }
             quadris->print();
             // drop the piece, summon next one (the drop function handles this)
@@ -312,9 +319,14 @@ int main(int argc, char *argv[]) {
             // execute sequence of commands in fileName
         } else if (cmd == "I" || cmd == "J" || cmd == "L" || cmd == "O" || cmd == "S" || 
             cmd == "T" || cmd == "Z") {
-            quadris->replaceCurrentPiece(cmd);
-            quadris->print();
-            // change the current block to the block
+                bool isHeavy = false;
+                int currentLevel = quadris->getCurrentLevel();
+                if (currentLevel > 2) {
+                    isHeavy = true;
+                }
+                quadris->replaceCurrentPiece(cmd, currentLevel, isHeavy);
+                quadris->print();
+                // change the current block to the block
         } else if (cmd == "restart") {
             // clear the board and start new game
             quadris->restart();
@@ -322,6 +334,15 @@ int main(int argc, char *argv[]) {
             quadris->hint();
             quadris->print();
             // display a hint
+        } else if (cmd == "hold") {
+            if (!quadris->hold()) {
+                if (gameOver()) {
+                    quadris->restart();
+                } else {
+                    break;
+                }
+            }
+            quadris->print();
         } else {
             cout << "Invalid command: " << cmd << endl;
         }

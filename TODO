@@ -3,4 +3,16 @@ OK ACTUALLY GET SYMBOL MIGHT HAVE A USE
 Lisa pls comment:
     GamePiece.cc
 
+MAKE THE GAME REAL TIME BY ADDING A TIMER THAT ADDS TO A THING
+AND THEN IT CALLS HEAVYMOVE ON THE PIECE ONCE THE TIME REACHES 50
+SETS THE TIME TO 0. IF IT CALLS HEAVYMOVE AND FAILS THEN IT CALLS DROP
+ON THAT PIECE!!!!!!!!!!!!
 
+
+WHen you restart we still need to make the held piece nullptr
+We need to make holdSwapped false
+Probably many other new features that we have now
+Basically update the grid retart function
+
+
+If you try to switch to an I block at the very right it does very bad things

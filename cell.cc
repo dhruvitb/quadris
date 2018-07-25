@@ -8,7 +8,7 @@ colour{Colour::NoColour} {
 
 CellInfo Cell::getInfo() const {
     char symbol = '-';
-    if (piece != nullptr) {
+    if (piece) {
         symbol = piece->getSymbol();
     }
     return CellInfo{position.row, position.col, colour, symbol};

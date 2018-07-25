@@ -13,15 +13,16 @@ class GraphicsDisplay: public Observer<CellInfo> {
     int height; // height of the window
     int squareSize; // size of the squares to be drawn
     int pieceSizeOffset = 2; // distance between pieces (to give grid effect)
-    void drawNext(shared_ptr<GamePiece> next); // show next piece
+    // draw the next and held pieces
+    void drawSidePieces(shared_ptr<GamePiece> next, 
+    shared_ptr<GamePiece> held); 
 public:
     GraphicsDisplay(int width, int height);
     ~GraphicsDisplay();
+    void init(std::string scheme);
     bool notify(Subject<CellInfo> &from);
     void updateMenu(int level, int score, int hiScore, shared_ptr<GamePiece>
-    next);
-    void removeWindow();
-    void changeColourScheme(std::string s);
+    next, shared_ptr<GamePiece> held);
 };
 
 #endif

@@ -44,8 +44,28 @@ bool TextDisplay::notify(Subject<CellInfo> &from) {
     return true;
 }
 
+void TextDisplay::printPiece(shared_ptr<GamePiece> piece) {
+    vector<Coordinate> coords = piece->getCoords();
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            bool isOccupied = false;
+            Coordinate temp = Coordinate{i + 3, j};
+            for (Coordinate c : coords) {
+                if (temp == c) {
+                    cout << piece->getSymbol();
+                    isOccupied = true;
+                }
+            }
+            if (!isOccupied) {
+                cout << " ";
+            }
+        }
+        cout << endl;
+    }
+}
+
 void TextDisplay::print(int level, int score, int hiScore, 
-shared_ptr<GamePiece> next) {
+shared_ptr<GamePiece> next, shared_ptr<GamePiece> held) {
     int width = 11;
     int height = 18;
     cout << "Level:    " << level << endl;
@@ -57,22 +77,10 @@ shared_ptr<GamePiece> next) {
         }
         cout << endl;
     }
-    cout << "Next Piece:" << std::endl;
-    vector<Coordinate> coords = next->getCoords();
-    for (int i = 0; i < 2; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            bool isOccupied = false;
-            Coordinate temp = Coordinate{i + 3, j};
-            for (Coordinate c : coords) {
-                if (temp == c) {
-                    cout << next->getSymbol();
-                    isOccupied = true;
-                }
-            }
-            if (!isOccupied) {
-                cout << " ";
-            }
-        }
-        cout << endl;
+    cout << "Next Piece:" << endl;
+    printPiece(next);
+    if (held) {
+        cout << "Held Piece:" << endl;
+        printPiece(held);
     }
 }
