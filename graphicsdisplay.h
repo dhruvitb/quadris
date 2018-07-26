@@ -19,8 +19,10 @@ class GraphicsDisplay: public Observer<CellInfo> {
 public:
     GraphicsDisplay(int width, int height);
     ~GraphicsDisplay();
+    // allows for intializing with custom settings (colourscheme)
     void init(std::string scheme);
-    bool notify(Subject<CellInfo> &from);
+    bool notify(Subject<CellInfo> &from) override;
+    // update the side menu of the display
     void updateMenu(int level, int score, int hiScore, shared_ptr<GamePiece>
     next, shared_ptr<GamePiece> held);
 };

@@ -12,7 +12,9 @@ protected:
     int squaresDeleted = 0;  // counter for if entire piece is cleared
     bool isHeavy = false; // is the piece heavy? (level 3 and 4)
     int findRotationIndex(Rotation change); // for 2x3 bounding box pieces
-    // applies offset amount to rotation
+    // returns a coordinate with offset applied to 
+    // offset is calculated as the difference between the piece
+    // and the rotation templates found in structures.h
     Coordinate templateCoord(Coordinate c, Coordinate offset); 
 public:
     virtual ~GamePiece() = 0;

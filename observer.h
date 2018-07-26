@@ -10,4 +10,4 @@ public:
     virtual bool notify(Subject<InfoType> &from) = 0;
 };
 
-#endif 
+#endif

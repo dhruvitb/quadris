@@ -14,10 +14,9 @@ using namespace std;
 Level4::Level4() {}
 
 shared_ptr<GamePiece> Level4::generatePiece() {
-    cout << "the turncount for brick is: " << turnCount << endl;
-    if (turnCount == 5) { 
-        resetTurnCount();
-        notifyObservers();
+    if (turnCount == 5) {
+        resetTurnCount(); // set the turncount since line clear to 0
+        notifyObservers(); // tell the grid it needs to place a bomb
     }
     if (random) {
         vector<string> pieces{"I", "J", "L", "O", "S", "S", "T", "Z", "Z"};
@@ -39,5 +38,5 @@ void Level4::resetTurnCount() {
 }
 
 void Level4::incrementTurnCount() {
-    ++turnCount;
+    ++turnCount; // called when a piece is dropped
 }

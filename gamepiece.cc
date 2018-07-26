@@ -6,24 +6,29 @@ using namespace std;
 
 GamePiece::~GamePiece() {}
 
-int GamePiece::findRotationIndex(Rotation change) { //-1 if ccw, +1 if cw
+int GamePiece::findRotationIndex(Rotation change) { // -1 if ccw, +1 if cw
     int c = static_cast<int>(change);
     if (rotationIndex + c >= 0 && rotationIndex + c <= 3) {
         return rotationIndex + c;
     } else if (rotationIndex + c > 3) {
         return (rotationIndex + c) % 4;
-    } else { //curr + change < 0
+    } else { // curr + change < 0
         return (rotationIndex + c + 4);
     }
 }
 
  vector<Coordinate> GamePiece::rotate(Rotation r) {
-    rotationCoordinates c;
+    rotationCoordinates c; //template of all possible rotations
     vector<Coordinate> copy;
     Coordinate lowerLeft = getLowerLeft();
+    //selects the correct rotation from template of rotations in c
     vector<Coordinate> currentRotation = c.allRotations[rotationIndex];
+    //selects the correct next rotation from templace of rotations in c
     vector<Coordinate> nextRotation = c.allRotations[findRotationIndex(r)];
+    //finds the lower lower coordinate of any config from the template
     Coordinate lowerLeftTemplate = rotationCoordinates::getLowerAndLeft();
+    //offset calculates transformations that need to be applied from 
+    //nextRotation
     Coordinate offset = {lowerLeft.row - lowerLeftTemplate.row, 
                         lowerLeft.col - lowerLeftTemplate.col};
     int sizeCoords = allCoords.size();
@@ -84,9 +89,10 @@ Coordinate GamePiece::getLowerLeft() {
 }
 
 void GamePiece::undoRotation(Rotation r) {
-    int change = static_cast<int>(r);
+    // to find out if the change was clockwise or counterclockwise
+    int change = static_cast<int>(r); 
     rotationIndex = rotationIndex - change;
-    if (rotationIndex > 3) {
+    if (rotationIndex > 3) { // undoes the rotation but in the range [0,3]
         rotationIndex = rotationIndex - 4;
     } else if (rotationIndex < 0) {
         rotationIndex = rotationIndex + 4;

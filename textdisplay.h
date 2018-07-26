@@ -18,9 +18,11 @@ class TextDisplay: public Observer<CellInfo> {
     const char BLANK = '-';
     const char BOMB = '*';
     const char HINT = '?';
+    // reduces similar code to print gamePieces for next/held
     void printPiece(shared_ptr<GamePiece> piece);
 public:
     TextDisplay();
+    // print the text display and associated info
     void print(int level, int score, int hiScore, shared_ptr<GamePiece> next,
     shared_ptr<GamePiece> held);
     bool notify(Subject<CellInfo> &from) override;

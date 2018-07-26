@@ -16,6 +16,7 @@ TextDisplay::TextDisplay() {
 }
 
 bool TextDisplay::notify(Subject<CellInfo> &from) {
+    // use colours to find out what the symbol on the display should be
     CellInfo info = from.getInfo();
     int row = info.row;
     int col = info.col;
@@ -49,7 +50,8 @@ void TextDisplay::printPiece(shared_ptr<GamePiece> piece) {
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < 4; ++j) {
             bool isOccupied = false;
-            Coordinate temp = Coordinate{i + 3, j};
+            // the actual starting position for pieces is 3 rows lower
+            Coordinate temp = Coordinate{i + 3, j}; 
             for (Coordinate c : coords) {
                 if (temp == c) {
                     cout << piece->getSymbol();

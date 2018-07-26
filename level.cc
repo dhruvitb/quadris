@@ -72,7 +72,8 @@ void Level::changeFileName (string f) {
 
 void Level::changeSeed (int x) {
 	seed = x;
-	srand(seed);
+	// use the seed as the multiplied value before taking mod
+	srand(seed); 
 }
 
 void Level::resetTurnCount() {
@@ -81,15 +82,13 @@ void Level::resetTurnCount() {
 
 int Level::randomInt(int num) {
 	int x = rand() % num;
-	//cout << "random number is: " << x << endl;
 	return x;
 } 
 
 LevelInfo Level::getInfo() const {
-    return LevelInfo{true};
+    return LevelInfo{};
 }
 
 void Level::incrementTurnCount() {
-	// does nothing normally (in level 4 )
+	// does nothing normally (in level 4 it has purpose)
 }
-

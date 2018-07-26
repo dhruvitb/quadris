@@ -2,7 +2,6 @@
 using namespace std;
 
 BlockI::BlockI(int levelGenerated, bool isHeavy) {
-    //cout << "Generating block I" << endl;
     this->levelGenerated = levelGenerated;
     allCoords = {Coordinate{3,0}, Coordinate{3,1},
     Coordinate{3,2}, Coordinate{3,3}};
@@ -27,10 +26,12 @@ vector<Coordinate> BlockI::rotate(Rotation r) {
     ++rotationIndex;
     vector<Coordinate> newCoords; 
     Coordinate lowerLeft = getLowerLeft();
-    RotationCoordinatesL rotationCoords; // defined in structures.h
+    RotationCoordinatesI rotationCoords; // defined in structures.h
     for (Coordinate coord :
     rotationCoords.RotationCoordinates[rotationIndex % 2]) {
-        if (rotationIndex % 2 == 1) {
+        // the direction of the rotation depends on the type of rotation that
+        // needs to occur
+        if (rotationIndex % 2 == 1) { 
             newCoords.emplace_back(lowerLeft - coord);
         } else {
             newCoords.emplace_back(lowerLeft + coord);

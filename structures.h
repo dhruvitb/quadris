@@ -37,10 +37,11 @@ struct CellInfo {
 };
 
 struct LevelInfo {
-    bool dropBomb;
+      
 };
 
-struct RotationCoordinatesL {
+struct RotationCoordinatesI {
+    // possible rotation configurations for the I block
     const vector<vector<Coordinate>> RotationCoordinates{
         {Coordinate{0,0}, Coordinate{0,1}, Coordinate{0,2}, Coordinate{0,3}},
         {Coordinate{0,0}, Coordinate{1,0}, Coordinate{2,0}, Coordinate{3,0}}
@@ -48,6 +49,7 @@ struct RotationCoordinatesL {
 };
 
 struct rotationCoordinates {
+    // possible rotation configurations for all 2x3 blocks
     vector<vector<Coordinate>> allRotations{
         {Coordinate{1,0}, Coordinate{1,1}, Coordinate{1,2}, Coordinate{2,0}, 
             Coordinate{2,1}, Coordinate{2,2}},
@@ -59,7 +61,7 @@ struct rotationCoordinates {
             Coordinate{1,1}, Coordinate{0,1}}
     };
     static Coordinate getLowerAndLeft() {
-        return Coordinate{2,0}; //by our own definition
+        return Coordinate{2,0}; //by our definition the default lowerleft
     }    
 };
  

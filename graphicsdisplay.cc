@@ -37,13 +37,11 @@ bool GraphicsDisplay::notify(Subject<CellInfo> &from) {
 void GraphicsDisplay::updateMenu(int level, int score, int hiScore,
 shared_ptr<GamePiece> next, shared_ptr<GamePiece> held) {
     // update the values on the side menu
-    if (window) {
-        window->fillRectangle(390, 80, 100, 80, 10);
-        window->drawString(400, 100, "Level:     " + to_string(level));
-        window->drawString(400, 120, "Score:     " + to_string(score));
-        window->drawString(400, 140, "Hi Score:  " + to_string(hiScore));
-        drawSidePieces(next, held);
-    }
+    window->fillRectangle(390, 80, 100, 80, 10);
+    window->drawString(400, 100, "Level:     " + to_string(level));
+    window->drawString(400, 120, "Score:     " + to_string(score));
+    window->drawString(400, 140, "Hi Score:  " + to_string(hiScore));
+    drawSidePieces(next, held);
 }
 
 void GraphicsDisplay::drawSidePieces(shared_ptr<GamePiece> next,
@@ -52,7 +50,7 @@ shared_ptr<GamePiece> held) {
     vector<Coordinate> coords = next->getCoords();
     Colour colour = next->getColour();
     int colourValue = (int) colour;
-    // cover the area with a white rectangle first
+    // cover the area with a white rectangle first to prevent overlap
     window->fillRectangle(390, 150, 150, 300, 10);
     window->drawString(400, 200, "Next Piece:");
     for (Coordinate c : coords) {

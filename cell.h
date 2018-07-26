@@ -11,13 +11,12 @@ class Cell: public Subject<CellInfo> {
     Coordinate position; // coordinates of the cell
     Colour colour; // colour of the cell
     std::shared_ptr<GamePiece> piece; // piece the cell has (once dropped)
-    std::vector<Observer<CellInfo>*> observers; // observers of the cell
 public:
     // initialize with starting coordinate
     Cell(Coordinate c);
     // get the info of this cell defined in structures.h
     CellInfo getInfo() const override;
-    // set the colour of this cell
+    // set the colour of this cell (also calls notifyObservers)
     void setColour(Colour c);
     // set the piece this cell has
     void setPiece(std::shared_ptr<GamePiece> newPiece);

@@ -37,26 +37,28 @@ Grid::~Grid() {}
 
 void Grid::init(string scheme) {
     if (!textOnly) {
-        gd.init(scheme);
+        gd.init(scheme); // create graphics display with given colour scheme
     }
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
             Cell c = Cell{Coordinate{i,j}};
             if (!graphicsOnly) {
-                c.attach(&td);
+                c.attach(&td); // only atach text observer if enabled
             }
             if (!textOnly) {
-                c.attach(&gd);
+                c.attach(&gd); // only attach graphics observer if enabled
             }
             c.notifyObservers();
             temp.emplace_back(c);
         }
         theGrid.emplace_back(temp);
     }
+    // start off with the current piece and the next piece
     currentPiece = levelFactory->generatePiece();
     nextPiece = levelFactory->generatePiece();
     vector<Coordinate> initialCoords = currentPiece->getCoords();
+    // display the first piece 
     for (Coordinate c : initialCoords) {
         if (inBounds(c.row, c.col, height, width)) {
             theGrid[c.row][c.col].setColour(currentPiece->getColour());
@@ -70,10 +72,13 @@ bool Grid::inBounds(int i, int j, int maxI, int maxJ) {
 }
 
 void Grid::print() {
+    // depending on which ones are enabled
     if (!graphicsOnly) {
         td.print(currentLevel, score, highScore, nextPiece, heldPiece);
     }
-    gd.updateMenu(currentLevel, score, highScore, nextPiece, heldPiece);
+    if (!textOnly) {
+        gd.updateMenu(currentLevel, score, highScore, nextPiece, heldPiece);
+    }
 }
 
 void Grid::changeTextOnly() {
@@ -166,6 +171,7 @@ bool Grid::drop() {
     while (shiftPiece(Direction::Down));
     vector<Coordinate> finalCoords = currentPiece->getCoords();
     for (Coordinate c : finalCoords) {
+        // if its row is less than 3 it is too high
         if (c.row < 3 || !inBounds(c.row, c.col, height, width)) {
             return false;
         }
@@ -175,42 +181,53 @@ bool Grid::drop() {
     if (finalCoords.size() == 1) { // if the piece is a bomb
         return true;
     }
-    levelFactory->incrementTurnCount();
-    holdSwapped = false;
-    return (getNextPiece());
+    // increments turns passed without a line cleared in level 4
+    // if a line clears it will be set to 0 by clearRows
+    levelFactory->incrementTurnCount(); 
+    holdSwapped = false; // player is able to hold a piece since next turn
+    return (getNextPiece()); // if a next piece can be given without collision
 }
 
-bool Grid::validMove(vector<Coordinate> newCoords, shared_ptr<GamePiece> piece) {
-    bool valid = true;
+bool Grid::validMove(vector<Coordinate> newCoords, 
+shared_ptr<GamePiece> piece) {
+    bool valid = true; // will become false if move is not valid 
     vector<Coordinate> oldCoords = piece->getCoords();
+    // set its own coordinates to no colour so it doesn't collide with itself
     for (Coordinate c : oldCoords) {
         if (inBounds(c.row, c.col, height, width)) {
             theGrid[c.row][c.col].setColour(Colour::NoColour);
-            //cout << "Removing colour in (" << c.row << "," << c.col << ")" << endl;
         } else {
             return false;
         }
     }
+    // checks for collisions
     for (Coordinate c : newCoords) {
-        if (!inBounds(c.row, c.col, height, width) ||
-        (theGrid[c.row][c.col].getInfo().colour != Colour::NoColour &&
-        theGrid[c.row][c.col].getInfo().colour != Colour::Black)) {
+        if (inBounds(c.row, c.col, height, width)) {
+            Colour cellColour = theGrid[c.row][c.col].getInfo().colour;
+            if  (cellColour!= Colour::NoColour && 
+                 cellColour != Colour::Black) {
+                valid = false;
+                break;
+            }
+        } else {
             valid = false;
             break;
         }
     }
+    // give the piece it's new coordinates
     if (valid) {
         piece->setCoords(newCoords);
         removeHint();
-    } else {
+    } else { // otherwise keep old coordinates and add colours back 
         for (Coordinate c : oldCoords) {
             theGrid[c.row][c.col].setColour(piece->getColour());
         }
     }
-    return valid;
+    return valid; // return if successful
 }
 
 bool Grid::heavyMove(vector<Coordinate> moveDown) {
+    // move the piece down one if row (if valid)
     for (Coordinate &c : moveDown) {
         ++c.row;
     }
@@ -224,12 +241,14 @@ bool Grid::shiftPiece(Direction d, shared_ptr<GamePiece> piece) {
         piece = currentPiece;
     }
     vector<Coordinate> newPosition = piece->shift(d);
+    // check if valid, if it is set colours and notify observers
     if (validMove(newPosition, piece)) {
         for (Coordinate c : newPosition) {
             if (inBounds(c.row, c.col, height, width)) {
                 theGrid[c.row][c.col].setColour(piece->getColour());
             }
         }
+        // if piece is heavy, move it down 1
         if (piece->getIsHeavy()) {
             if(heavyMove(newPosition)) {
                 for (Coordinate c : newPosition) {
@@ -245,10 +264,12 @@ bool Grid::shiftPiece(Direction d, shared_ptr<GamePiece> piece) {
 
 bool Grid::rotatePiece(Rotation r) {
     vector<Coordinate> newPosition = currentPiece->rotate(r);
+    // check for valid rotation and update colours
     if (validMove(newPosition, currentPiece)) {
         for (Coordinate c : newPosition) {
             theGrid[c.row][c.col].setColour(currentPiece->getColour());
         }
+        // move down one row if heavy
         if (currentPiece->getIsHeavy()) {
             if(heavyMove(newPosition)) {
                 for (Coordinate c : newPosition) {
@@ -264,20 +285,24 @@ bool Grid::rotatePiece(Rotation r) {
 }
 
 bool Grid::getNextPiece() {
+    // get the next piece and set it to the current piece
     currentPiece = nextPiece;
     nextPiece = levelFactory->generatePiece(); //consider file or random
     vector<Coordinate> newPieceCoords = currentPiece->getCoords();
     for (Coordinate c : newPieceCoords) {
         Cell &theCell = theGrid[c.row][c.col];
-        if (theCell.getInfo().colour != Colour::NoColour) {
-            return false;
+        if (theCell.getInfo().colour != Colour::NoColour &&
+            theCell.getInfo().colour != Colour::Black) {
+            return false; // used in game over check
         }
+        // update the colours to show the next peice
         theCell.setColour(currentPiece->getColour());
     }
     return true;
 }
 
 void Grid::updateLevelFactory() {
+    // maps the integer level to a level factory
     if (currentLevel == 4) {
         levelFactory = make_shared<Level4>();
     } else if (currentLevel == 3) {
@@ -293,31 +318,36 @@ void Grid::updateLevelFactory() {
 }
 
 void Grid::levelUp() {
+    // level up if valid
     if (currentLevel < LEVEL_MAX) {
         ++currentLevel;
         updateLevelFactory();
-        //cout << "Current level is: " << currentLevel << endl;
         print();
     } else {
-        cout << "Level is outside range of [" << LEVEL_MIN << "," << LEVEL_MAX << "]" << endl;
+        cout << "Level is outside range of [" << 
+        LEVEL_MIN << "," << LEVEL_MAX << "]" << endl;
     }
 }
 
 void Grid::levelDown() {
+    // level down if valid
     if (currentLevel > LEVEL_MIN) {
         --currentLevel;
         updateLevelFactory();
         print();
     } else {
-        cout << "Level is outside range of [" << LEVEL_MIN << "," << LEVEL_MAX << "]" << endl;
+        cout << "Level is outside range of [" << 
+        LEVEL_MIN << "," << LEVEL_MAX << "]" << endl;
     }
 }
 void Grid::updateLevel(int lvl) {
+    // used to set a particular level
     currentLevel = lvl;
     updateLevelFactory();
 }
 
 void Grid::updateFileName(string s) {
+    // only for levels that allow files
     if (currentLevel == 0 || currentLevel == 3 || currentLevel == 4) {
         levelFactory->changeFileName(s);
     } else {
@@ -330,7 +360,7 @@ void Grid::updateSeed(int x) {
     if (currentLevel != 0) {
         levelFactory->changeSeed(x);
     } else {
-        cout << "Level 0 can not have a seed" << endl;
+        cout << "Level 0 cannot have a seed" << endl;
     }
 }
 
@@ -339,7 +369,7 @@ void Grid::restoreRandom() {
         levelFactory->randomize();
     } else {
         if (currentLevel == 0) {
-            cout << "Level " << currentLevel << " can not be random" << endl;
+            cout << "Level " << currentLevel << " cannot be random" << endl;
         } else {
             cout << "Level " << currentLevel << " is already random" << endl;
         }
@@ -378,7 +408,6 @@ void Grid::replaceCurrentPiece(string s, int levelGenerated, bool isHeavy) {
         if (newPiece->getSymbol() == 'I') {
             if (lowerLeft.col > 7) {
                 replaceable = false;
-                //cout << "Invalid command: block cannot fit" << endl;
             }
             lowerLeftTemplate.row = 3;
         }
@@ -398,11 +427,11 @@ void Grid::replaceCurrentPiece(string s, int levelGenerated, bool isHeavy) {
         //then check the colour of the new coordinates
         for (Coordinate c : newPiece->getCoords()) {
             Cell &theCell = theGrid[c.row][c.col];
+            Colour cellColour = theCell.getInfo().colour;
             if (!(inBounds(c.row, c.col, height, width)) ||
-                (theCell.getInfo().colour != Colour::NoColour &&
-                theCell.getInfo().colour != Colour::Black )) {
+                (cellColour != Colour::NoColour &&
+                 cellColour != Colour::Black )) {
                 replaceable = false;
-                //cout << "Invalid command: block cannot fit" << endl;
                 break;
             }
         }
@@ -427,19 +456,23 @@ void Grid::restart() {
     //enter fields of grid that need to be changed when restarted
     currentLevel = 0;
     score = 0;
-    levelFactory = make_shared<Level0>();
+    levelFactory = make_shared<Level0>(); // level becomes 0 again
     levelFactory->attach(this);
     currentPiece = levelFactory->generatePiece();
     nextPiece = levelFactory->generatePiece();
-    theGrid.clear();
-    heldPiece = nullptr;
-    holdSwapped = false;
+    theGrid.clear(); // empty the cells of the grid
+    heldPiece = nullptr; // reset the held piece
+    holdSwapped = false; // allow them to swap on the first turn
     for (int i = 0; i < height; ++i) {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
             Cell c = Cell{Coordinate{i,j}};
-            c.attach(&td);
-            c.attach(&gd);
+            if (!textOnly) {
+                c.attach(&td);
+            }
+            if (!graphicsOnly) {
+                c.attach(&gd);
+            }
             c.notifyObservers();
             temp.emplace_back(c);
         }
@@ -464,7 +497,7 @@ void Grid::hint() {
     for (Coordinate c : copyCurrentCoords) {
         theGrid[c.row][c.col].setColour(Colour::NoColour);
     }
-    //find the optimal column for hint ****To be improved
+    //find the optimal column for hint 
     int furthestCol = width - 3; 
     if (currentPiece->getSymbol() == 'I') { //special case for I
         furthestCol = width - 4;
@@ -476,7 +509,6 @@ void Grid::hint() {
     for (Coordinate &c : hintCoords) {
         c.col = c.col - offset;
     }
-    cout << "offset by: " << offset << endl;
     theHint->setCoords(hintCoords);
     while (shiftPiece(Direction::Down, theHint));
     //set the hintPiece to theHint
@@ -496,12 +528,13 @@ void Grid::hint() {
 }
 
 bool Grid::notify(Subject<LevelInfo> &from) {
+    // drop a bomb in the center
     (void) from;
     shared_ptr<GamePiece> temp = currentPiece;
     currentPiece = make_shared<BlockBomb>();
     Coordinate bombCell = currentPiece->getCoords()[0];
-    if (theGrid[bombCell.row][bombCell.col].getInfo().colour !=
-    Colour::NoColour) {
+    Colour cellColour = theGrid[bombCell.row][bombCell.col].getInfo().colour;
+    if (cellColour != Colour::NoColour && cellColour != Colour::Black) {
         // force drop() to produce false by giving invalid coords
         currentPiece->setCoords(vector<Coordinate>{{-1,-1}});
     }
@@ -511,16 +544,16 @@ bool Grid::notify(Subject<LevelInfo> &from) {
 }
 
 bool Grid::hold() {
-    // make a temp copy of the currentPiece to swap
     if (holdSwapped) {
         cout << "You've already held a piece this turn" << endl;
         return true;
     }
+    // make a temp copy of the currentPiece to swap
     string currentPieceName;
     currentPieceName.push_back(currentPiece->getSymbol());
     shared_ptr<GamePiece> temp = createPiece(currentPieceName, 
     currentPiece->getLevelGenerated(), currentPiece->getIsHeavy());
-    if (heldPiece) {
+    if (heldPiece) { // if there is already a held piece, swap 
         vector<Coordinate> oldCoords = currentPiece->getCoords();
         vector<Coordinate> heldCoords = heldPiece->getCoords();
         for (Coordinate c : oldCoords) {
@@ -528,8 +561,12 @@ bool Grid::hold() {
         }
         for (Coordinate c : heldCoords) {
             Cell &theCell = theGrid[c.row][c.col];
-            if (theCell.getInfo().colour != Colour::NoColour) {
-                return false;
+            Colour cellColour = theCell.getInfo().colour;
+            if (cellColour != Colour::NoColour && 
+                cellColour != Colour::Black) {
+                // if not swappable you lose since you've hit the top
+                // with the piece
+                return false; 
             }
             theCell.setColour(heldPiece->getColour());
         }
@@ -552,6 +589,7 @@ bool Grid::hold() {
 }
 
 void Grid::removeHint() {
+    // remove the hint block
     if (hintPiece != nullptr) {
         vector<Coordinate> hintCoords = hintPiece->getCoords();
         for (Coordinate c : hintCoords) {

@@ -19,7 +19,7 @@ shared_ptr<GamePiece> Level3::generatePiece() {
         int size = pieces.size();
         int n = randomInt(size);
         return generatePieceFromString(pieces[n], true);
-    } else {
+    } else { // do not randomly generate pieces
         string s = generateString();
         return generatePieceFromString(s, true);
     }

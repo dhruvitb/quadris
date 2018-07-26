@@ -1,18 +1,3 @@
-OK ACTUALLY GET SYMBOL MIGHT HAVE A USE
+lisa comment main
 
-Lisa pls comment:
-    GamePiece.cc
-
-
-WHen you restart we still need to make the held piece nullptr
-We need to make holdSwapped false
-Probably many other new features that we have now
-Basically update the grid retart function
-
-
-If you try to switch to an I block at the very right it does very bad things
-
-
-If a piece is standing vertically, the hint will never tell it to go to the far right
-
-BRICK PICE DOES NOT WORK FIX COUNT BECAUSE IT COUNTS THE BLOCK AS A DROP
+find out if getLowerAndLeft can be removed

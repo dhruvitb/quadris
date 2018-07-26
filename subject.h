@@ -10,6 +10,7 @@
 template <typename InfoType> class Observer;
 
 template <typename InfoType> class Subject {
+protected:
     std::vector<Observer<InfoType>*> observers; // list of its observers
 public:
     void attach(Observer<InfoType> *o); // add a new observer

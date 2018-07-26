@@ -27,10 +27,10 @@ class Grid: public Observer<LevelInfo> {
     bool graphicsOnly; // changed by command line arguments
     std::shared_ptr<GamePiece> currentPiece; // the current piece on the board
     std::shared_ptr<GamePiece> nextPiece; // the next piece in the queue
-    std::shared_ptr<GamePiece> hintPiece; //filled when hint is called
-    std::shared_ptr<GamePiece> heldPiece;
+    std::shared_ptr<GamePiece> hintPiece; // filled when hint is called
+    std::shared_ptr<GamePiece> heldPiece; // piece held for later
     // returns whether a Coordinate is within the bounds of the board
-    static bool inBounds(int i, int j, int maxI, int maxJ); 
+    static bool inBounds(int i, int j, int maxI, int maxJ);
     // changes the levelFactor to be equal to the changed level
     void updateLevelFactory();
     // checks each coordinate in newPosition to see if it's valid
@@ -59,7 +59,7 @@ public:
     void print(); // updates & prints textDisplay and graphicsDisplay
     void changeTextOnly(); // toggles text-only mode
     void changeGraphicsOnly(); // toggles graphics-only mode
-    bool drop(); // drops current piece
+    bool drop(); // drops current piece (checks for game over)
     // moves current piece in given direction
     bool shiftPiece(Direction d, shared_ptr<GamePiece> piece = nullptr);
     bool rotatePiece(Rotation r); // rotates current piece in given rotation
@@ -75,7 +75,7 @@ public:
     int getCurrentLevel(); //returns the current level
     void restart(); // reinitializes the game (saves high score)
     void hint(); // displays a hint for current piece
-    bool hold(); // holds the current piece for later use
+    bool hold(); // holds current piece for later use (checks for game over)
     bool notify(Subject<LevelInfo> &from) override; // receives notification
 };
 

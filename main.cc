@@ -51,85 +51,12 @@ string updateMultiplier(string command, int &multiplier) {
         multiplier = n;
     } //else the multiplier value doesn't get mutated (default value 1)
     string u = checkUniqueness(input); //u for unique
-    /*if (u != "") { //shouldn't matter if the multiplier for these are changed
-        if (u == "random" || u == "sequence" || u == "I" || u == "J" || u == "L" ||
-            u == "O" || u == "S" || u == "T" || u == "Z" || u == "restart" || 
-            u == "hint") {
-            multiplier = 1; //these commands should only occur once
-        }        
-    }*/
     return input;
 }
 
-//makes sure colourScheme is valid
-/*bool validColourScheme(string s) {
-    bool valid = false;
-    vector<string> library = {"Pastel", "Dark"};
-    int size = library.size();
-    for (int i; i < size; ++i) {
-        if (library[i] == s) {
-            valid = true;
-            break;
-        }
-    }
-    return valid;
-}*/
-
-/*
-//checks if command contains action and ensures the command is valid
-//there may be a multiplier
-bool validCommand(string command, string action) {
-    stringstream ss(command);
-
-    int n = -1;
-    string realCommand;
-
-    if('0' <= command[0] && command[0] <= '9')
-        ss >> n;
-
-    ss >> realCommand;
-
-    return (realCommand == action);
-}
-*/
-
-//mutates multiplier
-/*bool validCommand(string command, string action, int &multiplier) {
-    bool contains = (command.find(action) != string::npos);
-    if (!contains) {
-        return false; 
-    } //doesn't need to know if it is valid
-    bool valid = false;
-    stringstream ss(command);
-    int n = -1;
-    string s;
-    ss >> n >> s; //n will become 0 if 0right or right
-    //no digit in front (i.e. right)
-    if (n == 0) {
-        stringstream ss(command);
-        ss >> s;
-    }
-    if (s == action) {
-        valid = true;
-        //actions where muliplier don't have an effect
-        if (s == "random" || s == "sequence" || s == "I" || s == "J" || s == "L" ||
-            s == "O" || s == "S" || s == "T" || s == "Z" || s == "restart" || 
-            s == "hint") {
-            return true; //contains && valid are both true
-        }
-        //case for 0right
-        if (command.at(0) == '0') {
-            multiplier = 0;
-        } else if (isdigit(command.at(0))) { 
-            multiplier = n;
-        } 
-        //if there is no digit in front (including negatives), multiplier doesn't change
-        //default value is 1
-    }
-    return contains && valid;
-}*/
-
 bool gameOver() {
+    // waits for user input to decide if they want to keep playing once
+    // the game is lost
     string answer;
     bool restartGame;
     cout << "Game Over! Keep playing? Y/N" << endl;
@@ -192,8 +119,6 @@ int main(int argc, char *argv[]) {
         }  else if (option == "-colourscheme") {
             colourScheme = argv[i+1];
             ++i;
-            //quadris->applyColourScheme(cscheme);
-            //do something with colourscheme
         }
     }
     quadris->init(colourScheme); //considers command-line interface
@@ -304,7 +229,6 @@ int main(int argc, char *argv[]) {
                 cout << "Invalid file." << endl;
             }
             // if level is 3/4 make it read from fileName
-            // finish the try catch block above*****
         } else if (cmd == "random") {
             quadris->restoreRandom();
             // if level is 3/4 restore randomness
