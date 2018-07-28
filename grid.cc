@@ -467,12 +467,8 @@ void Grid::restart() {
         vector<Cell> temp;
         for (int j = 0; j < width; ++j) {
             Cell c = Cell{Coordinate{i,j}};
-            if (!textOnly) {
-                c.attach(&td);
-            }
-            if (!graphicsOnly) {
-                c.attach(&gd);
-            }
+            c.attach(&td);
+            c.attach(&gd);
             c.notifyObservers();
             temp.emplace_back(c);
         }

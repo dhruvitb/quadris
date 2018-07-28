@@ -254,6 +254,7 @@ int main(int argc, char *argv[]) {
         } else if (cmd == "restart") {
             // clear the board and start new game
             quadris->restart();
+			quadris->restart();
         } else if (cmd == "hint") {
             quadris->hint();
             quadris->print();

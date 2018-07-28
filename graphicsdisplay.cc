@@ -28,9 +28,11 @@ bool GraphicsDisplay::notify(Subject<CellInfo> &from) {
     // convert the colours in our enum class to ints for the window.h class
     int colourValue = (int) colour;
     // make the squares a little bit smaller to make grid effect
-    window->fillRectangle(squareSize * col + pieceSizeOffset,
-    squareSize * row + pieceSizeOffset, squareSize - pieceSizeOffset,
-    squareSize - pieceSizeOffset, colourValue);
+	if (window) {
+	    window->fillRectangle(squareSize * col + pieceSizeOffset,
+    	squareSize * row + pieceSizeOffset, squareSize - pieceSizeOffset,
+    	squareSize - pieceSizeOffset, colourValue);
+	}
     return true;
 }
 
